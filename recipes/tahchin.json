@@ -1,0 +1,46 @@
+{
+  "slug": "tahchin",
+  "title": "Tahchin (Saffron Rice Cake)",
+  "description": "A stunning, savory Persian rice cake baked to golden perfection with a crispy crust (tahdig) and layered with yogurt, saffron, and tender chicken.",
+  "image_url": null,
+  "prep_time_minutes": 45,
+  "cook_time_minutes": 90,
+  "servings": 6,
+  "difficulty": "medium",
+  "category": "rice",
+  "category_slug": "rice",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 600,
+  "ingredients": [
+    {"item": "basmati rice", "amount": "3", "unit": "cups"},
+    {"item": "chicken breast", "amount": "1", "unit": "lb", "note": "cooked and shredded"},
+    {"item": "plain yogurt", "amount": "1.5", "unit": "cups", "note": "full fat, strained"},
+    {"item": "egg yolks", "amount": "3", "unit": "large"},
+    {"item": "saffron", "amount": "1/2", "unit": "tsp", "note": "ground and bloomed"},
+    {"item": "barberries (zereshk)", "amount": "1/2", "unit": "cup", "note": "rinsed"},
+    {"item": "butter", "amount": "1/2", "unit": "cup", "note": "melted"},
+    {"item": "sugar", "amount": "1", "unit": "tbsp"},
+    {"item": "salt", "amount": "2", "unit": "tsp"},
+    {"item": "oil", "amount": "3", "unit": "tbsp"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "Parboil the basmati rice in salted water until the grains are slightly soft on the outside but firm inside. Drain and rinse.", "time_minutes": 15},
+    {"step": 2, "text": "In a bowl, whisk together the plain yogurt, egg yolks, bloomed saffron, melted butter, and half the salt.", "time_minutes": 5},
+    {"step": 3, "text": "Mix half of the parboiled rice into the yogurt-saffron mixture to create the tahdig layer base.", "time_minutes": 5},
+    {"step": 4, "text": "In a small pan, briefly sauté the barberries in a little oil with the sugar to plump them up. Mix lightly with the cooked chicken breast.", "time_minutes": 5},
+    {"step": 5, "text": "Brush the bottom and sides of a baking dish with oil. Press the yogurt-rice mixture firmly into the bottom.", "time_minutes": 5},
+    {"step": 6, "text": "Add a layer of the chicken and barberry mixture, avoiding the edges. Top with the remaining plain parboiled rice and press down firmly.", "time_minutes": 10},
+    {"step": 7, "text": "Cover tightly with foil, poke a few holes for steam, and bake at 375°F (190°C) until the bottom and sides are deeply golden and crispy.", "time_minutes": 90}
+  ],
+  "tags": ["rice cake", "saffron", "chicken", "barberries", "tahdig", "baked"],
+  "tips": "Pressing the rice layers down firmly is the secret to a tahchin that holds its shape when inverted.",
+  "storage_notes": "Store leftovers in an airtight container for up to 4 days. Reheat in the oven to re-crisp the tahdig.",
+  "serve_with": "Salad Shirazi and fresh herbs.",
+  "substitutions": [
+    {"original": "chicken breast", "substitute": "eggplant", "note": "Use fried or roasted eggplant slices for a vegetarian tahchin."},
+    {"original": "plain yogurt", "substitute": "Greek yogurt", "note": "Greek yogurt works well due to its thick consistency."}
+  ],
+  "source_urls": ["https://cooking.nytimes.com/recipes/1020208-tahchin-e-morgh-persian-baked-chicken-and-rice", "https://persianmama.com/tahchin-morgh-persian-savory-rice-cake/"],
+  "verification_status": "reviewed"
+}

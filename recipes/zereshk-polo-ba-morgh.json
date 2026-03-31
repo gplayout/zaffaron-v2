@@ -1,0 +1,55 @@
+{
+  "slug": "zereshk-polo-ba-morgh",
+  "title": "Zereshk Polo ba Morgh (Barberry Rice with Chicken)",
+  "description": "A classic Persian dish featuring saffron-infused chicken served alongside fluffy basmati rice studded with tart barberries and pistachios.",
+  "image_url": null,
+  "prep_time_minutes": 30,
+  "cook_time_minutes": 60,
+  "servings": 4,
+  "difficulty": "medium",
+  "category": "rice",
+  "category_slug": "rice",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 650,
+  "ingredients": [
+    {"item": "Chicken legs or breast", "amount": "4", "unit": "pieces", "note": "Skinless"},
+    {"item": "Onion", "amount": "1", "unit": "large", "note": "Finely chopped"},
+    {"item": "Garlic", "amount": "2", "unit": "cloves", "note": "Minced"},
+    {"item": "Tomato paste", "amount": "2", "unit": "tbsp", "note": ""},
+    {"item": "Turmeric", "amount": "1", "unit": "tsp", "note": ""},
+    {"item": "Saffron", "amount": "1/4", "unit": "tsp", "note": "Ground, bloomed in 2 tbsp hot water"},
+    {"item": "Vegetable oil", "amount": "4", "unit": "tbsp", "note": ""},
+    {"item": "Salt", "amount": "1", "unit": "tsp", "note": "To taste"},
+    {"item": "Black pepper", "amount": "1/2", "unit": "tsp", "note": ""},
+    {"item": "Basmati rice", "amount": "3", "unit": "cups", "note": "Washed and soaked"},
+    {"item": "Dried barberries (Zereshk)", "amount": "1", "unit": "cup", "note": "Washed and drained"},
+    {"item": "Sugar", "amount": "1", "unit": "tbsp", "note": "For barberries"},
+    {"item": "Butter", "amount": "2", "unit": "tbsp", "note": ""},
+    {"item": "Slivered pistachios", "amount": "2", "unit": "tbsp", "note": "Optional garnish"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "In a large pot, heat 2 tbsp of vegetable oil over medium heat. Add the chopped onion and sauté until golden brown (about 8-10 minutes).", "time_minutes": 10},
+    {"step": 2, "text": "Add minced garlic, turmeric, salt, and black pepper. Stir for 1 minute until fragrant.", "time_minutes": 1},
+    {"step": 3, "text": "Add the chicken pieces to the pot and sear on all sides until lightly browned.", "time_minutes": 10},
+    {"step": 4, "text": "Stir in the tomato paste and cook for 2 minutes to remove its raw flavor. Add 1.5 cups of water and half of the bloomed saffron. Bring to a boil, then reduce heat, cover, and simmer for 45 minutes until chicken is tender.", "time_minutes": 45},
+    {"step": 5, "text": "While the chicken cooks, prepare the rice. Boil 6 cups of water with 2 tbsp salt. Add soaked basmati rice and boil for 5-7 minutes until the outside is soft but the center is still slightly firm. Drain.", "time_minutes": 10},
+    {"step": 6, "text": "In a non-stick pot, melt 1 tbsp oil. Add a layer of rice, shaping it into a pyramid. Poke holes in the rice with a spoon handle. Pour 1/4 cup of water mixed with 1 tbsp oil over the rice. Cover with a lid wrapped in a clean towel and steam on low heat for 45 minutes.", "time_minutes": 45},
+    {"step": 7, "text": "In a small pan, melt butter over low heat. Add washed barberries and sugar. Sauté gently for 1-2 minutes until they plump up (do not burn). Turn off the heat.", "time_minutes": 2},
+    {"step": 8, "text": "Mix 1 cup of the steamed rice with the remaining bloomed saffron and the barberries.", "time_minutes": 2},
+    {"step": 9, "text": "To serve, spread the white rice on a platter, top with the saffron-barberry rice mix, and sprinkle with slivered pistachios. Serve the chicken in a separate bowl with its sauce.", "time_minutes": 2}
+  ],
+  "tags": ["chicken", "rice", "saffron", "barberries", "main course", "festive"],
+  "tips": "Wash the barberries carefully as they can contain grit. Never fry them on high heat, as they will burn and turn bitter immediately.",
+  "storage_notes": "Store the chicken and rice in separate airtight containers in the fridge for up to 3 days. Reheat gently on the stovetop or microwave.",
+  "serve_with": "Mast-o-Khiar (cucumber yogurt), Salad Shirazi, and Sabzi Khordan (fresh herb platter).",
+  "substitutions": [
+    {"original": "Barberries", "substitute": "Dried cranberries", "note": "Use less sugar if substituting with sweetened dried cranberries."},
+    {"original": "Chicken legs", "substitute": "Tofu or chickpeas", "note": "For a vegetarian version, simmer tofu or chickpeas in the tomato saffron sauce."}
+  ],
+  "source_urls": [
+    "https://persianmama.com/zereshk-polo-ba-morgh-barberry-rice-with-chicken/",
+    "https://thecaspianchef.com/2019/06/11/zereshk-polo-saffron-barberry-rice-with-chicken/"
+  ],
+  "verification_status": "reviewed"
+}

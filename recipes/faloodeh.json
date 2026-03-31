@@ -1,0 +1,42 @@
+{
+  "slug": "faloodeh",
+  "title": "Faloodeh (Rose Water Sorbet)",
+  "description": "A traditional, elegant Persian dessert featuring thin rice noodles suspended in a semi-frozen, sweet rose water and lime syrup.",
+  "image_url": null,
+  "prep_time_minutes": 15,
+  "cook_time_minutes": 10,
+  "servings": 6,
+  "difficulty": "medium",
+  "category": "dessert",
+  "category_slug": "dessert",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 210,
+  "ingredients": [
+    {"item": "sugar", "amount": "1.5", "unit": "cups"},
+    {"item": "water", "amount": "2", "unit": "cups"},
+    {"item": "rose water", "amount": "1/4", "unit": "cup"},
+    {"item": "rice vermicelli noodles", "amount": "4", "unit": "oz", "note": "very thin"},
+    {"item": "lime juice", "amount": "2", "unit": "tbsp", "note": "fresh, plus more for serving"},
+    {"item": "sour cherry syrup", "amount": "2", "unit": "tbsp", "note": "optional, for topping"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "In a saucepan, combine the sugar and water. Bring to a boil over medium heat, stirring until the sugar is completely dissolved to make a simple syrup.", "time_minutes": 5},
+    {"step": 2, "text": "Remove the syrup from heat and let it cool completely. Once cool, stir in the rose water.", "time_minutes": 30},
+    {"step": 3, "text": "Pour the cooled rose water syrup into a shallow freezer-safe container and place it in the freezer until it becomes slushy (about 2-3 hours). Stir with a fork every 45 minutes.", "time_minutes": 180},
+    {"step": 4, "text": "Break the dry rice vermicelli noodles into 2-inch pieces. Boil them in water according to package directions (about 3-5 minutes) until soft but not mushy.", "time_minutes": 5},
+    {"step": 5, "text": "Drain the noodles and rinse them thoroughly under very cold water to stop the cooking and chill them.", "time_minutes": 2},
+    {"step": 6, "text": "Take the slushy syrup from the freezer, fold in the cold noodles and lime juice. Mix well.", "time_minutes": 3},
+    {"step": 7, "text": "Return the mixture to the freezer for another 1-2 hours until firm but scoopable. Serve in bowls with extra lime juice or sour cherry syrup poured on top.", "time_minutes": 60}
+  ],
+  "tags": ["dessert", "sorbet", "rose water", "noodles", "vegan", "gluten-free", "summer"],
+  "tips": "Make sure you use thin rice vermicelli, not bean threads. Stirring the syrup as it freezes is crucial to prevent a solid block of ice.",
+  "storage_notes": "Store covered in the freezer for up to 1 month. Let it sit at room temperature for 5-10 minutes to soften before scooping.",
+  "serve_with": "Bastani Sonnati (Persian Saffron Ice Cream) for a classic 'makhloot' (mixed) dessert.",
+  "substitutions": [
+    {"original": "sour cherry syrup", "substitute": "pomegranate syrup", "note": "Provides a similarly tart and colorful contrast to the sweet rose flavor."},
+    {"original": "lime juice", "substitute": "lemon juice", "note": "Can be used if limes are unavailable, though lime is more traditional."}
+  ],
+  "source_urls": ["https://persianmama.com/faloodeh-shirazi/", "https://thedeliciouscrescent.com/faloodeh-persian-noodle-dessert/"],
+  "verification_status": "reviewed"
+}

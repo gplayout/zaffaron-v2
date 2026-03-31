@@ -1,0 +1,48 @@
+{
+  "slug": "mirza-ghasemi",
+  "title": "Mirza Ghasemi (Smoky Eggplant & Tomato)",
+  "description": "A popular Northern Iranian dish made from fire-roasted eggplants, lots of garlic, fresh tomatoes, and eggs, resulting in a rich, smoky, and deeply savory dip.",
+  "image_url": null,
+  "prep_time_minutes": 15,
+  "cook_time_minutes": 45,
+  "servings": 4,
+  "difficulty": "medium",
+  "category": "appetizer",
+  "category_slug": "appetizer",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 200,
+  "ingredients": [
+    {"item": "Eggplants", "amount": "4", "unit": "medium", "note": "Globe or Italian varieties"},
+    {"item": "Tomatoes", "amount": "4", "unit": "medium", "note": "Fresh, peeled, and diced"},
+    {"item": "Garlic", "amount": "6", "unit": "cloves", "note": "Finely minced or crushed"},
+    {"item": "Eggs", "amount": "2", "unit": "large", "note": ""},
+    {"item": "Tomato paste", "amount": "1", "unit": "tbsp", "note": "Optional, for deeper color"},
+    {"item": "Turmeric", "amount": "1/2", "unit": "tsp", "note": ""},
+    {"item": "Salt", "amount": "1", "unit": "tsp", "note": "To taste"},
+    {"item": "Black pepper", "amount": "1/2", "unit": "tsp", "note": "To taste"},
+    {"item": "Vegetable oil or olive oil", "amount": "4", "unit": "tbsp", "note": ""}
+  ],
+  "instructions": [
+    {"step": 1, "text": "Roast the eggplants over an open gas flame or on an outdoor grill, turning them occasionally with tongs until the skin is completely charred and the flesh is very soft. This takes about 15-20 minutes and is essential for the smoky flavor.", "time_minutes": 20},
+    {"step": 2, "text": "Place the charred eggplants in a bowl and cover with plastic wrap for 10 minutes to steam. This makes peeling easier. Carefully peel off the blackened skin and discard. Finely chop or mash the roasted eggplant flesh.", "time_minutes": 15},
+    {"step": 3, "text": "To easily peel the tomatoes, cut a shallow 'X' on the bottom of each and submerge them in boiling water for 30 seconds. Remove, peel off the skin, and finely dice the tomatoes.", "time_minutes": 5},
+    {"step": 4, "text": "In a large skillet, heat the oil over medium heat. Add the minced garlic and turmeric. Sauté for about 1-2 minutes until fragrant, being careful not to burn the garlic.", "time_minutes": 2},
+    {"step": 5, "text": "Add the diced tomatoes (and tomato paste, if using) to the skillet. Cook for 10-15 minutes, mashing them slightly, until the juices evaporate and the tomatoes form a thick sauce.", "time_minutes": 15},
+    {"step": 6, "text": "Stir the mashed smoky eggplant into the tomato-garlic mixture. Season with salt and black pepper. Cook together for another 5-10 minutes so the flavors meld.", "time_minutes": 10},
+    {"step": 7, "text": "Make two small wells in the eggplant mixture in the skillet. Crack the eggs into the wells. Let the eggs set slightly for a minute, then gently scramble them into the eggplant mixture until fully cooked.", "time_minutes": 5},
+    {"step": 8, "text": "Transfer the Mirza Ghasemi to a serving dish and serve warm.", "time_minutes": 2}
+  ],
+  "tags": ["eggplant", "tomatoes", "garlic", "smoky", "vegetarian", "appetizer"],
+  "tips": "For the authentic taste of Gilan province, you must char the eggplants over an open flame. Baking them in the oven will yield a nice dish, but it will lack the signature smokiness.",
+  "storage_notes": "Store in the fridge for up to 4 days. The flavors often deepen the next day. Reheat in a pan or microwave.",
+  "serve_with": "Warm Persian flatbread (Barbari or Sangak) or steamed white rice (Chelo).",
+  "substitutions": [
+    {"original": "Eggs", "substitute": "None", "note": "To make this vegan, simply omit the eggs at the end. The roasted eggplant and tomato base is delicious on its own."}
+  ],
+  "source_urls": [
+    "https://persianmama.com/mirza-ghasemi-roasted-eggplant-and-tomato/",
+    "https://thecaspianchef.com/2019/07/04/mirza-ghasemi-smoky-eggplant-and-tomato-dip/"
+  ],
+  "verification_status": "reviewed"
+}

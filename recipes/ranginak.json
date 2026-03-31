@@ -1,0 +1,45 @@
+{
+  "slug": "ranginak",
+  "title": "Ranginak (Date & Walnut Sweet)",
+  "description": "A rich, no-bake traditional Southern Iranian dessert featuring soft dates stuffed with walnuts and blanketed under a toasted, spiced flour and butter mixture.",
+  "image_url": null,
+  "prep_time_minutes": 20,
+  "cook_time_minutes": 15,
+  "servings": 8,
+  "difficulty": "easy",
+  "category": "sweet",
+  "category_slug": "sweet",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 350,
+  "ingredients": [
+    {"item": "soft dates", "amount": "30", "unit": "pieces", "note": "Mazafati or Medjool, pitted"},
+    {"item": "walnuts", "amount": "30", "unit": "halves", "note": "to stuff the dates"},
+    {"item": "wheat flour", "amount": "1", "unit": "cup", "note": "all-purpose works too"},
+    {"item": "butter", "amount": "1/2", "unit": "cup", "note": "unsalted"},
+    {"item": "oil", "amount": "2", "unit": "tbsp", "note": "neutral oil"},
+    {"item": "cinnamon", "amount": "1", "unit": "tsp"},
+    {"item": "cardamom", "amount": "1/2", "unit": "tsp", "note": "ground"},
+    {"item": "powdered sugar", "amount": "2", "unit": "tbsp"},
+    {"item": "pistachios", "amount": "2", "unit": "tbsp", "note": "crushed, for garnish"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "Carefully remove the pits from the soft dates. Stuff each date with a walnut half. Arrange the stuffed dates snugly in a single layer on a serving platter or shallow dish.", "time_minutes": 15},
+    {"step": 2, "text": "In a dry skillet over medium-low heat, toast the wheat flour, stirring constantly. Toast until it changes to a light golden brown color and smells nutty (about 10 minutes). Be careful not to burn it.", "time_minutes": 10},
+    {"step": 3, "text": "Reduce the heat to low. Add the butter and oil to the toasted flour. Stir constantly until the butter melts and forms a smooth, thick, paste-like roux.", "time_minutes": 5},
+    {"step": 4, "text": "Remove the skillet from the heat. Instantly stir in the cinnamon and ground cardamom.", "time_minutes": 1},
+    {"step": 5, "text": "While the mixture is still hot, pour it evenly over the arranged dates, spreading it to cover them completely.", "time_minutes": 2},
+    {"step": 6, "text": "Allow the dessert to cool to room temperature. Dust the top evenly with powdered sugar and sprinkle with crushed pistachios.", "time_minutes": 30},
+    {"step": 7, "text": "Chill in the refrigerator for at least 1 hour to set. Cut into squares or diamond shapes to serve."}
+  ],
+  "tags": ["dates", "walnuts", "dessert", "no-bake", "energy treat", "southern iran"],
+  "tips": "Watch the flour closely while toasting; it can burn quickly. Use a fine mesh sieve to dust the powdered sugar evenly.",
+  "storage_notes": "Can be stored at room temperature in an airtight container for up to 3 days, or refrigerated for up to 2 weeks.",
+  "serve_with": "Hot Persian black tea.",
+  "substitutions": [
+    {"original": "wheat flour", "substitute": "chickpea flour", "note": "Can be used for a gluten-free version with a slightly different, nutty flavor profile."},
+    {"original": "walnuts", "substitute": "pecans", "note": "Pecans fit nicely into dates and offer a similar texture."}
+  ],
+  "source_urls": ["https://persianmama.com/ranginak-persian-date-cake/", "https://thecaspianchef.com/2019/05/29/ranginak-persian-date-dessert/"],
+  "verification_status": "reviewed"
+}

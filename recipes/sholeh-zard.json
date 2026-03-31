@@ -1,0 +1,50 @@
+{
+  "slug": "sholeh-zard",
+  "title": "Sholeh Zard (Saffron Rice Pudding)",
+  "description": "A fragrant, golden-yellow Persian rice pudding infused with saffron, rosewater, and cardamom, beautifully garnished with cinnamon and nuts.",
+  "image_url": null,
+  "prep_time_minutes": 15,
+  "cook_time_minutes": 120,
+  "servings": 8,
+  "difficulty": "medium",
+  "category": "dessert",
+  "category_slug": "dessert",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 280,
+  "ingredients": [
+    {"item": "Jasmine or broken Basmati rice", "amount": "1", "unit": "cup", "note": "Washed thoroughly and soaked overnight"},
+    {"item": "Water", "amount": "6", "unit": "cups", "note": "For cooking the rice"},
+    {"item": "Granulated sugar", "amount": "2", "unit": "cups", "note": "Adjust to desired sweetness"},
+    {"item": "Saffron", "amount": "1/2", "unit": "tsp", "note": "Ground, bloomed in 3 tbsp hot water"},
+    {"item": "Rosewater", "amount": "1/4", "unit": "cup", "note": "High quality"},
+    {"item": "Cardamom pods", "amount": "4", "unit": "whole", "note": "Slightly cracked (or 1/2 tsp ground)"},
+    {"item": "Butter", "amount": "2", "unit": "tbsp", "note": "Unsalted"},
+    {"item": "Slivered almonds", "amount": "1/4", "unit": "cup", "note": "Soaked in 1 tbsp rosewater"},
+    {"item": "Ground cinnamon", "amount": "1", "unit": "tbsp", "note": "For garnish"},
+    {"item": "Slivered pistachios", "amount": "2", "unit": "tbsp", "note": "For garnish"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "Drain the soaked rice. In a large heavy-bottomed pot, combine the rice and 6 cups of water. Bring to a boil, skimming off any foam that rises to the top.", "time_minutes": 15},
+    {"step": 2, "text": "Reduce heat to low, cover, and let it simmer for about 45-60 minutes until the rice is completely soft and broken down. Stir occasionally to prevent sticking. The mixture should look like a thick porridge.", "time_minutes": 60},
+    {"step": 3, "text": "Add the sugar to the pot and stir continuously until fully dissolved. The mixture will thin out once the sugar is added. Simmer for another 15 minutes.", "time_minutes": 15},
+    {"step": 4, "text": "Add the bloomed saffron and watch the pudding turn a vibrant golden yellow. Stir well.", "time_minutes": 2},
+    {"step": 5, "text": "Stir in the cracked cardamom pods, rosewater, butter, and the rosewater-soaked slivered almonds. Simmer gently for another 10-15 minutes until the pudding thickens to your liking. It should coat the back of a spoon.", "time_minutes": 15},
+    {"step": 6, "text": "Remove the cardamom pods. Pour the hot pudding into a large shallow serving dish or individual dessert bowls.", "time_minutes": 5},
+    {"step": 7, "text": "Let the pudding cool slightly at room temperature until a skin forms on top. Then, use ground cinnamon, slivered pistachios, and remaining almonds to create decorative patterns or calligraphy on the surface.", "time_minutes": 20},
+    {"step": 8, "text": "Refrigerate for at least 2 hours to set completely before serving.", "time_minutes": 120}
+  ],
+  "tags": ["dessert", "saffron", "rice pudding", "vegan-adaptable", "festive"],
+  "tips": "For the best texture, use broken basmati rice or a starchy short-grain rice. If using long-grain basmati, you may need to pulse it a few times in a blender before cooking so it breaks down properly.",
+  "storage_notes": "Store in the refrigerator covered with plastic wrap for up to 5 days. It is usually served cold, straight from the fridge.",
+  "serve_with": "Hot black tea.",
+  "substitutions": [
+    {"original": "Butter", "substitute": "Coconut oil or vegan butter", "note": "Makes the dessert fully vegan without significantly altering the flavor."},
+    {"original": "Cardamom pods", "substitute": "Ground cardamom", "note": "Use 1/2 tsp ground cardamom if you don't want to fish out whole pods."}
+  ],
+  "source_urls": [
+    "https://persianmama.com/sholeh-zard-persian-saffron-rice-pudding/",
+    "https://thecaspianchef.com/2021/04/13/sholeh-zard-saffron-rice-pudding/"
+  ],
+  "verification_status": "reviewed"
+}

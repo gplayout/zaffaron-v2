@@ -1,0 +1,49 @@
+{
+  "slug": "shirin-polo",
+  "title": "Shirin Polo (Sweet Jeweled Rice)",
+  "description": "A stunning, festive Persian sweet rice dish adorned with slivered almonds, pistachios, candied orange peel, and barberries, beautifully fragrant with saffron.",
+  "image_url": null,
+  "prep_time_minutes": 45,
+  "cook_time_minutes": 60,
+  "servings": 6,
+  "difficulty": "medium",
+  "category": "rice",
+  "category_slug": "rice",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 680,
+  "ingredients": [
+    {"item": "basmati rice", "amount": "3", "unit": "cups"},
+    {"item": "chicken breast", "amount": "1", "unit": "lb", "note": "cooked and shredded or diced"},
+    {"item": "onion", "amount": "1", "unit": "large", "note": "chopped"},
+    {"item": "orange peel", "amount": "1", "unit": "cup", "note": "julienned and bitterness removed"},
+    {"item": "carrots", "amount": "2", "unit": "medium", "note": "julienned"},
+    {"item": "slivered almonds", "amount": "1/2", "unit": "cup"},
+    {"item": "slivered pistachios", "amount": "1/2", "unit": "cup"},
+    {"item": "barberries (zereshk)", "amount": "1/2", "unit": "cup", "note": "rinsed"},
+    {"item": "sugar", "amount": "1/4", "unit": "cup", "note": "plus 2 tbsp for boiling peels"},
+    {"item": "saffron", "amount": "1/2", "unit": "tsp", "note": "ground and bloomed"},
+    {"item": "butter", "amount": "4", "unit": "tbsp"},
+    {"item": "salt", "amount": "2", "unit": "tsp"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "Wash the basmati rice and soak in salted water for 1 hour. Drain.", "time_minutes": 60},
+    {"step": 2, "text": "To remove bitterness from orange peel: Boil the julienned peels in water for 5 minutes, drain, and repeat this process twice. In a small pan, simmer the peels with 2 tbsp sugar and a little water until candied. Set aside.", "time_minutes": 25},
+    {"step": 3, "text": "In a skillet, sauté the carrots in 1 tbsp of butter until soft. Set aside.", "time_minutes": 5},
+    {"step": 4, "text": "In the same skillet, gently sauté the barberries, slivered almonds, and slivered pistachios with 1 tbsp butter and the remaining sugar for just 2 minutes. Do not burn.", "time_minutes": 2},
+    {"step": 5, "text": "Sauté the chopped onion until golden, then mix in the cooked chicken breast and a pinch of salt.", "time_minutes": 5},
+    {"step": 6, "text": "Parboil the soaked basmati rice in a large pot of boiling water for 5-7 minutes. Drain.", "time_minutes": 10},
+    {"step": 7, "text": "In a pot, melt 2 tbsp butter. Layer the parboiled rice, mixing gently with the chicken, candied orange peels, carrots, and the nut/barberry mixture, reserving some nuts/peels for garnish.", "time_minutes": 5},
+    {"step": 8, "text": "Pour the bloomed saffron over the top. Cover tightly with a towel-wrapped lid and steam on low heat for 45 minutes. Serve garnished with the reserved nuts and peels.", "time_minutes": 45}
+  ],
+  "tags": ["sweet rice", "festive", "weddings", "nuts", "orange", "chicken", "saffron"],
+  "tips": "Take your time removing the bitterness from the orange peel; it makes all the difference. Buy pre-slivered pistachios to save prep time.",
+  "storage_notes": "Store in the fridge for up to 4 days. Reheat gently in the microwave or stovetop.",
+  "serve_with": "Extra chicken on the side if desired, or as a standalone dish for celebrations.",
+  "substitutions": [
+    {"original": "chicken breast", "substitute": "omit for vegetarian", "note": "Can easily be made vegetarian by skipping the meat altogether; the nuts and flavors hold their own."},
+    {"original": "barberries", "substitute": "dried cranberries", "note": "Roughly chop dried cranberries if barberries are hard to find."}
+  ],
+  "source_urls": ["https://persianmama.com/shirin-polo-persian-sweet-rice/", "https://thecaspianchef.com/2020/03/10/shirin-polo-persian-sweet-rice/"],
+  "verification_status": "reviewed"
+}

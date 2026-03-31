@@ -1,0 +1,53 @@
+{
+  "slug": "gheymeh",
+  "title": "Gheymeh (Split Pea & Meat Stew)",
+  "description": "A deeply savory and tangy Persian stew made with diced meat, yellow split peas, dried limes, and topped with crispy homemade french fries.",
+  "image_url": null,
+  "prep_time_minutes": 20,
+  "cook_time_minutes": 120,
+  "servings": 4,
+  "difficulty": "medium",
+  "category": "stew",
+  "category_slug": "stew",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 550,
+  "ingredients": [
+    {"item": "Stewing beef or lamb", "amount": "1", "unit": "lb", "note": "Cut into 1-inch cubes"},
+    {"item": "Yellow split peas", "amount": "1", "unit": "cup", "note": "Rinsed and soaked for 2 hours"},
+    {"item": "Onion", "amount": "1", "unit": "large", "note": "Finely diced"},
+    {"item": "Tomato paste", "amount": "3", "unit": "tbsp", "note": ""},
+    {"item": "Dried limes (Limoo Amani)", "amount": "3", "unit": "pieces", "note": "Pierced with a fork"},
+    {"item": "Turmeric", "amount": "1", "unit": "tsp", "note": ""},
+    {"item": "Cinnamon", "amount": "1/2", "unit": "tsp", "note": ""},
+    {"item": "Rosewater", "amount": "1", "unit": "tbsp", "note": "Optional but traditional"},
+    {"item": "Saffron", "amount": "1/4", "unit": "tsp", "note": "Bloomed in 2 tbsp hot water"},
+    {"item": "Vegetable oil", "amount": "3", "unit": "tbsp", "note": ""},
+    {"item": "Salt", "amount": "1", "unit": "tsp", "note": "To taste"},
+    {"item": "Black pepper", "amount": "1/2", "unit": "tsp", "note": "To taste"},
+    {"item": "Potatoes", "amount": "2", "unit": "medium", "note": "Cut into matchsticks for fries"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "In a large pot, heat 2 tbsp of vegetable oil over medium heat. Sauté the diced onion until golden.", "time_minutes": 10},
+    {"step": 2, "text": "Add the cubed meat, turmeric, and black pepper. Sauté until the meat is browned on all sides.", "time_minutes": 10},
+    {"step": 3, "text": "Add the tomato paste to the pot and cook for 2 minutes to deepen its color and flavor.", "time_minutes": 2},
+    {"step": 4, "text": "Drain the soaked yellow split peas and add them to the pot along with 4 cups of water. Bring to a boil, then reduce heat to low, cover, and simmer for 1 hour.", "time_minutes": 60},
+    {"step": 5, "text": "Pierce the dried limes with a fork or knife and add them to the stew along with salt and cinnamon. Simmer for another 45-60 minutes until meat and peas are fully tender.", "time_minutes": 60},
+    {"step": 6, "text": "While the stew is simmering, heat the remaining 1 tbsp of oil in a frying pan and fry the potato matchsticks until crispy. Set aside on a paper towel and salt lightly.", "time_minutes": 15},
+    {"step": 7, "text": "In the last 10 minutes of cooking the stew, stir in the bloomed saffron and rosewater. Adjust salt and pepper.", "time_minutes": 10},
+    {"step": 8, "text": "Transfer the stew to a serving bowl and top with the crispy potato fries right before serving.", "time_minutes": 2}
+  ],
+  "tags": ["stew", "beef", "split peas", "dried limes", "comfort food"],
+  "tips": "Do not add salt at the beginning of cooking, as it can make the meat and split peas tough. Add it in the last hour. If the split peas cook too fast, you can cook them separately and add them at the end.",
+  "storage_notes": "Store in an airtight container in the fridge for up to 4 days. The flavors deepen the next day. Keep the fries separate so they don't get soggy.",
+  "serve_with": "Steamed basmati rice (Chelo), Sabzi Khordan, and Mast-o-Khiar.",
+  "substitutions": [
+    {"original": "Stewing beef", "substitute": "Mushrooms or eggplant", "note": "For a vegan version, use hearty mushrooms or fried eggplant chunks."},
+    {"original": "Dried limes", "substitute": "Fresh lemon juice", "note": "Use 2 tbsp fresh lemon juice if dried limes are unavailable, though it won't have the signature earthy flavor."}
+  ],
+  "source_urls": [
+    "https://persianmama.com/khoresht-gheymeh-beef-and-split-pea-stew/",
+    "https://www.thedeliciouscrescent.com/khoresht-gheymeh-persian-split-pea-stew/"
+  ],
+  "verification_status": "reviewed"
+}

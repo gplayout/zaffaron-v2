@@ -1,0 +1,52 @@
+{
+  "slug": "kuku-sabzi",
+  "title": "Kuku Sabzi (Persian Herb Frittata)",
+  "description": "A vibrant, emerald-green egg dish that is packed with fresh herbs, accented with the crunch of walnuts and the tang of barberries.",
+  "image_url": null,
+  "prep_time_minutes": 20,
+  "cook_time_minutes": 30,
+  "servings": 4,
+  "difficulty": "easy",
+  "category": "appetizer",
+  "category_slug": "appetizer",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 250,
+  "ingredients": [
+    {"item": "Eggs", "amount": "5", "unit": "large", "note": "Room temperature"},
+    {"item": "Fresh parsley", "amount": "1", "unit": "cup", "note": "Finely chopped"},
+    {"item": "Fresh cilantro", "amount": "1", "unit": "cup", "note": "Finely chopped"},
+    {"item": "Fresh dill", "amount": "1/2", "unit": "cup", "note": "Finely chopped"},
+    {"item": "Fresh chives or scallions", "amount": "1/2", "unit": "cup", "note": "Finely chopped"},
+    {"item": "Walnuts", "amount": "1/4", "unit": "cup", "note": "Roughly chopped"},
+    {"item": "Dried barberries (Zereshk)", "amount": "2", "unit": "tbsp", "note": "Washed and drained"},
+    {"item": "Baking powder", "amount": "1/2", "unit": "tsp", "note": "Optional, for fluffiness"},
+    {"item": "Turmeric", "amount": "1/2", "unit": "tsp", "note": ""},
+    {"item": "Salt", "amount": "1", "unit": "tsp", "note": ""},
+    {"item": "Black pepper", "amount": "1/2", "unit": "tsp", "note": ""},
+    {"item": "Vegetable oil or olive oil", "amount": "3", "unit": "tbsp", "note": "For pan-frying"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "Wash all the fresh herbs (parsley, cilantro, dill, chives) thoroughly and dry them completely using a salad spinner or paper towels. Finely chop them.", "time_minutes": 15},
+    {"step": 2, "text": "In a large mixing bowl, crack the eggs and whisk them lightly.", "time_minutes": 2},
+    {"step": 3, "text": "Add the finely chopped herbs, walnuts, washed barberries, baking powder, turmeric, salt, and black pepper to the eggs. Fold everything together until well combined. The mixture should be very thick with herbs; it’s an herb dish bound by eggs, not an egg dish with some herbs.", "time_minutes": 5},
+    {"step": 4, "text": "Heat the oil in a 9 or 10-inch non-stick skillet over medium heat until hot but not smoking.", "time_minutes": 3},
+    {"step": 5, "text": "Pour the herb and egg mixture into the skillet. Use a spatula to spread it out evenly. Cover the skillet with a lid, reduce the heat to medium-low, and let it cook for 15-20 minutes until the edges are browned and the center is mostly set.", "time_minutes": 20},
+    {"step": 6, "text": "Once the bottom is golden brown and the top is set, slice the Kuku into 4 or 8 wedges directly in the pan using a wooden or silicone spatula.", "time_minutes": 2},
+    {"step": 7, "text": "Carefully flip each wedge over to cook the other side for another 5-10 minutes, uncovered.", "time_minutes": 10},
+    {"step": 8, "text": "Remove from heat and serve warm or at room temperature.", "time_minutes": 2}
+  ],
+  "tags": ["eggs", "herbs", "vegetarian", "frittata", "nowruz", "side dish"],
+  "tips": "Drying the herbs completely is crucial. If they are wet, the Kuku will become soggy and fall apart. The ratio of herbs to eggs should heavily favor the herbs.",
+  "storage_notes": "Kuku Sabzi is excellent cold or at room temperature. Store in an airtight container in the fridge for up to 4 days. It makes a great sandwich filling.",
+  "serve_with": "Warm flatbread (Lavash or Sangak), feta cheese, radishes, and tomatoes.",
+  "substitutions": [
+    {"original": "Barberries", "substitute": "Dried cranberries", "note": "If you don't have barberries, unsweetened dried cranberries provide a similar tartness."},
+    {"original": "Frying method", "substitute": "Baking method", "note": "You can bake the Kuku in a greased baking dish at 350°F (175°C) for 30-40 minutes instead of pan-frying."}
+  ],
+  "source_urls": [
+    "https://persianmama.com/kuku-sabzi-persian-herb-frittata/",
+    "https://thecaspianchef.com/2019/03/18/kuku-sabzi-persian-herb-frittata/"
+  ],
+  "verification_status": "reviewed"
+}

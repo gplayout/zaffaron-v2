@@ -1,0 +1,48 @@
+{
+  "slug": "joojeh-kabab",
+  "title": "Joojeh Kabab (Saffron Chicken Kebab)",
+  "description": "Juicy, tender chunks of chicken marinated in a vibrant blend of saffron, lemon, yogurt, and onions, grilled over an open flame.",
+  "image_url": null,
+  "prep_time_minutes": 20,
+  "cook_time_minutes": 15,
+  "servings": 4,
+  "difficulty": "easy",
+  "category": "kebab",
+  "category_slug": "kebab",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 450,
+  "ingredients": [
+    {"item": "Chicken breast or boneless thighs", "amount": "2", "unit": "lbs", "note": "Cut into 1.5-inch chunks"},
+    {"item": "Onion", "amount": "1", "unit": "large", "note": "Grated or finely chopped"},
+    {"item": "Lemon juice", "amount": "1/4", "unit": "cup", "note": "Freshly squeezed"},
+    {"item": "Plain yogurt", "amount": "3", "unit": "tbsp", "note": "Whole milk or Greek"},
+    {"item": "Olive oil", "amount": "3", "unit": "tbsp", "note": ""},
+    {"item": "Saffron", "amount": "1/2", "unit": "tsp", "note": "Ground, bloomed in 2 tbsp hot water"},
+    {"item": "Salt", "amount": "1.5", "unit": "tsp", "note": "To taste"},
+    {"item": "Black pepper", "amount": "1/2", "unit": "tsp", "note": "To taste"},
+    {"item": "Butter", "amount": "3", "unit": "tbsp", "note": "Melted, for basting"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "In a large bowl, combine the grated onion, lemon juice, yogurt, olive oil, bloomed saffron, salt, and black pepper. Mix well to create the marinade.", "time_minutes": 5},
+    {"step": 2, "text": "Add the chicken chunks to the marinade. Toss thoroughly to ensure every piece is coated in the vibrant yellow mixture. Cover the bowl with plastic wrap.", "time_minutes": 5},
+    {"step": 3, "text": "Marinate the chicken in the refrigerator for at least 4 hours, ideally overnight, to allow the flavors to penetrate and the yogurt/lemon to tenderize the meat.", "time_minutes": 240},
+    {"step": 4, "text": "If using wooden skewers, soak them in water for 30 minutes. Thread the marinated chicken pieces onto the skewers, packing them slightly snug but not squished.", "time_minutes": 15},
+    {"step": 5, "text": "Preheat a grill to medium-high heat. If you don't have a grill, use a grill pan or the oven broiler.", "time_minutes": 10},
+    {"step": 6, "text": "Grill the chicken skewers for 10-15 minutes, turning every few minutes to ensure even cooking and light char marks.", "time_minutes": 15},
+    {"step": 7, "text": "During the last 2 minutes of grilling, brush the chicken pieces with melted butter mixed with a tiny drop of leftover bloomed saffron for extra richness and shine.", "time_minutes": 2},
+    {"step": 8, "text": "Remove from the grill and serve immediately.", "time_minutes": 2}
+  ],
+  "tags": ["chicken", "kebab", "saffron", "grilling", "BBQ"],
+  "tips": "Grating the onion rather than slicing it releases more juice, which acts as a powerful tenderizer. Don't skip the saffron; it is the soul of this dish.",
+  "storage_notes": "Store leftover cooked chicken in an airtight container in the fridge for up to 3 days. Reheat gently in a pan or microwave. The marinade can be frozen with the raw chicken for up to 2 months.",
+  "serve_with": "Saffron rice, grilled tomatoes, fresh flatbread (Lavash or Sangak), and raw onions.",
+  "substitutions": [
+    {"original": "Yogurt", "substitute": "Mayonnaise", "note": "Some modern Persian cooks use a spoon of mayo instead of yogurt for an extra tenderizing fat coating."}
+  ],
+  "source_urls": [
+    "https://www.epicurious.com/recipes/food/views/persian-saffron-chicken-kebabs-joojeh-kabab",
+    "https://persianmama.com/joojeh-kabab-persian-chicken-kebab/"
+  ],
+  "verification_status": "reviewed"
+}

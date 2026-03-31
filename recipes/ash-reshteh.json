@@ -1,0 +1,56 @@
+{
+  "slug": "ash-reshteh",
+  "title": "Ash Reshteh (Persian Noodle Soup)",
+  "description": "A thick, hearty, and aromatic soup loaded with fresh herbs, legumes, and Persian noodles, topped with caramelized onions, mint oil, and liquid whey (kashk).",
+  "image_url": null,
+  "prep_time_minutes": 30,
+  "cook_time_minutes": 90,
+  "servings": 6,
+  "difficulty": "medium",
+  "category": "soup",
+  "category_slug": "soup",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 350,
+  "ingredients": [
+    {"item": "Chickpeas", "amount": "1/2", "unit": "cup", "note": "Dried, soaked overnight"},
+    {"item": "Navy beans or Kidney beans", "amount": "1/2", "unit": "cup", "note": "Dried, soaked overnight"},
+    {"item": "Lentils", "amount": "1/2", "unit": "cup", "note": "Brown or green, rinsed"},
+    {"item": "Onions", "amount": "3", "unit": "large", "note": "Thinly sliced"},
+    {"item": "Garlic", "amount": "6", "unit": "cloves", "note": "Minced"},
+    {"item": "Fresh parsley", "amount": "1", "unit": "cup", "note": "Chopped"},
+    {"item": "Fresh cilantro", "amount": "1", "unit": "cup", "note": "Chopped"},
+    {"item": "Fresh spinach", "amount": "2", "unit": "cups", "note": "Chopped"},
+    {"item": "Fresh dill", "amount": "1/2", "unit": "cup", "note": "Chopped"},
+    {"item": "Dried mint", "amount": "2", "unit": "tbsp", "note": "For garnish"},
+    {"item": "Turmeric", "amount": "1", "unit": "tsp", "note": ""},
+    {"item": "Vegetable oil", "amount": "4", "unit": "tbsp", "note": ""},
+    {"item": "Reshteh", "amount": "8", "unit": "oz", "note": "Persian noodles, broken in half"},
+    {"item": "Kashk", "amount": "1/2", "unit": "cup", "note": "Liquid whey (or substitute sour cream/yogurt)"},
+    {"item": "Salt", "amount": "1", "unit": "tsp", "note": "To taste"},
+    {"item": "Black pepper", "amount": "1/2", "unit": "tsp", "note": "To taste"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "Drain the soaked chickpeas and beans. In a large pot, add the chickpeas, beans, and 6 cups of water. Bring to a boil, reduce heat, and simmer for 45-60 minutes until mostly tender.", "time_minutes": 60},
+    {"step": 2, "text": "Add the lentils to the pot and simmer for another 20 minutes until all legumes are soft.", "time_minutes": 20},
+    {"step": 3, "text": "While the legumes cook, heat 3 tbsp of oil in a skillet. Sauté the sliced onions slowly over medium-low heat until deeply caramelized and golden brown (about 20-30 minutes). Remove half of the onions for garnish.", "time_minutes": 30},
+    {"step": 4, "text": "To the remaining onions in the skillet, add the minced garlic, turmeric, and black pepper. Sauté for 2 minutes until fragrant. Add this mixture to the large pot with the legumes.", "time_minutes": 5},
+    {"step": 5, "text": "Stir the chopped parsley, cilantro, spinach, and dill into the soup pot. Add more boiling water if the soup is too thick. Simmer for 15-20 minutes until the herbs are wilted and dark green.", "time_minutes": 20},
+    {"step": 6, "text": "Add the broken Reshteh (noodles) to the pot. Stir gently to prevent sticking. Cook for 10-15 minutes until the noodles are soft. The starches in the noodles will thicken the soup significantly. Taste and adjust salt (Reshteh is often salty, so wait until this step to add salt).", "time_minutes": 15},
+    {"step": 7, "text": "In a small pan, heat 1 tbsp of oil. Add the dried mint, stir quickly for 10 seconds (don't burn it!), and remove from heat to make the mint oil garnish.", "time_minutes": 2},
+    {"step": 8, "text": "Ladle the hot soup into bowls. Drizzle with Kashk, the caramelized onions (Piaz Daagh), garlic, and the mint oil (Na'na Daagh).", "time_minutes": 5}
+  ],
+  "tags": ["soup", "vegetarian", "noodles", "herbs", "legumes", "comfort food"],
+  "tips": "Reshteh noodles expand and release a lot of starch, so the soup will thicken as it cools. You may need to add water when reheating. Be careful with salt, as both Reshteh and Kashk can be quite salty.",
+  "storage_notes": "Stores well in the fridge for up to 4 days. It thickens considerably, so add a little water or broth when reheating.",
+  "serve_with": "Warm flatbread (Barbari or Sangak).",
+  "substitutions": [
+    {"original": "Reshteh", "substitute": "Linguine or flat noodles", "note": "Linguine works as a substitute, but add a little flour to the soup to mimic the thickening effect of Reshteh starch."},
+    {"original": "Kashk", "substitute": "Sour cream mixed with yogurt", "note": "Mix 1 part sour cream with 1 part plain yogurt and a dash of lemon juice to mimic the tanginess of kashk."}
+  ],
+  "source_urls": [
+    "https://persianmama.com/persian-herb-noodle-soup-ash-reshteh/",
+    "https://www.thedeliciouscrescent.com/ash-reshteh-persian-noodle-soup/"
+  ],
+  "verification_status": "reviewed"
+}

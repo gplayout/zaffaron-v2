@@ -1,0 +1,46 @@
+{
+  "slug": "torshi-liteh",
+  "title": "Torshi Liteh (Persian Mixed Pickle)",
+  "description": "A tangy, deeply flavored Persian condiment made from finely minced eggplants, carrots, and herbs, fermented in vinegar and fragrant spices.",
+  "image_url": null,
+  "prep_time_minutes": 30,
+  "cook_time_minutes": 15,
+  "servings": 20,
+  "difficulty": "medium",
+  "category": "pickle",
+  "category_slug": "pickle",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 15,
+  "ingredients": [
+    {"item": "eggplants", "amount": "2", "unit": "large", "note": "peeled"},
+    {"item": "carrots", "amount": "3", "unit": "medium", "note": "peeled"},
+    {"item": "celery", "amount": "2", "unit": "stalks"},
+    {"item": "garlic", "amount": "6", "unit": "cloves"},
+    {"item": "fresh mint", "amount": "1/2", "unit": "cup", "note": "chopped"},
+    {"item": "fresh parsley", "amount": "1/2", "unit": "cup", "note": "chopped"},
+    {"item": "apple cider vinegar", "amount": "3", "unit": "cups", "note": "or white vinegar"},
+    {"item": "salt", "amount": "2", "unit": "tbsp"},
+    {"item": "turmeric", "amount": "1", "unit": "tsp"},
+    {"item": "black pepper", "amount": "1", "unit": "tsp"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "Dice the peeled eggplants. Place them in a pot with 1 cup of the apple cider vinegar and a pinch of salt. Simmer over low heat until soft and cooked through. Drain any excess liquid and let cool.", "time_minutes": 15},
+    {"step": 2, "text": "In a food processor, finely mince the cooked eggplants, carrots, celery, and garlic cloves. The texture should be very fine but not a complete puree.", "time_minutes": 10},
+    {"step": 3, "text": "Transfer the vegetable mixture to a large bowl. Stir in the finely chopped fresh mint and fresh parsley.", "time_minutes": 5},
+    {"step": 4, "text": "Add the turmeric, black pepper, and salt. Mix thoroughly.", "time_minutes": 2},
+    {"step": 5, "text": "Gradually stir in the remaining apple cider vinegar until the mixture reaches a thick, spoonable consistency.", "time_minutes": 3},
+    {"step": 6, "text": "Transfer the mixture to sterilized glass jars. Press down lightly to remove air bubbles. Seal tightly.", "time_minutes": 5},
+    {"step": 7, "text": "Store in a cool, dark place for at least 1 week to allow the flavors to mature before consuming. Move to the fridge after opening.", "time_minutes": 10080}
+  ],
+  "tags": ["pickle", "eggplant", "condiment", "vegan", "tangy", "fermented"],
+  "tips": "The finer the mince, the better the Torshi Liteh. Always use a clean, dry spoon when taking some out to prevent mold growth.",
+  "storage_notes": "Unopened jars can last in a dark, cool place for months. Once opened, refrigerate and consume within 2 months.",
+  "serve_with": "Rich meat dishes like Lubia Polo, Kebabs, or hearty stews.",
+  "substitutions": [
+    {"original": "apple cider vinegar", "substitute": "white wine vinegar", "note": "Any sharp vinegar works. Grape vinegar is traditional in Iran."},
+    {"original": "fresh mint and parsley", "substitute": "dried herbs", "note": "You can use dried versions, but reduce the quantity by half."}
+  ],
+  "source_urls": ["https://persianmama.com/torshi-liteh-pickled-eggplant/", "https://persianfoodtours.com/torshi-liteh-recipe/"],
+  "verification_status": "reviewed"
+}

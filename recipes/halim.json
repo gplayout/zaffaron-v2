@@ -1,0 +1,48 @@
+{
+  "slug": "halim",
+  "title": "Halim (Wheat & Meat Porridge)",
+  "description": "A comforting, slow-cooked Persian porridge made of wheat and meat (turkey, lamb, or beef), heavily pounded into a smooth, thick consistency, often enjoyed for breakfast.",
+  "image_url": null,
+  "prep_time_minutes": 20,
+  "cook_time_minutes": 480,
+  "servings": 6,
+  "difficulty": "hard",
+  "category": "breakfast",
+  "category_slug": "breakfast",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 450,
+  "ingredients": [
+    {"item": "Peeled whole wheat kernels", "amount": "2", "unit": "cups", "note": "Soaked overnight (often called 'gandom poost kandeh')"},
+    {"item": "Lamb shoulder, beef shank, or turkey breast", "amount": "1", "unit": "lb", "note": "Bone-in is preferred for flavor"},
+    {"item": "Onion", "amount": "1", "unit": "medium", "note": "Peeled, left whole"},
+    {"item": "Salt", "amount": "1.5", "unit": "tsp", "note": "To taste"},
+    {"item": "Cinnamon", "amount": "1", "unit": "tbsp", "note": "Ground, for garnish"},
+    {"item": "Butter", "amount": "4", "unit": "tbsp", "note": "Melted, for topping"},
+    {"item": "Sugar", "amount": "3", "unit": "tbsp", "note": "For serving (optional but traditional)"},
+    {"item": "Water", "amount": "10", "unit": "cups", "note": ""}
+  ],
+  "instructions": [
+    {"step": 1, "text": "Drain the overnight-soaked wheat. In a large, heavy-bottomed pot, bring 8 cups of water to a boil. Add the soaked wheat. Reduce heat to low, cover, and let it simmer gently for 3-4 hours, stirring occasionally until the wheat kernels burst and become very soft.", "time_minutes": 240},
+    {"step": 2, "text": "In a separate pot, place the meat, the whole onion, and 2 cups of water. Bring to a boil, skim off any foam, reduce heat, cover, and simmer for 2-3 hours until the meat is extremely tender and falling off the bone.", "time_minutes": 180},
+    {"step": 3, "text": "Remove the meat from its broth. Discard the onion and bones. Shred the meat very finely using two forks. Save the meat broth.", "time_minutes": 15},
+    {"step": 4, "text": "Once the wheat is completely soft and mushy, use an immersion blender to puree it partially. You want a smooth, thick paste, but some texture can remain. If it's too thick, add some of the saved meat broth.", "time_minutes": 10},
+    {"step": 5, "text": "Add the finely shredded meat and salt to the blended wheat. Now comes the most important part: stirring and mashing. Using a heavy wooden spoon or a meat masher (goosht-koob), vigorously stir and pound the mixture against the sides of the pot over low heat for 30-45 minutes. This creates the signature elastic, sticky texture of Halim.", "time_minutes": 45},
+    {"step": 6, "text": "Cook until the mixture is thick, cohesive, and stretchy. It should not be watery.", "time_minutes": 10},
+    {"step": 7, "text": "Ladle the hot Halim into wide, shallow bowls.", "time_minutes": 2},
+    {"step": 8, "text": "To serve, create a well in the center, pour in melted butter, and generously sprinkle ground cinnamon and sugar over the top according to personal taste.", "time_minutes": 5}
+  ],
+  "tags": ["breakfast", "porridge", "wheat", "lamb", "turkey", "comfort food", "ramadan"],
+  "tips": "The secret to authentic Halim is the vigorous physical pounding (kash-dar kardane halim) which activates the gluten and shreds the meat to the point where it becomes one with the wheat. Slow cookers are great for cooking the wheat overnight.",
+  "storage_notes": "Store in the fridge for up to 3 days. It will thicken significantly as it cools. Reheat gently on the stove with a splash of water or milk, stirring constantly.",
+  "serve_with": "Freshly baked Barbari or Sangak bread, hot black tea.",
+  "substitutions": [
+    {"original": "Whole wheat kernels", "substitute": "Bulgur wheat", "note": "Bulgur cooks much faster but will not yield the exact same elastic texture as whole peeled wheat."},
+    {"original": "Meat", "substitute": "Chicken breast", "note": "Chicken is leaner and faster to cook, but turkey, beef, or lamb provide a deeper traditional flavor."}
+  ],
+  "source_urls": [
+    "https://persianmama.com/halim-persian-wheat-and-meat-porridge/",
+    "https://www.thedeliciouscrescent.com/haleem-recipe/"
+  ],
+  "verification_status": "reviewed"
+}

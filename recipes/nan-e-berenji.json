@@ -1,0 +1,44 @@
+{
+  "slug": "nan-e-berenji",
+  "title": "Nan-e Berenji (Rice Cookies)",
+  "description": "Delicate, melt-in-your-mouth Persian rice flour cookies infused with rose water and cardamom, traditionally adorned with a stamp pattern and poppy seeds.",
+  "image_url": null,
+  "prep_time_minutes": 20,
+  "cook_time_minutes": 15,
+  "servings": 24,
+  "difficulty": "medium",
+  "category": "sweet",
+  "category_slug": "sweet",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 80,
+  "ingredients": [
+    {"item": "fine rice flour", "amount": "2.5", "unit": "cups", "note": "sifted twice"},
+    {"item": "powdered sugar", "amount": "3/4", "unit": "cup", "note": "sifted"},
+    {"item": "clarified butter (ghee)", "amount": "1", "unit": "cup", "note": "softened, or solid vegetable shortening"},
+    {"item": "egg yolk", "amount": "1", "unit": "large"},
+    {"item": "rose water", "amount": "3", "unit": "tbsp"},
+    {"item": "cardamom powder", "amount": "1", "unit": "tsp"},
+    {"item": "poppy seeds", "amount": "1", "unit": "tbsp", "note": "for garnish"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "In a large bowl, beat the softened clarified butter (ghee) and powdered sugar until light and fluffy.", "time_minutes": 5},
+    {"step": 2, "text": "Add the egg yolk and mix until fully combined.", "time_minutes": 2},
+    {"step": 3, "text": "Stir in the rose water and cardamom powder.", "time_minutes": 1},
+    {"step": 4, "text": "Gradually add the fine rice flour, kneading gently until a soft, smooth dough forms. Do not overmix. Wrap the dough in plastic wrap and let it rest at room temperature for 1 to 2 hours.", "time_minutes": 10},
+    {"step": 5, "text": "Preheat your oven to 325°F (160°C). Line a baking sheet with parchment paper.", "time_minutes": 10},
+    {"step": 6, "text": "Roll the dough into small, walnut-sized balls. Place them on the baking sheet about 1 inch apart. Flatten slightly, and press a cookie stamp or a thimble onto the top of each cookie to create a traditional pattern.", "time_minutes": 10},
+    {"step": 7, "text": "Sprinkle a tiny pinch of poppy seeds in the center of each cookie.", "time_minutes": 2},
+    {"step": 8, "text": "Bake for 12-15 minutes. The cookies should remain pale and not turn brown. Let them cool completely on the baking sheet before moving, as they are very fragile when warm.", "time_minutes": 15}
+  ],
+  "tags": ["cookies", "gluten-free", "nowruz", "sweets", "baking", "rice flour", "rose water"],
+  "tips": "It is critical to use extremely fine rice flour (asian market style). If your dough is too crumbly after resting, add a few drops of water or extra rose water.",
+  "storage_notes": "Store in an airtight container at room temperature for up to 3 weeks.",
+  "serve_with": "Hot black Persian tea.",
+  "substitutions": [
+    {"original": "poppy seeds", "substitute": "pistachio slivers", "note": "Can be pressed into the center for a different look and crunch."},
+    {"original": "clarified butter", "substitute": "solid shortening", "note": "Shortening keeps the cookies pure white, though ghee adds better flavor."}
+  ],
+  "source_urls": ["https://persianmama.com/nan-berenji-persian-rice-cookies/", "https://thecaspianchef.com/2019/12/11/nan-e-berenji-persian-rice-cookies/"],
+  "verification_status": "reviewed"
+}

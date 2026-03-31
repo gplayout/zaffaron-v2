@@ -1,0 +1,40 @@
+{
+  "slug": "doogh",
+  "title": "Doogh (Persian Yogurt Drink)",
+  "description": "A refreshing, savory, and slightly effervescent Persian yogurt drink flavored with mint. The perfect thirst-quencher for hot days and rich meals.",
+  "image_url": null,
+  "prep_time_minutes": 5,
+  "cook_time_minutes": 0,
+  "servings": 4,
+  "difficulty": "easy",
+  "category": "drink",
+  "category_slug": "drink",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 75,
+  "ingredients": [
+    {"item": "plain yogurt", "amount": "2", "unit": "cups", "note": "whole milk, sour preferred"},
+    {"item": "club soda or water", "amount": "2-3", "unit": "cups", "note": "chilled"},
+    {"item": "dried mint", "amount": "1", "unit": "tbsp"},
+    {"item": "salt", "amount": "1", "unit": "tsp", "note": "to taste"},
+    {"item": "ice cubes", "amount": "1", "unit": "cup"},
+    {"item": "dried rose petals", "amount": "1", "unit": "pinch", "note": "for garnish"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "In a large pitcher, vigorously whisk the plain yogurt until it is completely smooth and creamy, with no lumps remaining.", "time_minutes": 2},
+    {"step": 2, "text": "Whisk in the dried mint and salt until well combined.", "time_minutes": 1},
+    {"step": 3, "text": "Gradually pour in the cold club soda or water while stirring gently. Use club soda for a fizzy, traditional texture, or plain water for a flat version.", "time_minutes": 1},
+    {"step": 4, "text": "Taste and adjust salt or mint as needed. Add the ice cubes to the pitcher.", "time_minutes": 1},
+    {"step": 5, "text": "Serve immediately in tall glasses, garnished with a tiny sprinkle of crushed dried rose petals on top.", "time_minutes": 1}
+  ],
+  "tags": ["drink", "beverage", "yogurt", "mint", "savory", "refreshing", "summer"],
+  "tips": "For an authentic tartness, leave your plain yogurt out at room temperature for a few hours before making the drink to let it sour naturally.",
+  "storage_notes": "Best enjoyed immediately if using club soda. If using flat water, it can be kept in the fridge for up to 3 days. Stir before pouring.",
+  "serve_with": "Chelo Kebab, Joojeh Kebab, or any hearty Persian rice dish.",
+  "substitutions": [
+    {"original": "club soda", "substitute": "still water", "note": "Still water is also completely authentic, often called 'Doogh-e ba ghaaz' (with gas) vs 'bi ghaaz' (without gas)."},
+    {"original": "dried mint", "substitute": "pennyroyal (pouneh)", "note": "Pouneh is a very traditional and sharp wild mint used in Iran."}
+  ],
+  "source_urls": ["https://persianmama.com/doogh-persian-yogurt-drink/", "https://thecaspianchef.com/2019/08/21/doogh-persian-yogurt-drink/"],
+  "verification_status": "reviewed"
+}

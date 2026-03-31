@@ -1,0 +1,48 @@
+{
+  "slug": "adas-polo",
+  "title": "Adas Polo (Lentil Rice)",
+  "description": "A delightful mix of fluffy basmati rice, earthy lentils, golden raisins, dates, and fragrant spices, often served with caramelized onions and ground beef.",
+  "image_url": null,
+  "prep_time_minutes": 20,
+  "cook_time_minutes": 60,
+  "servings": 5,
+  "difficulty": "easy",
+  "category": "rice",
+  "category_slug": "rice",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 520,
+  "ingredients": [
+    {"item": "basmati rice", "amount": "2", "unit": "cups"},
+    {"item": "brown lentils", "amount": "1", "unit": "cup"},
+    {"item": "ground beef", "amount": "1/2", "unit": "lb", "note": "optional"},
+    {"item": "onion", "amount": "1", "unit": "large", "note": "thinly sliced"},
+    {"item": "raisins", "amount": "1/2", "unit": "cup", "note": "golden or regular"},
+    {"item": "pitted dates", "amount": "1/2", "unit": "cup", "note": "halved"},
+    {"item": "cinnamon", "amount": "1", "unit": "tsp"},
+    {"item": "saffron", "amount": "1/4", "unit": "tsp", "note": "ground and bloomed"},
+    {"item": "salt", "amount": "1", "unit": "tsp"},
+    {"item": "pepper", "amount": "1/2", "unit": "tsp"},
+    {"item": "oil", "amount": "3", "unit": "tbsp"},
+    {"item": "butter", "amount": "2", "unit": "tbsp"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "Wash the basmati rice and soak in water. In a separate pot, cook the brown lentils in water until tender but not mushy. Drain.", "time_minutes": 30},
+    {"step": 2, "text": "In a skillet, heat 1 tbsp of oil and sauté the thinly sliced onion until golden and caramelized. Remove half for garnish.", "time_minutes": 15},
+    {"step": 3, "text": "In the same skillet, cook the ground beef with salt, pepper, and cinnamon until browned. Stir in the raisins and pitted dates just to warm through. Set aside.", "time_minutes": 10},
+    {"step": 4, "text": "Bring a large pot of water to a boil, add the soaked rice, and parboil for 5-7 minutes. Drain.", "time_minutes": 10},
+    {"step": 5, "text": "Add remaining oil and butter to the bottom of the pot. Layer the parboiled rice and the cooked lentils alternately.", "time_minutes": 5},
+    {"step": 6, "text": "Pour the bloomed saffron over the top layer. Cover with a towel-wrapped lid and steam on low heat until the rice is fluffy.", "time_minutes": 45},
+    {"step": 7, "text": "Serve the rice on a platter, topped with the beef, raisin, date mixture, and reserved caramelized onions."}
+  ],
+  "tags": ["lentils", "rice", "dates", "raisins", "comfort food", "sweet and savory"],
+  "tips": "Be careful not to overcook the lentils during the boiling stage; they will continue to soften while steaming with the rice.",
+  "storage_notes": "Keeps well in the fridge for up to 4 days. The flavors actually improve the next day.",
+  "serve_with": "Mast-o-Khiar (yogurt cucumber dip) and Sabzi Khidan.",
+  "substitutions": [
+    {"original": "ground beef", "substitute": "soy crumbles or more lentils", "note": "Easily made vegan/vegetarian by omitting the meat."},
+    {"original": "pitted dates", "substitute": "dried apricots", "note": "Can provide a different but delicious sweet contrast."}
+  ],
+  "source_urls": ["https://persianmama.com/adas-polo-lentil-rice/", "https://thecaspianchef.com/2020/06/17/adas-polo-persian-lentil-rice/"],
+  "verification_status": "reviewed"
+}

@@ -1,0 +1,46 @@
+{
+  "slug": "kaleh-pacheh",
+  "title": "Kaleh Pacheh (Sheep's Head and Hooves Soup)",
+  "description": "A very traditional, hearty Persian breakfast soup made by slow-cooking sheep's head and hooves overnight, creating a nutrient-dense, rich broth.",
+  "image_url": null,
+  "prep_time_minutes": 45,
+  "cook_time_minutes": 480,
+  "servings": 6,
+  "difficulty": "hard",
+  "category": "breakfast",
+  "category_slug": "breakfast",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 850,
+  "ingredients": [
+    {"item": "sheep's head", "amount": "1", "unit": "whole", "note": "cleaned meticulously"},
+    {"item": "sheep's hooves", "amount": "4", "unit": "pieces", "note": "cleaned meticulously"},
+    {"item": "onion", "amount": "2", "unit": "large", "note": "quartered"},
+    {"item": "garlic", "amount": "1", "unit": "head", "note": "cloves peeled"},
+    {"item": "cinnamon", "amount": "1", "unit": "stick"},
+    {"item": "turmeric", "amount": "1", "unit": "tbsp"},
+    {"item": "salt", "amount": "1", "unit": "tbsp", "note": "adjust to taste"},
+    {"item": "black pepper", "amount": "1", "unit": "tsp"},
+    {"item": "water", "amount": "12", "unit": "cups"},
+    {"item": "lime juice", "amount": "1/4", "unit": "cup", "note": "fresh, for serving"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "Crucial Step: Clean the sheep's head and hooves extremely thoroughly. Rinse repeatedly under cold water, scrubbing carefully to remove any remaining hairs or impurities.", "time_minutes": 45},
+    {"step": 2, "text": "Place the cleaned sheep's head and hooves into a very large, heavy-bottomed stockpot. Add enough water to cover completely.", "time_minutes": 5},
+    {"step": 3, "text": "Bring the water to a rapid boil. Let it boil for 10 minutes, then discard all the water and rinse the meat and pot. This removes impurities and strong odors.", "time_minutes": 15},
+    {"step": 4, "text": "Return the meat to the clean pot. Add the quartered onion, peeled garlic, cinnamon stick, turmeric, and black pepper. Pour in the 12 cups of fresh water.", "time_minutes": 5},
+    {"step": 5, "text": "Bring to a gentle boil, then reduce the heat to the absolute lowest setting. Cover tightly and let it simmer overnight (at least 8 to 10 hours) until the meat easily falls off the bones and the broth is rich.", "time_minutes": 480},
+    {"step": 6, "text": "About an hour before finishing, add the salt to taste.", "time_minutes": 5},
+    {"step": 7, "text": "Carefully separate the meat from the bones. Serve the rich broth in bowls, followed by the meat. Season heavily with fresh lime juice at the table to cut the richness."}
+  ],
+  "tags": ["breakfast", "traditional", "soup", "offal", "slow cooked", "winter"],
+  "tips": "This dish requires immense patience and meticulous cleaning. The overnight simmer is what extracts the gelatin from the hooves, creating the signature silky broth.",
+  "storage_notes": "Leftovers can be refrigerated for 3 days. The broth will solidify into a firm jelly when cold due to the collagen. Reheat gently.",
+  "serve_with": "Fresh Sangak or Lavash bread, raw onions, and extra lime juice.",
+  "substitutions": [
+    {"original": "sheep's head", "substitute": "beef shanks and marrow bones", "note": "If sheep's head is unavailable or unappealing, you can mimic the rich broth using beef marrow bones and shanks, though it won't be authentic Kaleh Pacheh."},
+    {"original": "cinnamon stick", "substitute": "bay leaves", "note": "Can be used to help neutralize strong odors during cooking."}
+  ],
+  "source_urls": ["https://www.tasteatlas.com/kale-pache", "https://persianfoodtours.com/kaleh-pacheh-recipe/"],
+  "verification_status": "reviewed"
+}

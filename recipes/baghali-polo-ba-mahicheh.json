@@ -1,0 +1,47 @@
+{
+  "slug": "baghali-polo-ba-mahicheh",
+  "title": "Baghali Polo ba Mahicheh (Fava Bean Rice with Lamb Shank)",
+  "description": "A magnificent Persian centerpiece featuring tender, fall-off-the-bone lamb shanks served alongside aromatic saffron rice studded with dill and fava beans.",
+  "image_url": null,
+  "prep_time_minutes": 30,
+  "cook_time_minutes": 180,
+  "servings": 4,
+  "difficulty": "medium",
+  "category": "rice",
+  "category_slug": "rice",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 750,
+  "ingredients": [
+    {"item": "lamb shanks", "amount": "4", "unit": "pieces"},
+    {"item": "basmati rice", "amount": "3", "unit": "cups"},
+    {"item": "fava beans", "amount": "2", "unit": "cups", "note": "peeled"},
+    {"item": "fresh dill", "amount": "2", "unit": "cups", "note": "chopped"},
+    {"item": "onion", "amount": "1", "unit": "large", "note": "diced"},
+    {"item": "garlic", "amount": "4", "unit": "cloves", "note": "minced"},
+    {"item": "turmeric", "amount": "1", "unit": "tsp"},
+    {"item": "saffron", "amount": "1/4", "unit": "tsp", "note": "ground and bloomed"},
+    {"item": "salt", "amount": "2", "unit": "tsp"},
+    {"item": "black pepper", "amount": "1", "unit": "tsp"},
+    {"item": "oil", "amount": "4", "unit": "tbsp"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "Wash and soak the basmati rice in salted water for 1 hour.", "time_minutes": 60},
+    {"step": 2, "text": "Heat 2 tbsp of oil in a pot. Brown the lamb shanks on all sides, then remove.", "time_minutes": 10},
+    {"step": 3, "text": "In the same pot, sauté the onion and garlic until soft. Add turmeric, black pepper, and half the salt.", "time_minutes": 5},
+    {"step": 4, "text": "Return lamb shanks to the pot, cover halfway with water, and simmer gently until tender.", "time_minutes": 150},
+    {"step": 5, "text": "In a separate pot, boil water, add the drained rice, and boil for 5 minutes. Add fava beans in the last minute, then drain.", "time_minutes": 10},
+    {"step": 6, "text": "Layer the parboiled rice and beans with fresh dill in a pot. Pour the bloomed saffron over the top.", "time_minutes": 5},
+    {"step": 7, "text": "Cover with a towel-wrapped lid and steam on low heat to create tahdig. Serve alongside the shanks.", "time_minutes": 45}
+  ],
+  "tags": ["lamb", "fava beans", "dill", "rice", "saffron", "main course", "nowruz"],
+  "tips": "Grind saffron with a tiny pinch of sugar and dissolve in hot water (bloom) for the best color and aroma.",
+  "storage_notes": "Store lamb and rice in separate airtight containers in the fridge for up to 3 days.",
+  "serve_with": "Salad Shirazi, Mast-o-Khiar, and Sabzi Khidan (fresh herbs).",
+  "substitutions": [
+    {"original": "fresh dill", "substitute": "dried dill", "note": "Use 1 cup dried dill if fresh is not available, but fresh yields better flavor."},
+    {"original": "lamb shanks", "substitute": "beef chunks", "note": "You can use beef stew meat, cooking until tender."}
+  ],
+  "source_urls": ["https://persianmama.com/baghali-polo-with-lamb-shanks/", "https://thecaspianchef.com/2019/04/23/baghali-polo/"],
+  "verification_status": "reviewed"
+}

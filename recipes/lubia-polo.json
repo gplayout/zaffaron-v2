@@ -1,0 +1,47 @@
+{
+  "slug": "lubia-polo",
+  "title": "Lubia Polo (Green Bean Rice)",
+  "description": "A deeply comforting one-pot Persian dish combining green beans, ground beef, and rice, all infused with a rich tomato base, cinnamon, and saffron.",
+  "image_url": null,
+  "prep_time_minutes": 25,
+  "cook_time_minutes": 75,
+  "servings": 4,
+  "difficulty": "medium",
+  "category": "rice",
+  "category_slug": "rice",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 610,
+  "ingredients": [
+    {"item": "basmati rice", "amount": "2.5", "unit": "cups"},
+    {"item": "green beans", "amount": "1", "unit": "lb", "note": "trimmed and cut into 1-inch pieces"},
+    {"item": "ground beef", "amount": "1", "unit": "lb"},
+    {"item": "onion", "amount": "1", "unit": "large", "note": "finely chopped"},
+    {"item": "tomato paste", "amount": "3", "unit": "tbsp"},
+    {"item": "turmeric", "amount": "1", "unit": "tsp"},
+    {"item": "cinnamon", "amount": "1", "unit": "tsp"},
+    {"item": "saffron", "amount": "1/4", "unit": "tsp", "note": "ground and bloomed"},
+    {"item": "oil", "amount": "4", "unit": "tbsp"},
+    {"item": "salt", "amount": "2", "unit": "tsp"},
+    {"item": "black pepper", "amount": "1", "unit": "tsp"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "Wash the basmati rice and soak it in salted water for 1 hour.", "time_minutes": 60},
+    {"step": 2, "text": "In a large skillet, heat 2 tbsp of oil and sauté the chopped onion until golden. Add the ground beef, turmeric, cinnamon, black pepper, and half the salt. Cook until meat is browned.", "time_minutes": 15},
+    {"step": 3, "text": "Stir the tomato paste into the meat mixture and cook for 2 minutes to deepen its flavor. Add the chopped green beans and 1/2 cup of water. Cover and simmer for 15 minutes until beans are tender. Set aside.", "time_minutes": 20},
+    {"step": 4, "text": "Boil a pot of water, drain the soaked rice, and parboil it for about 5-7 minutes. The grains should be firm in the center. Drain the rice.", "time_minutes": 10},
+    {"step": 5, "text": "In the large rice pot, add the remaining 2 tbsp of oil. Layer the parboiled rice and the green bean-beef mixture alternately, forming a pyramid.", "time_minutes": 5},
+    {"step": 6, "text": "Pour the bloomed saffron over the top of the rice.", "time_minutes": 1},
+    {"step": 7, "text": "Cover the pot with a towel-wrapped lid. Cook on medium-high for 5 minutes until steam builds, then lower heat to low and steam for 45 minutes.", "time_minutes": 50}
+  ],
+  "tags": ["green beans", "rice", "beef", "comfort food", "tomato base", "one pot"],
+  "tips": "Frying the tomato paste slightly before adding the water removes its raw metallic taste and gives the dish a vibrant red color.",
+  "storage_notes": "Keeps wonderfully in the fridge for up to 4 days. Reheats perfectly in the microwave or on the stovetop.",
+  "serve_with": "Salad Shirazi, Mast-o-Khiar, or Torshi Liteh.",
+  "substitutions": [
+    {"original": "ground beef", "substitute": "diced lamb or beef stew meat", "note": "Use small cubes of meat instead of ground meat, cooking longer in step 3 until tender."},
+    {"original": "green beans", "substitute": "frozen green beans", "note": "Thaw and drain well before using to prevent a soggy mixture."}
+  ],
+  "source_urls": ["https://persianmama.com/lubia-polo-green-bean-rice/", "https://cooking.nytimes.com/recipes/1020209-loobia-polo-persian-green-bean-and-beef-rice"],
+  "verification_status": "reviewed"
+}

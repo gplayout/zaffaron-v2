@@ -1,0 +1,41 @@
+{
+  "slug": "mast-o-khiar",
+  "title": "Mast-o-Khiar (Yogurt & Cucumber Dip)",
+  "description": "A cool and creamy Persian dip combining thick yogurt with grated cucumbers, crunchy walnuts, sweet raisins, and fragrant dried mint.",
+  "image_url": null,
+  "prep_time_minutes": 10,
+  "cook_time_minutes": 0,
+  "servings": 4,
+  "difficulty": "easy",
+  "category": "appetizer",
+  "category_slug": "appetizer",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 150,
+  "ingredients": [
+    {"item": "plain yogurt", "amount": "2", "unit": "cups", "note": "whole milk or Greek"},
+    {"item": "Persian cucumbers", "amount": "3", "unit": "medium", "note": "grated or finely diced"},
+    {"item": "garlic", "amount": "1", "unit": "clove", "note": "minced or grated"},
+    {"item": "dried mint", "amount": "1", "unit": "tbsp"},
+    {"item": "walnuts", "amount": "1/4", "unit": "cup", "note": "chopped"},
+    {"item": "raisins", "amount": "2", "unit": "tbsp", "note": "optional but highly recommended"},
+    {"item": "salt", "amount": "1/2", "unit": "tsp"},
+    {"item": "dried rose petals", "amount": "1", "unit": "tsp", "note": "crushed, for garnish"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "Wash the Persian cucumbers. Grate them or chop them very finely. If grating, gently squeeze out excess water.", "time_minutes": 5},
+    {"step": 2, "text": "In a serving bowl, combine the plain yogurt, prepared cucumbers, minced garlic, dried mint, chopped walnuts, and raisins.", "time_minutes": 3},
+    {"step": 3, "text": "Season with salt to taste and stir well until all ingredients are evenly distributed.", "time_minutes": 1},
+    {"step": 4, "text": "Garnish the top with a sprinkle of crushed dried rose petals, extra walnuts, and mint. Chill in the refrigerator for at least 30 minutes before serving.", "time_minutes": 1}
+  ],
+  "tags": ["yogurt", "cucumber", "dip", "appetizer", "vegetarian", "refreshing", "cooling"],
+  "tips": "For a thicker dip, use strained yogurt (Mast-e Kiseh) or Greek yogurt. Let the flavors marry in the fridge for an hour before eating.",
+  "storage_notes": "Store in the refrigerator for up to 3 days. It may become a bit watery; simply stir it before serving.",
+  "serve_with": "Flatbread (Lavash or Sangak), crackers, or as a cooling side to spicy or rich dishes like Adas Polo.",
+  "substitutions": [
+    {"original": "Persian cucumbers", "original_note": "crisp and seedless", "substitute": "English cucumber", "note": "Cut in half and scoop out the watery seeds before grating."},
+    {"original": "dried mint", "substitute": "fresh mint", "note": "Use 2 tablespoons of finely chopped fresh mint instead."}
+  ],
+  "source_urls": ["https://persianmama.com/mast-o-khiar-persian-yogurt-and-cucumber-dip/", "https://thecaspianchef.com/2019/01/22/mast-o-khiar/"],
+  "verification_status": "reviewed"
+}

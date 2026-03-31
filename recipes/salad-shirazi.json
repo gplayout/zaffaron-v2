@@ -1,0 +1,42 @@
+{
+  "slug": "salad-shirazi",
+  "title": "Salad Shirazi (Persian Chopped Salad)",
+  "description": "A crisp, refreshing, and bright salad featuring finely diced cucumbers, tomatoes, and red onions, dressed simply with citrus and dried mint.",
+  "image_url": null,
+  "prep_time_minutes": 15,
+  "cook_time_minutes": 0,
+  "servings": 4,
+  "difficulty": "easy",
+  "category": "side",
+  "category_slug": "side",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 70,
+  "ingredients": [
+    {"item": "Persian cucumbers", "amount": "4", "unit": "medium", "note": "finely diced"},
+    {"item": "firm tomatoes", "amount": "3", "unit": "medium", "note": "finely diced"},
+    {"item": "red onion", "amount": "1", "unit": "small", "note": "finely diced"},
+    {"item": "dried mint", "amount": "1", "unit": "tbsp"},
+    {"item": "lime juice", "amount": "3", "unit": "tbsp", "note": "freshly squeezed, or verjuice/ab-ghooreh"},
+    {"item": "olive oil", "amount": "2", "unit": "tbsp", "note": "optional but recommended"},
+    {"item": "salt", "amount": "1", "unit": "tsp", "note": "to taste"},
+    {"item": "black pepper", "amount": "1/2", "unit": "tsp"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "Wash the Persian cucumbers, firm tomatoes, and red onion. Finely dice them into uniform pieces, about the size of a pea. Place them in a large serving bowl.", "time_minutes": 10},
+    {"step": 2, "text": "Sprinkle the dried mint evenly over the diced vegetables.", "time_minutes": 1},
+    {"step": 3, "text": "Drizzle the freshly squeezed lime juice and olive oil over the salad.", "time_minutes": 1},
+    {"step": 4, "text": "Season with salt and black pepper.", "time_minutes": 1},
+    {"step": 5, "text": "Toss gently to combine all ingredients thoroughly. For best results, let it rest in the refrigerator for 15-30 minutes before serving to let the flavors meld.", "time_minutes": 2}
+  ],
+  "tags": ["salad", "vegan", "vegetarian", "gluten-free", "healthy", "refreshing", "cucumbers", "tomatoes"],
+  "tips": "The secret to an authentic Salad Shirazi is the fine, uniform dice of all the vegetables. Use a sharp knife. If using regular cucumbers, peel and deseed them first.",
+  "storage_notes": "Best eaten fresh the same day, but can be stored in an airtight container in the fridge for up to 1 day. It will release water as it sits.",
+  "serve_with": "Almost any Persian main course, including Kebabs, Baghali Polo, and Lubia Polo.",
+  "substitutions": [
+    {"original": "lime juice", "substitute": "ab-ghooreh (verjuice)", "note": "Verjuice is very traditional and gives an authentic sharp tartness."},
+    {"original": "red onion", "substitute": "white onion", "note": "White onion works well, though red provides better color."}
+  ],
+  "source_urls": ["https://www.themediterraneandish.com/shirazi-salad-recipe/", "https://persianmama.com/salad-shirazi/"],
+  "verification_status": "reviewed"
+}

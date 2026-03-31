@@ -1,0 +1,50 @@
+{
+  "slug": "kashk-e-bademjan",
+  "title": "Kashk-e Bademjan (Eggplant & Whey Dip)",
+  "description": "A rich, savory Persian appetizer made of fried eggplants mashed with onions, garlic, mint, and kashk (fermented whey), creating a deeply flavorful and creamy dip.",
+  "image_url": null,
+  "prep_time_minutes": 20,
+  "cook_time_minutes": 45,
+  "servings": 4,
+  "difficulty": "easy",
+  "category": "appetizer",
+  "category_slug": "appetizer",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 320,
+  "ingredients": [
+    {"item": "Eggplants", "amount": "4", "unit": "medium", "note": "Italian or small globe eggplants"},
+    {"item": "Onion", "amount": "1", "unit": "large", "note": "Thinly sliced"},
+    {"item": "Garlic", "amount": "4", "unit": "cloves", "note": "Minced"},
+    {"item": "Dried mint", "amount": "2", "unit": "tbsp", "note": ""},
+    {"item": "Kashk (liquid whey)", "amount": "1/2", "unit": "cup", "note": "Diluted with 1/4 cup warm water"},
+    {"item": "Walnuts", "amount": "1/4", "unit": "cup", "note": "Finely chopped, for garnish"},
+    {"item": "Turmeric", "amount": "1/2", "unit": "tsp", "note": ""},
+    {"item": "Salt", "amount": "1", "unit": "tsp", "note": "To taste"},
+    {"item": "Black pepper", "amount": "1/2", "unit": "tsp", "note": "To taste"},
+    {"item": "Vegetable oil", "amount": "1/2", "unit": "cup", "note": "For frying"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "Peel the eggplants and slice them lengthwise into 1/2-inch thick pieces. Sprinkle them generously with salt and let them sit in a colander for 30 minutes to draw out the bitterness. Rinse well and pat them completely dry with paper towels.", "time_minutes": 30},
+    {"step": 2, "text": "Heat the vegetable oil in a large skillet over medium-high heat. Fry the eggplant slices in batches until golden brown and soft on both sides. Drain on paper towels.", "time_minutes": 15},
+    {"step": 3, "text": "In a separate pan, heat 2 tbsp of oil over medium heat. Add the sliced onions and slowly fry them until deeply caramelized and golden (Piaz Daagh). Remove half of the onions for garnish.", "time_minutes": 20},
+    {"step": 4, "text": "To the remaining onions in the pan, add the minced garlic, turmeric, and black pepper. Sauté for 1 minute until fragrant. Add the fried eggplants to this pan.", "time_minutes": 2},
+    {"step": 5, "text": "Add 1/2 cup of water to the pan. Cover and let the eggplants simmer on low heat for 10-15 minutes until they are extremely soft and falling apart.", "time_minutes": 15},
+    {"step": 6, "text": "Remove the lid and use a potato masher or a wooden spoon to roughly mash the eggplants until you achieve a chunky dip consistency.", "time_minutes": 2},
+    {"step": 7, "text": "Stir in the diluted kashk. Cook on low for another 5 minutes to let the flavors meld. Taste for salt (kashk is salty, so you may not need any extra).", "time_minutes": 5},
+    {"step": 8, "text": "In a small saucepan, heat 1 tbsp of oil. Add the dried mint, stir for 5-10 seconds, and immediately remove from heat to make the mint oil (Na'na Daagh).", "time_minutes": 1},
+    {"step": 9, "text": "Transfer the dip to a shallow serving bowl. Drizzle with the mint oil, extra kashk, caramelized onions, and chopped walnuts.", "time_minutes": 2}
+  ],
+  "tags": ["eggplant", "kashk", "dip", "vegetarian", "appetizer"],
+  "tips": "Frying the eggplants is traditional, but you can also brush them with oil and roast them at 400°F (200°C) for 25-30 minutes for a lighter version. Do not skip salting the eggplants, as it prevents them from absorbing too much oil.",
+  "storage_notes": "Store in an airtight container in the fridge for up to 4 days. Reheat gently on the stovetop or in the microwave.",
+  "serve_with": "Warm Persian flatbreads like Sangak, Barbari, or Lavash, alongside fresh herbs (Sabzi Khordan).",
+  "substitutions": [
+    {"original": "Kashk", "substitute": "Greek yogurt or sour cream", "note": "If kashk is unavailable, mix equal parts thick Greek yogurt and sour cream. It won't have the distinct fermented flavor, but it provides the right creamy texture."}
+  ],
+  "source_urls": [
+    "https://persianmama.com/kashk-bademjan-persian-eggplant-dip/",
+    "https://www.thedeliciouscrescent.com/kashk-bademjan/"
+  ],
+  "verification_status": "reviewed"
+}

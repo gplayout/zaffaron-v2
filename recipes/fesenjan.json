@@ -1,0 +1,50 @@
+{
+  "slug": "fesenjan",
+  "title": "Fesenjān (Pomegranate Walnut Stew)",
+  "description": "A rich, iconic Persian stew made with toasted ground walnuts, pomegranate molasses, and tender chicken, striking a perfect balance of sweet and sour.",
+  "image_url": null,
+  "prep_time_minutes": 15,
+  "cook_time_minutes": 180,
+  "servings": 6,
+  "difficulty": "medium",
+  "category": "stew",
+  "category_slug": "stew",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 700,
+  "ingredients": [
+    {"item": "Walnuts", "amount": "3", "unit": "cups", "note": "Halves or pieces"},
+    {"item": "Chicken thighs", "amount": "1.5", "unit": "lbs", "note": "Boneless and skinless, or bone-in pieces"},
+    {"item": "Onion", "amount": "1", "unit": "large", "note": "Finely grated or pureed"},
+    {"item": "Pomegranate molasses", "amount": "3/4", "unit": "cup", "note": "Adjust based on sweetness preference"},
+    {"item": "Sugar", "amount": "2", "unit": "tbsp", "note": "Optional, depending on sourness of molasses"},
+    {"item": "Turmeric", "amount": "1", "unit": "tsp", "note": ""},
+    {"item": "Cinnamon", "amount": "1/2", "unit": "tsp", "note": ""},
+    {"item": "Vegetable oil", "amount": "2", "unit": "tbsp", "note": ""},
+    {"item": "Salt", "amount": "1", "unit": "tsp", "note": "To taste"},
+    {"item": "Black pepper", "amount": "1/2", "unit": "tsp", "note": "To taste"},
+    {"item": "Cold water or ice cubes", "amount": "1", "unit": "cup", "note": "To shock the walnuts"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "Place the walnuts in a food processor and pulse until they are very finely ground, almost like a paste. Be careful not to turn it into walnut butter.", "time_minutes": 5},
+    {"step": 2, "text": "In a large pot, heat 1 tbsp of oil. Sauté the grated onion until soft and translucent. Add the ground walnuts and toast on low heat for 5-10 minutes, stirring constantly to prevent burning.", "time_minutes": 10},
+    {"step": 3, "text": "Add 3 cups of cold water to the walnuts. Bring to a boil, then reduce heat to the lowest setting, cover, and simmer for 1 to 1.5 hours. To help the walnuts release their natural oils, drop an ice cube into the pot every 30 minutes.", "time_minutes": 90},
+    {"step": 4, "text": "While the walnut sauce is simmering, season the chicken pieces with salt, black pepper, and turmeric. In a skillet, heat 1 tbsp of oil and lightly brown the chicken on all sides. Set aside.", "time_minutes": 15},
+    {"step": 5, "text": "Stir the pomegranate molasses, sugar (if using), and cinnamon into the simmering walnut sauce. The sauce will darken.", "time_minutes": 5},
+    {"step": 6, "text": "Add the browned chicken to the walnut-pomegranate sauce. Cover and simmer gently for another 45-60 minutes until the chicken is cooked through and tender, and the sauce is thick and oil has pooled on top.", "time_minutes": 60},
+    {"step": 7, "text": "Taste the stew and adjust the sweetness/sourness with more sugar or pomegranate molasses as desired. Serve hot.", "time_minutes": 5}
+  ],
+  "tags": ["stew", "pomegranate", "walnuts", "chicken", "sweet and sour", "festive"],
+  "tips": "The secret to a great Fesenjan is patience. Slow, low cooking is required to extract the oils from the walnuts. Adding ice water shocks the walnuts and helps them release oil.",
+  "storage_notes": "Fesenjan tastes even better the next day. Store in an airtight container in the fridge for up to 5 days. It also freezes exceptionally well for up to 3 months.",
+  "serve_with": "Steamed white basmati rice (Chelo) to soak up the rich sauce.",
+  "substitutions": [
+    {"original": "Chicken", "substitute": "Duck, lamb, or meatballs", "note": "Duck is the traditional meat used in Northern Iran. For a vegan option, use roasted butternut squash cubes."},
+    {"original": "Sugar", "substitute": "Maple syrup or honey", "note": "Can be used to balance the tartness of the pomegranate molasses."}
+  ],
+  "source_urls": [
+    "https://cooking.nytimes.com/recipes/1017040-fesenjan",
+    "https://persianmama.com/chicken-in-walnut-pomegranate-sauce-khoresht-fesenjan/"
+  ],
+  "verification_status": "reviewed"
+}

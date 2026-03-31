@@ -1,0 +1,43 @@
+{
+  "slug": "borani-esfenaj",
+  "title": "Borani Esfenaj (Spinach & Yogurt Dip)",
+  "description": "A healthy, creamy Persian appetizer featuring sautéed spinach folded into thick yogurt, seasoned with garlic and topped with crunchy walnuts.",
+  "image_url": null,
+  "prep_time_minutes": 10,
+  "cook_time_minutes": 10,
+  "servings": 4,
+  "difficulty": "easy",
+  "category": "appetizer",
+  "category_slug": "appetizer",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 120,
+  "ingredients": [
+    {"item": "fresh spinach", "amount": "1", "unit": "lb", "note": "washed and roughly chopped"},
+    {"item": "plain yogurt", "amount": "1.5", "unit": "cups", "note": "thick Greek style"},
+    {"item": "garlic", "amount": "2", "unit": "cloves", "note": "minced"},
+    {"item": "onion", "amount": "1", "unit": "small", "note": "finely chopped"},
+    {"item": "olive oil", "amount": "2", "unit": "tbsp"},
+    {"item": "salt", "amount": "1", "unit": "tsp", "note": "to taste"},
+    {"item": "black pepper", "amount": "1/2", "unit": "tsp"},
+    {"item": "walnuts", "amount": "2", "unit": "tbsp", "note": "chopped, for garnish"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "Heat the olive oil in a large skillet over medium heat. Add the chopped onion and sauté until soft and translucent.", "time_minutes": 5},
+    {"step": 2, "text": "Add the minced garlic and cook for 1 more minute until fragrant.", "time_minutes": 1},
+    {"step": 3, "text": "Add the fresh spinach to the skillet in batches. Cook just until wilted. Season with salt and black pepper. Remove from heat.", "time_minutes": 4},
+    {"step": 4, "text": "Let the spinach mixture cool down completely. If a lot of liquid was released, squeeze the spinach gently or drain it well so it doesn't water down the yogurt.", "time_minutes": 15},
+    {"step": 5, "text": "In a serving bowl, fold the cooled spinach into the plain yogurt. Mix well.", "time_minutes": 2},
+    {"step": 6, "text": "Cover and refrigerate for at least 30 minutes. Garnish with chopped walnuts and an extra drizzle of olive oil before serving.", "time_minutes": 30}
+  ],
+  "tags": ["spinach", "yogurt", "dip", "appetizer", "vegetarian", "healthy", "garlic"],
+  "tips": "Squeezing the excess water out of the cooked spinach is the secret to a thick and creamy Borani.",
+  "storage_notes": "Store in the refrigerator for up to 3 days. Give it a stir before serving.",
+  "serve_with": "Warm flatbread (Lavash or Pita) and fresh vegetable platters.",
+  "substitutions": [
+    {"original": "fresh spinach", "substitute": "frozen spinach", "note": "Thaw and squeeze completely dry. Skip the cooking step, just sauté the onions and garlic, then mix them in."},
+    {"original": "plain yogurt", "substitute": "dairy-free yogurt", "note": "Use thick cashew or coconut yogurt for a vegan version."}
+  ],
+  "source_urls": ["https://persianmama.com/borani-esfenaj-persian-spinach-yogurt-dip/", "https://www.themediterraneandish.com/borani-esfenaj-persian-spinach-yogurt-dip/"],
+  "verification_status": "reviewed"
+}

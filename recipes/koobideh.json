@@ -1,0 +1,48 @@
+{
+  "slug": "koobideh",
+  "title": "Kabab Koobideh (Ground Meat Kebab)",
+  "description": "The quintessential Persian street food and restaurant favorite: juicy, perfectly seasoned ground beef and lamb skewers grilled over hot coals.",
+  "image_url": null,
+  "prep_time_minutes": 30,
+  "cook_time_minutes": 15,
+  "servings": 4,
+  "difficulty": "hard",
+  "category": "kebab",
+  "category_slug": "kebab",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 400,
+  "ingredients": [
+    {"item": "Ground beef (80/20 lean)", "amount": "1", "unit": "lb", "note": "Double ground if possible"},
+    {"item": "Ground lamb", "amount": "1", "unit": "lb", "note": "Should have a good fat content"},
+    {"item": "Onions", "amount": "2", "unit": "medium", "note": "Grated and juices completely squeezed out"},
+    {"item": "Salt", "amount": "1.5", "unit": "tsp", "note": ""},
+    {"item": "Black pepper", "amount": "1", "unit": "tsp", "note": ""},
+    {"item": "Turmeric", "amount": "1/2", "unit": "tsp", "note": ""},
+    {"item": "Saffron", "amount": "1/4", "unit": "tsp", "note": "Ground, bloomed in 1 tbsp hot water"},
+    {"item": "Sumac", "amount": "1", "unit": "tbsp", "note": "For garnish"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "Grate the onions into a fine mesh strainer set over a bowl. Squeeze the grated onions firmly with your hands to remove as much juice as possible. Keep the dry onion pulp and discard the juice.", "time_minutes": 10},
+    {"step": 2, "text": "In a large bowl, combine the ground beef, ground lamb, dry onion pulp, salt, black pepper, turmeric, and bloomed saffron.", "time_minutes": 5},
+    {"step": 3, "text": "Knead the meat mixture vigorously with your hands for 10-15 minutes until it becomes a cohesive, sticky paste that holds together. This is crucial to prevent the meat from falling off the skewers.", "time_minutes": 15},
+    {"step": 4, "text": "Cover the bowl with plastic wrap and refrigerate for at least 2 hours (or overnight) to let the fat firm up and the flavors meld.", "time_minutes": 120},
+    {"step": 5, "text": "Take a handful of the cold meat mixture (about the size of a small apple) and form it into a long cylinder around a wide, flat metal Persian skewer. Press it evenly along the skewer, leaving empty space at both ends. Use your thumb and index finger to create indentations along the meat.", "time_minutes": 15},
+    {"step": 6, "text": "Prepare a charcoal grill (or gas grill) to high heat. Place the skewers on the grill, leaving a gap between the meat and the heat source.", "time_minutes": 10},
+    {"step": 7, "text": "Quickly turn the skewers every 15-20 seconds during the first minute of cooking. This seals the meat on both sides and prevents it from dropping into the fire.", "time_minutes": 2},
+    {"step": 8, "text": "Continue grilling for another 10-12 minutes, turning occasionally, until the meat is browned and cooked through.", "time_minutes": 12},
+    {"step": 9, "text": "Slide the meat off the skewers using a piece of flatbread (lavash) to protect your hands, and sprinkle generously with sumac.", "time_minutes": 2}
+  ],
+  "tags": ["beef", "lamb", "kebab", "grilling", "classic"],
+  "tips": "The two main reasons Koobideh falls off the skewer: not squeezing the onion juice out completely, and not kneading the meat long enough to develop the sticky proteins.",
+  "storage_notes": "Best eaten immediately. Leftovers can be stored in the fridge for up to 3 days and reheated in the microwave, though they will lose some juiciness.",
+  "serve_with": "Chelo (saffron rice), grilled tomatoes, raw onions, fresh basil, and Doogh (mint yogurt drink).",
+  "substitutions": [
+    {"original": "Ground lamb", "substitute": "Ground beef (higher fat)", "note": "If you don't like lamb, use 2 lbs of ground beef, but ensure it is at least 20% fat or the kebab will be dry."}
+  ],
+  "source_urls": [
+    "https://persianmama.com/kabab-koobideh-grilled-minced-meat-kabab/",
+    "https://thecaspianchef.com/2019/07/26/kabab-koobideh-persian-ground-meat-kebab/"
+  ],
+  "verification_status": "reviewed"
+}

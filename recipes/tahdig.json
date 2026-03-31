@@ -1,0 +1,47 @@
+{
+  "slug": "tahdig",
+  "title": "Tahdig (Crispy Saffron Rice)",
+  "description": "The prized golden, crispy crust that forms at the bottom of the pot of Persian rice. Infused with saffron and butter, it's the ultimate crunchy delicacy.",
+  "image_url": null,
+  "prep_time_minutes": 15,
+  "cook_time_minutes": 60,
+  "servings": 6,
+  "difficulty": "hard",
+  "category": "side",
+  "category_slug": "side",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 300,
+  "ingredients": [
+    {"item": "High-quality Basmati rice", "amount": "3", "unit": "cups", "note": "Washed until water runs clear, then soaked in salted water for 2 hours"},
+    {"item": "Water", "amount": "8", "unit": "cups", "note": "For boiling the rice"},
+    {"item": "Salt", "amount": "3", "unit": "tbsp", "note": "For boiling water"},
+    {"item": "Saffron", "amount": "1/4", "unit": "tsp", "note": "Ground, bloomed in 2 tbsp hot water"},
+    {"item": "Vegetable oil or ghee", "amount": "3", "unit": "tbsp", "note": "For the bottom of the pot"},
+    {"item": "Plain yogurt", "amount": "2", "unit": "tbsp", "note": "Full fat, for the crust base"},
+    {"item": "Butter", "amount": "2", "unit": "tbsp", "note": "Melted, to pour over steaming rice"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "Bring 8 cups of water and 3 tbsp of salt to a rolling boil in a large non-stick pot.", "time_minutes": 10},
+    {"step": 2, "text": "Drain the soaked rice and add it to the boiling water. Boil uncovered for 5-8 minutes. The rice grains should be slightly soft on the outside but firm in the middle. Drain the rice in a fine-mesh colander and rinse lightly with lukewarm water.", "time_minutes": 10},
+    {"step": 3, "text": "In a medium bowl, mix the yogurt, bloomed saffron, and 1 cup of the parboiled drained rice until evenly coated.", "time_minutes": 5},
+    {"step": 4, "text": "Wash and dry the non-stick pot. Place it over medium heat and add the oil/ghee. Once the oil is hot, spread the yogurt-saffron-rice mixture evenly across the bottom of the pot, packing it down gently with a spatula to form a flat layer.", "time_minutes": 5},
+    {"step": 5, "text": "Gently spoon the remaining parboiled white rice over the tahdig layer, shaping it into a loose pyramid or mound. Using the handle of a wooden spoon, poke 4-5 holes straight down through the rice to the bottom to allow steam to escape.", "time_minutes": 5},
+    {"step": 6, "text": "Pour the melted butter and 2 tablespoons of water over the rice pyramid.", "time_minutes": 2},
+    {"step": 7, "text": "Wrap the pot lid in a clean kitchen towel (to catch condensation) and place it tightly on the pot. Cook on medium-high heat for 5-7 minutes until steam builds up inside the pot.", "time_minutes": 7},
+    {"step": 8, "text": "Reduce the heat to the lowest setting and let it steam undisturbed for 45-50 minutes. Do not open the lid during this time.", "time_minutes": 50},
+    {"step": 9, "text": "To serve, remove the lid, place a large round serving platter upside down over the pot, and carefully but quickly invert the pot to release the rice cake. The crispy golden tahdig should be on top.", "time_minutes": 5}
+  ],
+  "tags": ["rice", "saffron", "crispy", "side dish", "vegan-adaptable"],
+  "tips": "Using a good quality non-stick pot (like Teflon) is essential for a perfect release. If the tahdig won't release easily, dip the bottom of the hot pot into a sink of cold water for 1 minute before inverting.",
+  "storage_notes": "Tahdig is best eaten immediately while crispy. Leftovers can be stored in the fridge for 2 days but will lose their crunch. Reheat in a toaster oven.",
+  "serve_with": "Any Persian stew (Khoresht) or kebabs.",
+  "substitutions": [
+    {"original": "Yogurt and rice base", "substitute": "Sliced potatoes or lavash bread", "note": "Instead of the yogurt-rice mix, you can layer thinly sliced potatoes or flatbread at the bottom of the oiled pot."}
+  ],
+  "source_urls": [
+    "https://www.bonappetit.com/recipe/tahdig",
+    "https://thecaspianchef.com/2019/12/06/the-art-of-tahdig-persian-crispy-rice/"
+  ],
+  "verification_status": "reviewed"
+}

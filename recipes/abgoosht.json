@@ -1,0 +1,52 @@
+{
+  "slug": "abgoosht",
+  "title": "Abgoosht (Traditional Lamb Broth)",
+  "description": "Also known as Dizi, this rustic Persian stew features bone-in lamb, chickpeas, white beans, and potatoes. The broth is served as soup, and the solids are mashed into a hearty paste.",
+  "image_url": null,
+  "prep_time_minutes": 15,
+  "cook_time_minutes": 240,
+  "servings": 4,
+  "difficulty": "medium",
+  "category": "stew",
+  "category_slug": "stew",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 600,
+  "ingredients": [
+    {"item": "Lamb shoulder or shanks", "amount": "1.5", "unit": "lbs", "note": "Bone-in, with some fat"},
+    {"item": "Chickpeas", "amount": "1/2", "unit": "cup", "note": "Dried, soaked overnight"},
+    {"item": "White navy beans", "amount": "1/2", "unit": "cup", "note": "Dried, soaked overnight"},
+    {"item": "Onion", "amount": "1", "unit": "large", "note": "Peeled, left whole or halved"},
+    {"item": "Garlic", "amount": "3", "unit": "cloves", "note": "Peeled"},
+    {"item": "Tomatoes", "amount": "2", "unit": "medium", "note": "Halved"},
+    {"item": "Potatoes", "amount": "2", "unit": "medium", "note": "Peeled, cut into chunks"},
+    {"item": "Tomato paste", "amount": "2", "unit": "tbsp", "note": ""},
+    {"item": "Turmeric", "amount": "1", "unit": "tsp", "note": ""},
+    {"item": "Cinnamon", "amount": "1/2", "unit": "tsp", "note": ""},
+    {"item": "Dried limes (Limoo Amani)", "amount": "2", "unit": "pieces", "note": "Pierced with a fork"},
+    {"item": "Salt", "amount": "1.5", "unit": "tsp", "note": "To taste"},
+    {"item": "Black pepper", "amount": "1", "unit": "tsp", "note": "To taste"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "Drain the soaked chickpeas and navy beans. In a large, heavy-bottomed pot (or traditional stone crock), combine the meat, beans, onion, garlic, turmeric, and 6 cups of water. Bring to a boil.", "time_minutes": 15},
+    {"step": 2, "text": "Skim off any foam that rises to the top. Reduce the heat to the lowest setting, cover tightly, and simmer gently for 2 hours.", "time_minutes": 120},
+    {"step": 3, "text": "Add the halved tomatoes, potato chunks, dried limes, cinnamon, and tomato paste to the pot. Season with salt and black pepper.", "time_minutes": 5},
+    {"step": 4, "text": "Cover and simmer for another 1 to 1.5 hours until the meat falls off the bone, the potatoes are soft, and the beans are completely tender.", "time_minutes": 90},
+    {"step": 5, "text": "To serve the Abgoosht in the traditional two-course method: Carefully strain the rich broth into a serving bowl. This is the 'Ab' (water/broth).", "time_minutes": 5},
+    {"step": 6, "text": "Remove the bones from the meat. Discard the onion pieces and dried limes. Leave the meat, beans, and potatoes in the pot.", "time_minutes": 5},
+    {"step": 7, "text": "Using a wooden masher (goosht-koob) or potato masher, aggressively mash the meat, beans, and potatoes together until they form a coarse paste. This is the 'Goosht' (meat/solids), also known as 'Koobideh'.", "time_minutes": 10},
+    {"step": 8, "text": "Serve the broth as a soup course, eating it by tearing small pieces of flatbread (Sangak) and soaking them in the broth (Tilit). Follow with the mashed solids eaten with more flatbread.", "time_minutes": 5}
+  ],
+  "tags": ["lamb", "stew", "beans", "comfort food", "traditional"],
+  "tips": "Abgoosht is traditionally cooked in individual clay pots called 'Dizi' over a very low fire for many hours. A slow cooker is an excellent modern alternative for this recipe.",
+  "storage_notes": "Store the broth and the mashed solids separately in airtight containers in the fridge for up to 3 days. Reheat on the stovetop.",
+  "serve_with": "Sangak bread, raw onions, radishes, fresh basil, and Torshi (pickled vegetables).",
+  "substitutions": [
+    {"original": "Lamb", "substitute": "Beef shank", "note": "Beef shank with bone marrow works beautifully if you prefer not to use lamb."}
+  ],
+  "source_urls": [
+    "https://persianmama.com/abgoosht-dizi-persian-lamb-and-chickpea-stew/",
+    "https://www.thedeliciouscrescent.com/abgoosht-recipe/"
+  ],
+  "verification_status": "reviewed"
+}

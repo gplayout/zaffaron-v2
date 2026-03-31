@@ -1,0 +1,44 @@
+{
+  "slug": "zeytoon-parvardeh",
+  "title": "Zeytoon Parvardeh (Marinated Olives)",
+  "description": "A spectacular Northern Iranian appetizer consisting of green olives marinated in a rich, tangy paste of crushed walnuts, pomegranate molasses, garlic, and fresh herbs.",
+  "image_url": null,
+  "prep_time_minutes": 15,
+  "cook_time_minutes": 0,
+  "servings": 6,
+  "difficulty": "easy",
+  "category": "appetizer",
+  "category_slug": "appetizer",
+  "cuisine": "Persian",
+  "cuisine_slug": "persian",
+  "calories_per_serving": 180,
+  "ingredients": [
+    {"item": "pitted green olives", "amount": "2", "unit": "cups", "note": "drained and rinsed"},
+    {"item": "walnuts", "amount": "1", "unit": "cup", "note": "finely ground"},
+    {"item": "pomegranate molasses", "amount": "3", "unit": "tbsp", "note": "sour or sweet-sour"},
+    {"item": "garlic", "amount": "2", "unit": "cloves", "note": "minced"},
+    {"item": "fresh mint", "amount": "2", "unit": "tbsp", "note": "finely chopped"},
+    {"item": "fresh cilantro", "amount": "2", "unit": "tbsp", "note": "finely chopped"},
+    {"item": "olive oil", "amount": "2", "unit": "tbsp"},
+    {"item": "pomegranate seeds", "amount": "1/4", "unit": "cup", "note": "for garnish"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "If your pitted green olives are very salty, soak them in cold water for an hour, then drain and pat dry. Place them in a large mixing bowl.", "time_minutes": 5},
+    {"step": 2, "text": "In a food processor, pulse the walnuts until they are finely ground, almost like a coarse meal. Do not turn them into butter.", "time_minutes": 2},
+    {"step": 3, "text": "Add the ground walnuts to the bowl with the olives.", "time_minutes": 1},
+    {"step": 4, "text": "Add the pomegranate molasses, minced garlic, chopped fresh mint, fresh cilantro, and olive oil to the bowl.", "time_minutes": 2},
+    {"step": 5, "text": "Toss everything together until the olives are thickly coated in the walnut-pomegranate mixture.", "time_minutes": 2},
+    {"step": 6, "text": "Transfer to a serving dish, cover, and refrigerate for at least 2 hours (preferably overnight) to allow the flavors to meld deeply.", "time_minutes": 120},
+    {"step": 7, "text": "Before serving, garnish with fresh pomegranate seeds."}
+  ],
+  "tags": ["olives", "walnuts", "pomegranate", "appetizer", "vegan", "northern iran", "gilani"],
+  "tips": "The authentic recipe uses Chochaq, a wild herb native to Northern Iran. A mix of mint and cilantro is the best substitute outside of Iran.",
+  "storage_notes": "Store in an airtight container in the refrigerator for up to 2 weeks. The flavor improves as it sits.",
+  "serve_with": "Flatbreads, or as a side dish alongside fish and rice dishes like Sabzi Polo Mahi.",
+  "substitutions": [
+    {"original": "fresh mint and cilantro", "substitute": "dried mint", "note": "Use 1 tablespoon dried mint if fresh herbs are unavailable."},
+    {"original": "pomegranate molasses", "substitute": "balsamic glaze and lemon", "note": "In a pinch, use a thick balsamic glaze mixed with a little lemon juice, though pomegranate is highly preferred."}
+  ],
+  "source_urls": ["https://persianmama.com/zeytoon-parvardeh-marinated-olives/", "https://thecaspianchef.com/2019/10/29/zeytoon-parvardeh/"],
+  "verification_status": "reviewed"
+}

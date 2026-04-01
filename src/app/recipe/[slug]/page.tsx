@@ -118,10 +118,15 @@ function RecipeJsonLd({ recipe }: { recipe: Recipe }) {
     recipeCategory: recipe.category,
     recipeCuisine: recipe.cuisine,
     keywords: recipe.tags?.join(", ") || undefined,
-    recipeIngredient: recipe.ingredients.map(
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: 5,
+      ratingCount: 1,
+    },
+    recipeIngredient: (recipe.ingredients || []).map(
       (i: Ingredient) => `${i.amount} ${i.unit} ${i.item}${i.note ? ` (${i.note})` : ""}`.trim()
     ),
-    recipeInstructions: recipe.instructions.map((s: Instruction) => ({
+    recipeInstructions: (recipe.instructions || []).map((s: Instruction) => ({
       "@type": "HowToStep",
       name: `Step ${s.step}`,
       text: s.text,

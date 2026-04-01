@@ -8,11 +8,21 @@ export const revalidate = 3600;
 
 const PAGE_SIZE = 24;
 
-export const metadata: Metadata = {
-  title: "All Recipes",
-  description: "Browse all authentic Persian and world recipes on Zaffaron. Every recipe tested, every detail perfected.",
-  alternates: { canonical: "https://zaffaron.com/recipes" },
-};
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}): Promise<Metadata> {
+  const params = await searchParams;
+  const page = Math.max(1, parseInt(params.page || "1", 10));
+  const canonical = page > 1 ? `https://zaffaron.com/recipes?page=${page}` : "https://zaffaron.com/recipes";
+
+  return {
+    title: "All Recipes",
+    description: "Browse all authentic Persian and world recipes on Zaffaron. Every recipe tested, every detail perfected.",
+    alternates: { canonical },
+  };
+}
 
 export default async function AllRecipesPage({
   searchParams,

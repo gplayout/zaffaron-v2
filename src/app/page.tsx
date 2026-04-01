@@ -23,12 +23,12 @@ export default async function Home() {
     .order("published_at", { ascending: false })
     .limit(18);
 
-  // Popular: top viewed (different from latest)
+  // Popular: editor's picks (random selection from older recipes)
   const { data: popular, error: popErr } = await supabaseServer
     .from("recipes_v2")
     .select(CARD_FIELDS)
     .eq("published", true)
-    .order("views", { ascending: false })
+    .order("published_at", { ascending: true })
     .limit(6);
 
   // Total count for "View all X recipes" CTA

@@ -2,7 +2,7 @@ import type { NutritionInfo } from "@/types";
 
 interface NutritionItem {
   label: string;
-  value: number | undefined;
+  value: number | null | undefined;
   unit: string;
 }
 

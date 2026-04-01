@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { StarRating } from "./StarRating";
-import { User, Calendar, MessageSquare, Star } from "lucide-react";
+import { User, Calendar, MessageSquare, Star, Loader2 } from "lucide-react";
+import { submitRecipeReview } from "./reviews-actions";
+import { useAuth } from "@/hooks/useAuth";
 
 interface Review {
   id: string;
@@ -13,15 +15,18 @@ interface Review {
 }
 
 interface RecipeReviewsProps {
-  reviews?: Review[];
-  recipeId?: string;
+  reviews: Review[];
+  recipeId: number;
 }
 
-export function RecipeReviews({ reviews = [], recipeId }: RecipeReviewsProps) {
+export function RecipeReviews({ reviews: initialReviews, recipeId }: RecipeReviewsProps) {
+  const { user } = useAuth();
+  const [reviews, setReviews] = useState<Review[]>(initialReviews);
   const [userRating, setUserRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const averageRating = reviews.length > 0
     ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
@@ -29,31 +34,49 @@ export function RecipeReviews({ reviews = [], recipeId }: RecipeReviewsProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+    setSubmitError(null);
+
     if (userRating === 0) {
-      alert("Please select a star rating");
+      setSubmitError("Please select a star rating");
+      return;
+    }
+
+    if (!user) {
+      setSubmitError("You must be signed in to submit a review");
       return;
     }
 
     setIsSubmitting(true);
 
-    // TODO: Connect to backend
-    console.log("Submitting review:", {
-      recipeId,
-      rating: userRating,
-      text: reviewText,
-    });
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    const result = await submitRecipeReview(recipeId, userRating, reviewText);
 
     setIsSubmitting(false);
-    setSubmitSuccess(true);
-    setUserRating(0);
-    setReviewText("");
 
-    // Hide success message after 3 seconds
-    setTimeout(() => setSubmitSuccess(false), 3000);
+    if (result.ok) {
+      // Add or update the review in the list
+      setReviews((prev) => {
+        const existingIndex = prev.findIndex((r) => r.id === result.review.id);
+        if (existingIndex >= 0) {
+          // Update existing review
+          const updated = [...prev];
+          updated[existingIndex] = result.review;
+          return updated;
+        }
+        // Add new review at the beginning
+        return [result.review, ...prev];
+      });
+
+      setSubmitSuccess(true);
+      setUserRating(0);
+      setReviewText("");
+
+      // Hide success message after 3 seconds
+      setTimeout(() => setSubmitSuccess(false), 3000);
+    } else if (result.error === 'auth') {
+      setSubmitError("You must be signed in to submit a review. Please sign in and try again.");
+    } else {
+      setSubmitError(result.error || "Failed to submit review. Please try again.");
+    }
   };
 
   const formatDate = (dateStr: string) => {
@@ -116,6 +139,12 @@ export function RecipeReviews({ reviews = [], recipeId }: RecipeReviewsProps) {
           Write a Review
         </h3>
 
+        {!user && (
+          <div className="mb-4 rounded-lg bg-amber-50 border border-amber-200 p-4 text-sm text-amber-800">
+            Please <a href="/auth/login" className="font-medium underline">sign in</a> to leave a review.
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="mb-2 block text-sm font-medium text-stone-700">
@@ -126,6 +155,7 @@ export function RecipeReviews({ reviews = [], recipeId }: RecipeReviewsProps) {
               interactive
               onRatingChange={setUserRating}
               size="lg"
+              disabled={!user}
             />
           </div>
 
@@ -141,17 +171,25 @@ export function RecipeReviews({ reviews = [], recipeId }: RecipeReviewsProps) {
               rows={4}
               value={reviewText}
               onChange={(e) => setReviewText(e.target.value)}
-              placeholder="Share your experience with this recipe..."
-              className="w-full rounded-lg border border-stone-300 px-4 py-3 text-stone-800 placeholder:text-stone-400 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+              placeholder={user ? "Share your experience with this recipe..." : "Sign in to write a review..."}
+              className="w-full rounded-lg border border-stone-300 px-4 py-3 text-stone-800 placeholder:text-stone-400 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 disabled:bg-stone-50 disabled:text-stone-400"
               required
+              disabled={!user}
             />
           </div>
 
+          {submitError && (
+            <div className="rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-700">
+              {submitError}
+            </div>
+          )}
+
           <button
             type="submit"
-            disabled={isSubmitting || userRating === 0}
-            className="rounded-lg bg-amber-600 px-6 py-2.5 font-medium text-white transition hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={isSubmitting || !user || userRating === 0}
+            className="rounded-lg bg-amber-600 px-6 py-2.5 font-medium text-white transition hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-50 inline-flex items-center gap-2"
           >
+            {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
             {isSubmitting ? "Submitting..." : "Submit Review"}
           </button>
 

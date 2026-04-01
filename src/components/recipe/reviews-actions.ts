@@ -1,6 +1,7 @@
 'use server';
 
 import { createServerSupabase } from '@/lib/supabase-server-auth';
+import { supabaseServer } from '@/lib/supabase-server';
 
 export interface Review {
   id: string;
@@ -21,9 +22,10 @@ export async function getRecipeReviews(
   recipeId: number
 ): Promise<{ ok: true; reviews: Review[] } | { ok: false; error: string }> {
   try {
-    const supabase = await createServerSupabase();
-
-    const { data, error } = await supabase
+    if (!Number.isFinite(recipeId)) {
+      return { ok: true, reviews: [] };
+    }
+    const { data, error } = await supabaseServer
       .from('recipe_reviews')
       .select('id, rating, body, created_at, user_id')
       .eq('recipe_id', recipeId)

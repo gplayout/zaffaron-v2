@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { supabaseServer } from "@/lib/supabase-server";
 import { getRecipeBySlug } from "@/lib/get-recipe";
+import { getRecipeReviews } from "@/components/recipe/reviews-actions";
 import {
   RecipeHero,
   RecipeIngredients,
@@ -68,13 +69,19 @@ export default async function RecipePage({ params }: Props) {
   const recipe = await getRecipeBySlug(slug);
   if (!recipe) notFound();
 
+  const recipeIdNum = Number(recipe.id);
+
+  // Fetch reviews server-side
+  const reviewsResult = await getRecipeReviews(recipeIdNum);
+  const reviews = reviewsResult.ok ? reviewsResult.reviews : [];
+
   return (
     <>
       <RecipeJsonLd recipe={recipe} />
       <BreadcrumbJsonLd recipe={recipe} />
       <article className="mx-auto max-w-3xl">
         <RecipeHero recipe={recipe} />
-        
+
         <RecipeTips recipe={recipe} />
 
         <div id="recipe-ingredients" className="grid gap-8 md:grid-cols-[1fr_2fr] mt-8">
@@ -96,7 +103,7 @@ export default async function RecipePage({ params }: Props) {
           categorySlug={recipe.category_slug || recipe.category.toLowerCase()}
         />
 
-        <RecipeReviews reviews={[]} recipeId={recipe.id} />
+        <RecipeReviews reviews={reviews} recipeId={recipeIdNum} />
       </article>
     </>
   );

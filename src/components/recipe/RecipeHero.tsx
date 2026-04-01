@@ -97,7 +97,7 @@ export function RecipeHero({ recipe }: RecipeHeroProps) {
       {/* Title with Favorite Button */}
       <div className="flex items-start justify-between gap-4">
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{recipe.title}</h1>
-        <FavoriteButton recipeId={recipe.id} recipeTitle={recipe.title} />
+        <FavoriteButton recipeId={recipe.id} />
       </div>
       <p className="mt-3 text-lg text-stone-600">{recipe.description}</p>
 

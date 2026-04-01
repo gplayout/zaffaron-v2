@@ -35,7 +35,7 @@ export async function submitCookApplication(
         phone: data.phone,
         city: data.city,
         specialties: data.specialties,
-        years_experience: data.yearsOfExperience,
+        years_experience: parseInt(data.yearsOfExperience, 10) || 0,
         bio: data.bio,
         kitchen_type: data.kitchenType,
         availability: data.availability,

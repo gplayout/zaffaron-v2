@@ -25,8 +25,8 @@ const SPECIALTIES = [
 ];
 
 const KITCHEN_TYPES = [
-  { value: 'home', label: 'Home Kitchen', description: 'I cook from my home kitchen' },
-  { value: 'commercial', label: 'Commercial Kitchen', description: 'I have a licensed commercial kitchen' },
+  { value: 'home_kitchen', label: 'Home Kitchen', description: 'I cook from my home kitchen' },
+  { value: 'commercial_kitchen', label: 'Commercial Kitchen', description: 'I have a licensed commercial kitchen' },
   { value: 'catering', label: 'Catering Business', description: 'I run a catering business' },
 ];
 

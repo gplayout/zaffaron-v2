@@ -2,9 +2,11 @@ import type { Recipe, Ingredient, Instruction } from "@/types";
 
 interface RecipeJsonLdProps {
   recipe: Recipe;
+  ratingValue?: number;
+  ratingCount?: number;
 }
 
-export function RecipeJsonLd({ recipe }: RecipeJsonLdProps) {
+export function RecipeJsonLd({ recipe, ratingValue, ratingCount }: RecipeJsonLdProps) {
   const totalMinutes = recipe.prep_time_minutes + recipe.cook_time_minutes;
   const url = `https://zaffaron.com/recipe/${recipe.slug}`;
   const nutrition = recipe.nutrition_per_serving;
@@ -37,8 +39,8 @@ export function RecipeJsonLd({ recipe }: RecipeJsonLdProps) {
     keywords: recipe.tags?.join(", ") || undefined,
     aggregateRating: {
       "@type": "AggregateRating",
-      ratingValue: 5,
-      ratingCount: 1,
+      ratingValue: ratingValue ?? 5,
+      ratingCount: ratingCount ?? 1,
     },
     recipeIngredient: (recipe.ingredients || []).map(
       (i: Ingredient) =>

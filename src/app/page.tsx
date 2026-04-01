@@ -1,4 +1,5 @@
 import RecipeCard from "@/components/RecipeCard";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
 import Link from "next/link";
 import { getLatestRecipes, getPopularRecipes, getRecipeCount } from "@/lib/api/recipes";
 import type { Metadata } from "next";
@@ -104,12 +105,8 @@ export default async function Home() {
         </Link>
       </div>
 
-      {/* Newsletter CTA */}
-      <section className="mt-16 rounded-2xl bg-amber-50 border border-amber-200 p-8 text-center">
-        <h2 className="text-2xl font-bold text-stone-800">🌿 Get Persian Recipes Weekly</h2>
-        <p className="mt-2 text-stone-600">Join our newsletter for authentic recipes delivered to your inbox every Friday.</p>
-        <p className="mt-4 text-sm text-stone-500">Coming soon — stay tuned!</p>
-      </section>
+      {/* Newsletter Signup */}
+      <NewsletterSignup />
     </>
   );
 }

@@ -10,6 +10,7 @@ import {
   RecipeJsonLd,
   BreadcrumbJsonLd,
   RelatedRecipes,
+  RecipeReviews,
 } from "@/components/recipe";
 import type { Metadata } from "next";
 
@@ -94,6 +95,8 @@ export default async function RecipePage({ params }: Props) {
           cuisineSlug={recipe.cuisine_slug || recipe.cuisine.toLowerCase()}
           categorySlug={recipe.category_slug || recipe.category.toLowerCase()}
         />
+
+        <RecipeReviews reviews={[]} recipeId={recipe.id} />
       </article>
     </>
   );

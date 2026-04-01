@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-// Router will be used when API integration is complete
-// import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ChefHat, Upload, Loader2, CheckCircle, ArrowLeft } from 'lucide-react';
+import { submitCookApplication } from './actions';
+import { useAuth } from '@/hooks/useAuth';
 
 const SPECIALTIES = [
   'Persian Cuisine',
@@ -37,9 +37,10 @@ const AVAILABILITY_OPTIONS = [
 ];
 
 export default function CookApplyPage() {
-  // const router = useRouter();
+  const { user } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -65,14 +66,28 @@ export default function CookApplyPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    console.log('Cook Application:', formData);
-    
+    setSubmitError(null);
+
+    const result = await submitCookApplication({
+      name: formData.name,
+      phone: formData.phone,
+      city: formData.city,
+      specialties: formData.specialties,
+      yearsOfExperience: formData.yearsOfExperience,
+      bio: formData.bio,
+      kitchenType: formData.kitchenType,
+      availability: formData.availability,
+    });
+
     setIsSubmitting(false);
-    setIsSubmitted(true);
+
+    if (result.ok) {
+      setIsSubmitted(true);
+    } else if (result.error === 'auth') {
+      setSubmitError('You must be signed in to submit an application. Please sign in and try again.');
+    } else {
+      setSubmitError(result.error || 'Something went wrong. Please try again.');
+    }
   };
 
   if (isSubmitted) {
@@ -97,12 +112,22 @@ export default function CookApplyPage() {
             >
               Return to Home
             </Link>
-            <button
-              onClick={() => setIsSubmitted(false)}
-              className="inline-flex w-full items-center justify-center rounded-lg border border-stone-300 bg-white px-6 py-3 font-medium text-stone-700 transition hover:bg-stone-50"
-            >
-              Submit Another Application
-            </button>
+            {!user && (
+              <Link
+                href="/auth/login"
+                className="inline-flex w-full items-center justify-center rounded-lg border border-stone-300 bg-white px-6 py-3 font-medium text-stone-700 transition hover:bg-stone-50"
+              >
+                Sign In to Your Account
+              </Link>
+            )}
+            {user && (
+              <button
+                onClick={() => setIsSubmitted(false)}
+                className="inline-flex w-full items-center justify-center rounded-lg border border-stone-300 bg-white px-6 py-3 font-medium text-stone-700 transition hover:bg-stone-50"
+              >
+                Submit Another Application
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -377,21 +402,28 @@ export default function CookApplyPage() {
         </section>
 
         {/* Submit */}
-        <div className="flex items-center gap-4">
-          <button
-            type="submit"
-            disabled={isSubmitting || formData.specialties.length === 0}
-            className="flex flex-1 items-center justify-center rounded-lg bg-amber-600 px-8 py-3 font-medium text-white transition hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                Submitting...
-              </>
-            ) : (
-              'Submit Application'
-            )}
-          </button>
+        <div className="flex flex-col gap-4">
+          {submitError && (
+            <div className="rounded-lg bg-red-50 border border-red-200 p-4 text-sm text-red-700">
+              {submitError}
+            </div>
+          )}
+          <div className="flex items-center gap-4">
+            <button
+              type="submit"
+              disabled={isSubmitting || formData.specialties.length === 0}
+              className="flex flex-1 items-center justify-center rounded-lg bg-amber-600 px-8 py-3 font-medium text-white transition hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                'Submit Application'
+              )}
+            </button>
+          </div>
         </div>
       </form>
     </div>

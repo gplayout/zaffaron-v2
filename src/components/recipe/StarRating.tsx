@@ -10,6 +10,7 @@ interface StarRatingProps {
   interactive?: boolean;
   onRatingChange?: (rating: number) => void;
   showValue?: boolean;
+  disabled?: boolean;
 }
 
 const sizeClasses = {
@@ -25,25 +26,26 @@ export function StarRating({
   interactive = false,
   onRatingChange,
   showValue = false,
+  disabled = false,
 }: StarRatingProps) {
   const [hoverRating, setHoverRating] = useState(0);
 
   const displayRating = hoverRating || rating;
 
   const handleClick = (starIndex: number) => {
-    if (interactive && onRatingChange) {
+    if (interactive && !disabled && onRatingChange) {
       onRatingChange(starIndex);
     }
   };
 
   const handleMouseEnter = (starIndex: number) => {
-    if (interactive) {
+    if (interactive && !disabled) {
       setHoverRating(starIndex);
     }
   };
 
   const handleMouseLeave = () => {
-    if (interactive) {
+    if (interactive && !disabled) {
       setHoverRating(0);
     }
   };
@@ -60,8 +62,8 @@ export function StarRating({
         onClick={() => handleClick(starIndex)}
         onMouseEnter={() => handleMouseEnter(starIndex)}
         onMouseLeave={handleMouseLeave}
-        disabled={!interactive}
-        className={`relative ${interactive ? "cursor-pointer hover:scale-110" : "cursor-default"} transition-transform`}
+        disabled={!interactive || disabled}
+        className={`relative ${interactive && !disabled ? "cursor-pointer hover:scale-110" : "cursor-default"} transition-transform disabled:opacity-50`}
         aria-label={`${starIndex} star${starIndex !== 1 ? "s" : ""}`}
       >
         {/* Background star (empty) */}

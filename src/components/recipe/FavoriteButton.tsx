@@ -1,79 +1,64 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Heart } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { toggleFavorite, getIsFavorited } from "./favorites-actions";
 
 interface FavoriteButtonProps {
   recipeId: string;
 }
 
-const STORAGE_KEY = "zaffaron_favorites";
-
-function getFavoritesFromStorage(): string[] {
-  if (typeof window === "undefined") return [];
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored) {
-    try {
-      return JSON.parse(stored);
-    } catch {
-      return [];
-    }
-  }
-  return [];
-}
-
-function subscribe(callback: () => void) {
-  const handler = () => callback();
-  window.addEventListener("storage", handler);
-  return () => window.removeEventListener("storage", handler);
-}
-
-function useFavorites() {
-  return useSyncExternalStore(
-    subscribe,
-    getFavoritesFromStorage,
-    () => []
-  );
-}
-
 export function FavoriteButton({ recipeId }: FavoriteButtonProps) {
   const { user } = useAuth();
-  const favorites = useFavorites();
-  const isFavorited = favorites.includes(recipeId);
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
 
-  const toggleFavorite = () => {
+  // Load initial favorite status from server when signed in
+  useEffect(() => {
     if (!user) return;
 
-    setIsAnimating(true);
-    
-    const stored = localStorage.getItem(STORAGE_KEY);
-    let newFavorites: string[] = [];
-    
-    if (stored) {
-      try {
-        newFavorites = JSON.parse(stored);
-      } catch {
-        newFavorites = [];
+    let cancelled = false;
+
+    const loadFavoriteStatus = async () => {
+      const result = await getIsFavorited(recipeId);
+      if (!cancelled && result.ok) {
+        setIsFavorited(result.isFavorited);
       }
-    }
+    };
 
-    if (isFavorited) {
-      newFavorites = newFavorites.filter((id) => id !== recipeId);
+    loadFavoriteStatus();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user, recipeId]);
+
+  const handleToggle = useCallback(async () => {
+    if (!user || isLoading) return;
+
+    setIsLoading(true);
+    setIsAnimating(true);
+
+    // Optimistic update
+    const previousState = isFavorited;
+    setIsFavorited(!isFavorited);
+
+    const result = await toggleFavorite(recipeId);
+
+    if (result.ok) {
+      setIsFavorited(result.isFavorited);
     } else {
-      newFavorites.push(recipeId);
+      // Revert on error
+      setIsFavorited(previousState);
+      console.error("Failed to toggle favorite:", result.error);
     }
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(newFavorites));
-    
-    // Dispatch storage event to update other components
-    window.dispatchEvent(new StorageEvent("storage"));
-
-    // Reset animation after it completes
+    setIsLoading(false);
     setTimeout(() => setIsAnimating(false), 300);
-  };
+  }, [user, isLoading, isFavorited, recipeId]);
 
   if (!user) {
     return (
@@ -99,34 +84,26 @@ export function FavoriteButton({ recipeId }: FavoriteButtonProps) {
     );
   }
 
+  const effectiveIsFavorited = user ? isFavorited : false;
+
   return (
     <button
-      onClick={toggleFavorite}
-      className={`flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-200 ${
-        isFavorited
+      onClick={handleToggle}
+      disabled={isLoading}
+      className={`flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-200 disabled:opacity-50 ${
+        effectiveIsFavorited
           ? "border-red-200 bg-red-50 text-red-500 hover:bg-red-100"
           : "border-stone-200 bg-white text-stone-400 hover:bg-stone-50 hover:text-stone-600"
       }`}
-      aria-label={isFavorited ? "Remove from favorites" : "Add to favorites"}
-      aria-pressed={isFavorited}
-      title={isFavorited ? "Remove from favorites" : "Save to favorites"}
+      aria-label={effectiveIsFavorited ? "Remove from favorites" : "Add to favorites"}
+      aria-pressed={effectiveIsFavorited}
+      title={effectiveIsFavorited ? "Remove from favorites" : "Save to favorites"}
     >
       <Heart
         className={`h-5 w-5 transition-all duration-300 ${
-          isFavorited ? "fill-current" : ""
+          effectiveIsFavorited ? "fill-current" : ""
         } ${isAnimating ? "scale-125" : "scale-100"}`}
       />
     </button>
   );
-}
-
-// Helper function to get favorites from localStorage
-export function getFavoriteIds(): string[] {
-  return getFavoritesFromStorage();
-}
-
-// Helper function to check if a recipe is favorited
-export function isRecipeFavorited(recipeId: string): boolean {
-  const favorites = getFavoritesFromStorage();
-  return favorites.includes(recipeId);
 }

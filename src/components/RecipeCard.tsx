@@ -58,7 +58,7 @@ export default function RecipeCard({ recipe, priority = false }: { recipe: Recip
         <p className="mt-1 line-clamp-2 text-sm text-stone-500">
           {recipe.description}
         </p>
-        <div className="mt-3 flex items-center gap-4 text-xs text-stone-400">
+        <div className="mt-3 flex items-center gap-4 text-xs text-stone-500">
           <span className="flex items-center gap-1">
             <Clock className="h-3.5 w-3.5" /> {totalTime} min
           </span>

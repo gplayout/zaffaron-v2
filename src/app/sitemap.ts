@@ -38,6 +38,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: "https://zaffaron.com", lastModified: lastMod, changeFrequency: "daily" as const },
     { url: "https://zaffaron.com/recipes", lastModified: lastMod, changeFrequency: "weekly" as const },
     { url: "https://zaffaron.com/about", lastModified: now, changeFrequency: "monthly" as const },
+    { url: "https://zaffaron.com/contact", lastModified: now, changeFrequency: "monthly" as const },
     { url: "https://zaffaron.com/editorial-policy", lastModified: now, changeFrequency: "monthly" as const },
     { url: "https://zaffaron.com/privacy", lastModified: now, changeFrequency: "monthly" as const },
     { url: "https://zaffaron.com/terms", lastModified: now, changeFrequency: "monthly" as const },

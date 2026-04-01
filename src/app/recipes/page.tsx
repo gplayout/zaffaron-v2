@@ -1,7 +1,6 @@
-import { supabaseServer } from "@/lib/supabase-server";
 import RecipeCard from "@/components/RecipeCard";
 import Link from "next/link";
-import type { Recipe } from "@/types";
+import { getRecipes } from "@/lib/api/recipes";
 import type { Metadata } from "next";
 
 export const revalidate = 3600;
@@ -31,18 +30,8 @@ export default async function AllRecipesPage({
 }) {
   const params = await searchParams;
   const page = Math.max(1, parseInt(params.page || "1", 10));
-  const from = (page - 1) * PAGE_SIZE;
-  const to = from + PAGE_SIZE - 1;
 
-  const { data: recipes, count } = await supabaseServer
-    .from("recipes_v2")
-    .select("id,slug,title,description,image_url,image_alt,prep_time_minutes,cook_time_minutes,servings,difficulty,category,category_slug,cuisine,cuisine_slug,calories_per_serving,published_at", { count: "exact" })
-    .eq("published", true)
-    .order("published_at", { ascending: false })
-    .range(from, to);
-
-  const items = (recipes as Recipe[]) || [];
-  const totalCount = count || 0;
+  const { recipes: items, count: totalCount } = await getRecipes(page, PAGE_SIZE);
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
   return (

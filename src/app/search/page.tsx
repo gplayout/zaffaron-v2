@@ -39,7 +39,7 @@ export default function SearchPage() {
           <label htmlFor="recipe-search" className="sr-only">
             Search recipes
           </label>
-          <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-stone-400" />
+          <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-stone-500" />
           <input
             id="recipe-search"
             type="text"
@@ -52,12 +52,12 @@ export default function SearchPage() {
       </form>
 
       <div aria-live="polite">
-        {loading && <p className="text-center text-stone-400">Searching…</p>}
+        {loading && <p className="text-center text-stone-500">Searching…</p>}
 
         {error && <p className="text-center text-red-500">{error}</p>}
 
         {searched && !loading && !error && results.length === 0 && (
-          <p className="text-center text-stone-400">No recipes found for &quot;{query}&quot;</p>
+          <p className="text-center text-stone-500">No recipes found for &quot;{query}&quot;</p>
         )}
       </div>
 

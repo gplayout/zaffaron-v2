@@ -1,8 +1,7 @@
 import { notFound } from "next/navigation";
-import { supabaseServer } from "@/lib/supabase-server";
 import RecipeCard from "@/components/RecipeCard";
 import Link from "next/link";
-import type { Recipe } from "@/types";
+import { getRecipesByCategory, getCategorySlugs, getCategoryRecipeCount } from "@/lib/api/recipes";
 import type { Metadata } from "next";
 
 export const revalidate = 3600;
@@ -31,11 +30,7 @@ const defaultDesc = (slug: string) => ({
 });
 
 export async function generateStaticParams() {
-  const { data } = await supabaseServer
-    .from("recipes_v2")
-    .select("category_slug")
-    .eq("published", true);
-  const slugs = [...new Set((data || []).map((r) => r.category_slug).filter(Boolean))];
+  const slugs = await getCategorySlugs();
   return slugs.map((slug) => ({ slug }));
 }
 
@@ -47,14 +42,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   if (!categoryDescriptions[slug]) {
     // Check if any recipes exist for this slug
-    const { count } = await supabaseServer.from("recipes_v2").select("id", { count: "exact", head: true }).eq("published", true).eq("category_slug", slug);
-    if (!count || count === 0) return { title: "Not Found", robots: { index: false } };
+    const count = await getCategoryRecipeCount(slug);
+    if (count === 0) return { title: "Not Found", robots: { index: false } };
   }
   const info = categoryDescriptions[slug] || defaultDesc(slug);
+  const url = `https://zaffaron.com/category/${slug}`;
   return {
     title: info.title,
     description: info.description,
-    alternates: { canonical: `https://zaffaron.com/category/${slug}` },
+    alternates: { canonical: url },
+    openGraph: {
+      title: info.title,
+      description: info.description,
+      url,
+    },
   };
 }
 
@@ -64,19 +65,8 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   const page = Math.max(1, parseInt(pageStr || '1', 10) || 1);
   const info = categoryDescriptions[slug] || defaultDesc(slug);
 
-  const from = (page - 1) * PAGE_SIZE;
-  const to = from + PAGE_SIZE - 1;
-
-  const { data: recipes, count } = await supabaseServer
-    .from("recipes_v2")
-    .select("id,slug,title,description,image_url,image_alt,prep_time_minutes,cook_time_minutes,servings,difficulty,category,category_slug,cuisine,cuisine_slug,calories_per_serving,published_at", { count: 'exact' })
-    .eq("published", true)
-    .eq("category_slug", slug)
-    .order("published_at", { ascending: false })
-    .range(from, to);
-
-  const items = (recipes as Recipe[]) || [];
-  const totalPages = Math.ceil((count || 0) / PAGE_SIZE);
+  const { recipes: items, count } = await getRecipesByCategory(slug, page, PAGE_SIZE);
+  const totalPages = Math.ceil(count / PAGE_SIZE);
 
   // 404 for invalid categories
   if (items.length === 0 && !categoryDescriptions[slug]) {

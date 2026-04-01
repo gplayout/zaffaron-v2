@@ -1,8 +1,7 @@
-import { supabaseServer } from "@/lib/supabase-server";
 import RecipeCard from "@/components/RecipeCard";
 import Link from "next/link";
+import { getLatestRecipes, getPopularRecipes, getRecipeCount } from "@/lib/api/recipes";
 import type { Metadata } from "next";
-import type { Recipe } from "@/types";
 
 export const revalidate = 60;
 
@@ -13,38 +12,11 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const CARD_FIELDS = `id,slug,title,description,image_url,image_alt,prep_time_minutes,cook_time_minutes,servings,difficulty,category,category_slug,cuisine,cuisine_slug,calories_per_serving,published_at`;
-
-  // Featured: latest 18 recipes (not 1000!)
-  const { data: latest, error: latestErr } = await supabaseServer
-    .from("recipes_v2")
-    .select(CARD_FIELDS)
-    .eq("published", true)
-    .order("published_at", { ascending: false })
-    .limit(18);
-
-  // Popular: editor's picks (random selection from older recipes)
-  const { data: popular, error: popErr } = await supabaseServer
-    .from("recipes_v2")
-    .select(CARD_FIELDS)
-    .eq("published", true)
-    .order("published_at", { ascending: true })
-    .limit(6);
-
-  // Total count for "View all X recipes" CTA
-  const { count } = await supabaseServer
-    .from("recipes_v2")
-    .select("id", { count: "exact", head: true })
-    .eq("published", true);
-
-  if (latestErr) {
-    console.error("Failed to fetch recipes:", latestErr);
-    throw new Error("Failed to load recipes. Please try again later.");
-  }
-
-  const latestItems = (latest as Recipe[]) || [];
-  const popularItems = (popular as Recipe[]) || [];
-  const totalCount = count || 0;
+  const [latestItems, popularItems, totalCount] = await Promise.all([
+    getLatestRecipes(18),
+    getPopularRecipes(6),
+    getRecipeCount(),
+  ]);
 
   return (
     <>

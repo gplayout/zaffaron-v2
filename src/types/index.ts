@@ -1,3 +1,5 @@
+export type { Cook } from './cook';
+
 export interface Ingredient {
   item: string;
   amount: string;

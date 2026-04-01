@@ -132,56 +132,56 @@ alter table public.orders enable row level security;
 alter table public.order_items enable row level security;
 
 -- cook_applications: user can insert/read own
-create policy if not exists "cook_applications_insert_own" on public.cook_applications
+create policy "cook_applications_insert_own" on public.cook_applications
   for insert with check (auth.uid() = user_id);
-create policy if not exists "cook_applications_select_own" on public.cook_applications
+create policy "cook_applications_select_own" on public.cook_applications
   for select using (auth.uid() = user_id);
 
 -- cooks: public can read verified cooks; cook can read self
-create policy if not exists "cooks_select_public_verified" on public.cooks
+create policy "cooks_select_public_verified" on public.cooks
   for select using (verified = true or auth.uid() = user_id);
 
 -- menu_items: public can read available items for verified cooks; cook can manage own
-create policy if not exists "menu_items_select_public" on public.menu_items
+create policy "menu_items_select_public" on public.menu_items
   for select using (
     available = true and exists (select 1 from public.cooks c where c.id = cook_id and c.verified = true)
     or exists (select 1 from public.cooks c where c.id = cook_id and c.user_id = auth.uid())
   );
-create policy if not exists "menu_items_modify_owner" on public.menu_items
+create policy "menu_items_modify_owner" on public.menu_items
   for all using (exists (select 1 from public.cooks c where c.id = cook_id and c.user_id = auth.uid()))
   with check (exists (select 1 from public.cooks c where c.id = cook_id and c.user_id = auth.uid()));
 
 -- favorites: user manages own
-create policy if not exists "favorites_select_own" on public.recipe_favorites
+create policy "favorites_select_own" on public.recipe_favorites
   for select using (auth.uid() = user_id);
-create policy if not exists "favorites_modify_own" on public.recipe_favorites
+create policy "favorites_modify_own" on public.recipe_favorites
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 -- recipe_reviews: authenticated can read all (public site) but only write own
-create policy if not exists "recipe_reviews_select_all" on public.recipe_reviews
+create policy "recipe_reviews_select_all" on public.recipe_reviews
   for select using (true);
-create policy if not exists "recipe_reviews_insert_own" on public.recipe_reviews
+create policy "recipe_reviews_insert_own" on public.recipe_reviews
   for insert with check (auth.uid() = user_id);
-create policy if not exists "recipe_reviews_update_own" on public.recipe_reviews
+create policy "recipe_reviews_update_own" on public.recipe_reviews
   for update using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 -- cook_reviews: authenticated can read all; only write own
-create policy if not exists "cook_reviews_select_all" on public.cook_reviews
+create policy "cook_reviews_select_all" on public.cook_reviews
   for select using (true);
-create policy if not exists "cook_reviews_insert_own" on public.cook_reviews
+create policy "cook_reviews_insert_own" on public.cook_reviews
   for insert with check (auth.uid() = user_id);
-create policy if not exists "cook_reviews_update_own" on public.cook_reviews
+create policy "cook_reviews_update_own" on public.cook_reviews
   for update using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 -- orders: customer sees own, cook sees their orders
-create policy if not exists "orders_select_customer_or_cook" on public.orders
+create policy "orders_select_customer_or_cook" on public.orders
   for select using (
     auth.uid() = customer_id
     or exists (select 1 from public.cooks c where c.id = cook_id and c.user_id = auth.uid())
   );
-create policy if not exists "orders_insert_customer" on public.orders
+create policy "orders_insert_customer" on public.orders
   for insert with check (auth.uid() = customer_id);
-create policy if not exists "orders_update_customer_or_cook" on public.orders
+create policy "orders_update_customer_or_cook" on public.orders
   for update using (
     auth.uid() = customer_id
     or exists (select 1 from public.cooks c where c.id = cook_id and c.user_id = auth.uid())
@@ -192,7 +192,7 @@ create policy if not exists "orders_update_customer_or_cook" on public.orders
   );
 
 -- order_items: visible if order visible; writable by order owner (customer) only
-create policy if not exists "order_items_select_via_orders" on public.order_items
+create policy "order_items_select_via_orders" on public.order_items
   for select using (
     exists (
       select 1 from public.orders o
@@ -204,12 +204,12 @@ create policy if not exists "order_items_select_via_orders" on public.order_item
     )
   );
 
-create policy if not exists "order_items_insert_customer" on public.order_items
+create policy "order_items_insert_customer" on public.order_items
   for insert with check (
     exists (select 1 from public.orders o where o.id = order_id and auth.uid() = o.customer_id)
   );
 
-create policy if not exists "order_items_update_customer" on public.order_items
+create policy "order_items_update_customer" on public.order_items
   for update using (
     exists (select 1 from public.orders o where o.id = order_id and auth.uid() = o.customer_id)
   )

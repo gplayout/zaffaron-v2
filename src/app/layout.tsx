@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Search, ChefHat } from "lucide-react";
 import { Analytics } from "@vercel/analytics/next";
 import { AuthProvider } from "@/components/AuthProvider";
-import { HeaderAuth } from "@/components/HeaderAuth";
+import { HeaderAuthWithFavorites } from "@/components/HeaderAuthWithFavorites";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -62,7 +62,7 @@ export default function RootLayout({
                 >
                   <Search className="h-5 w-5" />
                 </Link>
-                <HeaderAuth />
+                <HeaderAuthWithFavorites />
               </div>
             </div>
           </header>

@@ -15,7 +15,9 @@ export async function generateStaticParams() {
   const { data } = await supabaseServer
     .from("recipes_v2")
     .select("slug")
-    .eq("published", true);
+    .eq("published", true)
+    .order("published_at", { ascending: false })
+    .limit(500);
   return (data || []).map((r) => ({ slug: r.slug }));
 }
 

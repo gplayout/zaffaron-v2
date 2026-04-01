@@ -2,16 +2,9 @@
 
 import { useState } from "react";
 import { Search } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { searchRecipes } from "@/app/search/actions";
 import RecipeCard from "@/components/RecipeCard";
 import type { Recipe } from "@/types";
-
-// Metadata must be in a separate layout for client components — handled via layout.tsx
-
-// Sanitize input for PostgREST filter safety
-function sanitizeQuery(input: string): string {
-  return input.replace(/[%_\\(),."']/g, "").trim().slice(0, 100);
-}
 
 export default function SearchPage() {
   const [query, setQuery] = useState("");
@@ -22,28 +15,21 @@ export default function SearchPage() {
 
   async function handleSearch(e: React.FormEvent) {
     e.preventDefault();
-    const clean = sanitizeQuery(query);
-    if (!clean) return;
+    if (!query.trim()) return;
 
     setLoading(true);
     setSearched(true);
     setError(null);
 
-    const { data, error: fetchError } = await supabase
-      .from("recipes_v2")
-      .select("id,slug,title,description,image_url,image_alt,prep_time_minutes,cook_time_minutes,servings,difficulty,category,category_slug,cuisine,cuisine_slug,calories_per_serving,published_at")
-      .eq("published", true)
-      .or(`title.ilike.%${clean}%,cuisine.ilike.%${clean}%,category.ilike.%${clean}%`)
-      .order("created_at", { ascending: false })
-      .limit(20);
-
-    if (fetchError) {
+    try {
+      const data = await searchRecipes(query);
+      setResults(data);
+    } catch {
       setError("Search failed. Please try again.");
       setResults([]);
-    } else {
-      setResults((data as Recipe[]) || []);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   return (

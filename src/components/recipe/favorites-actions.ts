@@ -8,19 +8,16 @@ export async function getIsFavorited(
   try {
     const supabase = await createServerSupabase();
 
-    // Get current user
     const { data: { user }, error: authError } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return { ok: false, error: 'auth' };
     }
 
-    const recipeIdNum = Number(recipeId);
-
     const { data, error } = await supabase
       .from('recipe_favorites')
       .select('recipe_id')
-      .eq('recipe_id', recipeIdNum)
+      .eq('recipe_id', recipeId)
       .eq('user_id', user.id)
       .maybeSingle();
 
@@ -42,20 +39,16 @@ export async function toggleFavorite(
   try {
     const supabase = await createServerSupabase();
 
-    // Get current user
     const { data: { user }, error: authError } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return { ok: false, error: 'auth' };
     }
 
-    // Check if already favorited
-    const recipeIdNum = Number(recipeId);
-
     const { data: existing, error: checkError } = await supabase
       .from('recipe_favorites')
       .select('recipe_id')
-      .eq('recipe_id', recipeIdNum)
+      .eq('recipe_id', recipeId)
       .eq('user_id', user.id)
       .maybeSingle();
 
@@ -65,11 +58,10 @@ export async function toggleFavorite(
     }
 
     if (existing) {
-      // Delete (unfavorite)
       const { error: deleteError } = await supabase
         .from('recipe_favorites')
         .delete()
-        .eq('recipe_id', recipeIdNum)
+        .eq('recipe_id', recipeId)
         .eq('user_id', user.id);
 
       if (deleteError) {
@@ -79,12 +71,11 @@ export async function toggleFavorite(
 
       return { ok: true, isFavorited: false };
     } else {
-      // Upsert (favorite) — requires unique constraint on (recipe_id, user_id)
       const { error: upsertError } = await supabase
         .from('recipe_favorites')
         .upsert(
           {
-            recipe_id: recipeIdNum,
+            recipe_id: recipeId,
             user_id: user.id,
           },
           {

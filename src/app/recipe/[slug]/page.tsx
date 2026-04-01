@@ -69,10 +69,8 @@ export default async function RecipePage({ params }: Props) {
   const recipe = await getRecipeBySlug(slug);
   if (!recipe) notFound();
 
-  const recipeIdNum = Number(recipe.id);
-
   // Fetch reviews server-side
-  const reviewsResult = await getRecipeReviews(recipeIdNum);
+  const reviewsResult = await getRecipeReviews(recipe.id);
   const reviews = reviewsResult.ok ? reviewsResult.reviews : [];
 
   return (
@@ -103,7 +101,7 @@ export default async function RecipePage({ params }: Props) {
           categorySlug={recipe.category_slug || recipe.category.toLowerCase()}
         />
 
-        <RecipeReviews reviews={reviews} recipeId={recipeIdNum} />
+        <RecipeReviews reviews={reviews} recipeId={recipe.id} />
       </article>
     </>
   );

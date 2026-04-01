@@ -16,7 +16,7 @@ interface Review {
 
 interface RecipeReviewsProps {
   reviews: Review[];
-  recipeId: number;
+  recipeId: string;
 }
 
 export function RecipeReviews({ reviews: initialReviews, recipeId }: RecipeReviewsProps) {

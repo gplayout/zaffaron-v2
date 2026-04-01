@@ -19,10 +19,10 @@ interface ReviewRow {
 }
 
 export async function getRecipeReviews(
-  recipeId: number
+  recipeId: string
 ): Promise<{ ok: true; reviews: Review[] } | { ok: false; error: string }> {
   try {
-    if (!Number.isFinite(recipeId)) {
+    if (!recipeId) {
       return { ok: true, reviews: [] };
     }
     const { data, error } = await supabaseServer
@@ -52,21 +52,19 @@ export async function getRecipeReviews(
 }
 
 export async function submitRecipeReview(
-  recipeId: number,
+  recipeId: string,
   rating: number,
   body: string
 ): Promise<{ ok: true; review: Review } | { ok: false; error: string }> {
   try {
     const supabase = await createServerSupabase();
 
-    // Get current user
     const { data: { user }, error: authError } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return { ok: false, error: 'auth' };
     }
 
-    // Validate input
     if (rating < 1 || rating > 5) {
       return { ok: false, error: 'Rating must be between 1 and 5' };
     }
@@ -75,7 +73,6 @@ export async function submitRecipeReview(
       return { ok: false, error: 'Review text is required' };
     }
 
-    // Upsert review (insert or update if already exists)
     const { data, error } = await supabase
       .from('recipe_reviews')
       .upsert(

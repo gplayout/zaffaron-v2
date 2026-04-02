@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+﻿import { Metadata } from "next";
 import { Search, SlidersHorizontal, MapPin } from "lucide-react";
 import CookCard from "@/components/CookCard";
 import type { Cook } from "@/types";
@@ -196,7 +196,7 @@ async function CooksPageContent({
             <select
               name="cuisine"
               defaultValue={cuisine}
-              onChange={(e) => e.target.form?.submit()}
+              
               className="rounded-md border border-stone-200 bg-white px-3 py-1.5 text-sm text-stone-700 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
             >
               {cuisineTypes.map((type) => (
@@ -215,7 +215,7 @@ async function CooksPageContent({
             <select
               name="rating"
               defaultValue={rating}
-              onChange={(e) => e.target.form?.submit()}
+              
               className="rounded-md border border-stone-200 bg-white px-3 py-1.5 text-sm text-stone-700 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
             >
               {ratings.map((r) => (
@@ -235,7 +235,7 @@ async function CooksPageContent({
             <select
               name="availability"
               defaultValue={availability}
-              onChange={(e) => e.target.form?.submit()}
+              
               className="rounded-md border border-stone-200 bg-white px-3 py-1.5 text-sm text-stone-700 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
             >
               {availabilities.map((a) => (
@@ -265,7 +265,7 @@ async function CooksPageContent({
               id="sort"
               name="sort"
               defaultValue={sort}
-              onChange={(e) => e.target.form?.submit()}
+              
               className="rounded-md border border-stone-200 bg-white px-3 py-1.5 text-sm text-stone-700 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
             >
               {sortOptions.map((option) => (
@@ -305,3 +305,4 @@ async function CooksPageContent({
     </div>
   );
 }
+

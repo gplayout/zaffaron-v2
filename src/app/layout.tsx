@@ -83,7 +83,7 @@ export default function RootLayout({
                   </h3>
                   <ul className="space-y-3">
                     <li>
-                      <Link href="/become-a-cook" className="text-sm text-stone-600 hover:text-amber-600 transition">
+                      <Link href="/cook/apply" className="text-sm text-stone-600 hover:text-amber-600 transition">
                         Become a Cook
                       </Link>
                     </li>
@@ -107,7 +107,7 @@ export default function RootLayout({
                   </h3>
                   <ul className="space-y-3">
                     <li>
-                      <Link href="/help" className="text-sm text-stone-600 hover:text-amber-600 transition">
+                      <Link href="/contact" className="text-sm text-stone-600 hover:text-amber-600 transition">
                         Help Center
                       </Link>
                     </li>
@@ -117,7 +117,7 @@ export default function RootLayout({
                       </Link>
                     </li>
                     <li>
-                      <Link href="/feedback" className="text-sm text-stone-600 hover:text-amber-600 transition">
+                      <Link href="/contact" className="text-sm text-stone-600 hover:text-amber-600 transition">
                         Feedback
                       </Link>
                     </li>

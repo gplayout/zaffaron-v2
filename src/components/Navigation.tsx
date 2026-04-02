@@ -8,8 +8,8 @@ import { HeaderAuthWithFavorites } from "./HeaderAuthWithFavorites";
 
 const navLinks = [
   { href: "/recipes", label: "Recipes", icon: UtensilsCrossed },
-  { href: "/cuisines", label: "Cuisines", icon: null },
-  { href: "/categories", label: "Categories", icon: Grid3X3 },
+  { href: "/recipes", label: "Cuisines", icon: null },
+  { href: "/recipes", label: "Categories", icon: Grid3X3 },
   { href: "/cooks", label: "Cooks", icon: Users },
 ];
 

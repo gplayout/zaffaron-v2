@@ -47,9 +47,9 @@ export default async function Home() {
           { label: "🍚 Rice", href: "/category/rice" },
           { label: "🍢 Kebabs", href: "/category/kebab" },
           { label: "🥗 Appetizers", href: "/category/appetizer" },
-          { label: "🍮 Desserts", href: "/category/dessert" },
           { label: "🥣 Soups", href: "/category/soup" },
-          { label: "🥛 Drinks", href: "/category/drink" },
+          { label: "🍳 Breakfast", href: "/category/breakfast" },
+          { label: "🥘 Main Courses", href: "/category/main" },
         ].map((cat) => (
           <Link
             key={cat.href}

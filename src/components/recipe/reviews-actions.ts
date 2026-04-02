@@ -15,6 +15,7 @@ interface ReviewRow {
   id: string;
   rating: number;
   body: string | null;
+  author_name: string | null;
   created_at: string;
 }
 
@@ -27,7 +28,7 @@ export async function getRecipeReviews(
     }
     const { data, error } = await supabaseServer
       .from('recipe_reviews')
-      .select('id, rating, body, created_at, user_id')
+      .select('id, rating, body, author_name, created_at')
       .eq('recipe_id', recipeId)
       .order('created_at', { ascending: false });
 
@@ -40,7 +41,7 @@ export async function getRecipeReviews(
       id: item.id,
       rating: item.rating,
       text: item.body || "",
-      authorName: 'Anonymous',
+      authorName: item.author_name || 'Anonymous',
       createdAt: item.created_at,
     }));
 
@@ -73,6 +74,13 @@ export async function submitRecipeReview(
       return { ok: false, error: 'Review text is required' };
     }
 
+    // Get user's display name from metadata
+    const authorName =
+      user.user_metadata?.full_name ||
+      user.user_metadata?.name ||
+      user.email?.split('@')[0] ||
+      'Anonymous';
+
     const { data, error } = await supabase
       .from('recipe_reviews')
       .upsert(
@@ -81,12 +89,13 @@ export async function submitRecipeReview(
           user_id: user.id,
           rating,
           body: body.trim(),
+          author_name: authorName,
         },
         {
           onConflict: 'recipe_id,user_id',
         }
       )
-      .select('id, rating, body, created_at, user_id')
+      .select('id, rating, body, author_name, created_at')
       .single();
 
     if (error) {
@@ -99,7 +108,7 @@ export async function submitRecipeReview(
       id: row.id,
       rating: row.rating,
       text: row.body || "",
-      authorName: 'Anonymous',
+      authorName: row.author_name || authorName,
       createdAt: row.created_at,
     };
 

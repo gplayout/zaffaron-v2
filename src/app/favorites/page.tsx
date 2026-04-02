@@ -11,9 +11,9 @@ export const metadata = {
   description: "Your saved recipes on Zaffaron",
 };
 
-async function getUser() {
+async function getSupabase() {
   const cookieStore = await cookies();
-  const supabase = createServerClient(
+  return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -23,34 +23,31 @@ async function getUser() {
       },
     }
   );
-  
-  const { data: { user } } = await supabase.auth.getUser();
-  return user;
 }
 
-async function getRecipesByIds(ids: string[]): Promise<Recipe[]> {
-  if (ids.length === 0) return [];
-  
-  const cookieStore = await cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll: () => cookieStore.getAll(),
-        setAll: () => {},
-      },
-    }
-  );
+async function getFavoriteRecipes(userId: string): Promise<Recipe[]> {
+  const supabase = await getSupabase();
 
-  const { data, error } = await supabase
-    .from("recipes")
+  // Get favorite recipe_ids for this user
+  const { data: favRows, error: favError } = await supabase
+    .from("recipe_favorites")
+    .select("recipe_id")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+
+  if (favError || !favRows || favRows.length === 0) return [];
+
+  const recipeIds = favRows.map((r) => r.recipe_id);
+
+  // Fetch the actual recipes
+  const { data: recipes, error: recipeError } = await supabase
+    .from("recipes_v2")
     .select("*")
-    .in("id", ids)
+    .in("id", recipeIds)
     .eq("published", true);
 
-  if (error || !data) return [];
-  return data as Recipe[];
+  if (recipeError || !recipes) return [];
+  return recipes as Recipe[];
 }
 
 function FavoritesGrid({ recipes }: { recipes: Recipe[] }) {
@@ -108,7 +105,8 @@ function LoadingGrid() {
 }
 
 async function FavoritesContent() {
-  const user = await getUser();
+  const supabase = await getSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
     return (
@@ -140,25 +138,8 @@ async function FavoritesContent() {
     );
   }
 
-  // For now, we can't read localStorage on server
-  // The client component will handle displaying favorites
-  // This is a placeholder - in production, favorites would come from DB
-  return (
-    <div className="rounded-xl border border-stone-200 bg-white p-12 text-center">
-      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-stone-100">
-        <Heart className="h-8 w-8 text-amber-500" />
-      </div>
-      <h2 className="mt-4 text-lg font-semibold text-stone-900">Your Favorites</h2>
-      <p className="mt-2 text-stone-600">
-        Your saved recipes will appear here. For now, favorites are stored in your browser.
-      </p>
-      <p className="mt-4 text-sm text-stone-500">
-        <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-3 py-1 text-amber-700">
-          Coming soon: Sync favorites across all your devices
-        </span>
-      </p>
-    </div>
-  );
+  const recipes = await getFavoriteRecipes(user.id);
+  return <FavoritesGrid recipes={recipes} />;
 }
 
 export default async function FavoritesPage() {

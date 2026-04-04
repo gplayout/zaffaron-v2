@@ -4,25 +4,23 @@ import { useState } from "react";
 import { Search } from "lucide-react";
 import { searchRecipes } from "@/app/search/actions";
 import RecipeCard from "@/components/RecipeCard";
-import type { Recipe } from "@/types";
+import type { RecipeSummary } from "@/types";
 
 export default function SearchPage() {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<Recipe[]>([]);
+  const [results, setResults] = useState<RecipeSummary[]>([]);
   const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function handleSearch(e: React.FormEvent) {
-    e.preventDefault();
-    if (!query.trim()) return;
-
+  async function doSearch(term: string) {
+    if (!term.trim()) return;
+    setQuery(term);
     setLoading(true);
     setSearched(true);
     setError(null);
-
     try {
-      const data = await searchRecipes(query);
+      const data = await searchRecipes(term);
       setResults(data);
     } catch {
       setError("Search failed. Please try again.");
@@ -32,6 +30,11 @@ export default function SearchPage() {
     }
   }
 
+  async function handleSearch(e: React.FormEvent) {
+    e.preventDefault();
+    await doSearch(query);
+  }
+
   return (
     <div>
       <form onSubmit={handleSearch} className="mb-8">
@@ -39,7 +42,9 @@ export default function SearchPage() {
           <label htmlFor="recipe-search" className="sr-only">
             Search recipes
           </label>
-          <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-stone-500" />
+          <button type="submit" className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-500 hover:text-amber-600 transition" aria-label="Search">
+            <Search className="h-5 w-5" />
+          </button>
           <input
             id="recipe-search"
             type="text"
@@ -51,15 +56,33 @@ export default function SearchPage() {
         </div>
       </form>
 
-      <div aria-live="polite">
+      <div aria-live="polite" aria-busy={loading}>
         {loading && <p className="text-center text-stone-500">Searching…</p>}
-
         {error && <p className="text-center text-red-500">{error}</p>}
-
         {searched && !loading && !error && results.length === 0 && (
           <p className="text-center text-stone-500">No recipes found for &quot;{query}&quot;</p>
         )}
       </div>
+
+      {/* Initial state: search suggestions */}
+      {!searched && !loading && (
+        <div className="mx-auto max-w-lg text-center">
+          <p className="text-lg font-medium text-stone-700 mb-4">What are you craving?</p>
+          <div className="flex flex-wrap justify-center gap-2">
+            {["Kebab", "Rice", "Soup", "Biryani", "Hummus", "Baklava", "Dolma", "Stew", "Salad", "Bread"].map((term) => (
+              <button
+                key={term}
+                type="button"
+                onClick={() => doSearch(term)}
+                className="rounded-full border border-stone-200 bg-white px-4 py-1.5 text-sm text-stone-600 transition hover:border-amber-300 hover:bg-amber-50"
+              >
+                {term}
+              </button>
+            ))}
+          </div>
+          <p className="mt-6 text-sm text-stone-400">Search across 1,500+ recipes from Persian, Turkish, Afghan, Lebanese, Azerbaijani, Indian, Moroccan, and Greek cuisines</p>
+        </div>
+      )}
 
       {results.length > 0 && (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

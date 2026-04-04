@@ -1,31 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { supabaseServer } from "@/lib/supabase-server";
-
-const labelMap: Record<string, string> = {
-  persian: "Persian",
-  indian: "Indian",
-  "middle-eastern": "Middle Eastern",
-  stew: "Stews",
-  rice: "Rice Dishes",
-  kebab: "Kebabs",
-  appetizer: "Appetizers",
-  soup: "Soups",
-  dessert: "Desserts",
-  drink: "Drinks",
-  breakfast: "Breakfast",
-  main: "Main Courses",
-  salad: "Salads",
-  side: "Side Dishes",
-  pickle: "Pickles",
-  sweet: "Sweets",
-  bread: "Breads",
-};
-
-function capitalize(s: string) {
-  if (!s) return s;
-  return labelMap[s.toLowerCase()] || s.charAt(0).toUpperCase() + s.slice(1).replace(/-/g, " ");
-}
+import { humanize } from "@/lib/formatting";
 
 interface RelatedRecipesProps {
   currentSlug: string;
@@ -34,32 +10,35 @@ interface RelatedRecipesProps {
 }
 
 export async function RelatedRecipes({ currentSlug, cuisineSlug, categorySlug }: RelatedRecipesProps) {
-  // Get related recipes: same cuisine first, fill with same category
+  // Two queries: same cuisine first, then same category as fallback
+  const FIELDS = "slug,title,image_url,image_alt,prep_time_minutes,cook_time_minutes,difficulty,cuisine,category,cuisine_slug";
+
+  // Primary: same cuisine (most relevant)
   const { data: sameCuisine } = await supabaseServer
     .from("recipes_v2")
-    .select("slug,title,image_url,image_alt,prep_time_minutes,cook_time_minutes,difficulty,cuisine,category")
+    .select(FIELDS)
     .eq("published", true)
     .eq("cuisine_slug", cuisineSlug)
     .neq("slug", currentSlug)
+    .order("published_at", { ascending: false })
     .limit(4);
 
-  const related = (sameCuisine || []).slice(0, 4);
-
-  // Fill remaining slots with same category if needed
-  if (related.length < 4 && categorySlug) {
-    const existingSlugs = new Set(related.map((r) => r.slug));
-    const { data: sameCat } = await supabaseServer
+  // Fallback: same category, different cuisine (for variety)
+  const slugsToExclude = [currentSlug, ...(sameCuisine || []).map(r => r.slug)];
+  let categoryFill: typeof sameCuisine = [];
+  if ((sameCuisine || []).length < 4) {
+    const { data: catData } = await supabaseServer
       .from("recipes_v2")
-      .select("slug,title,image_url,image_alt,prep_time_minutes,cook_time_minutes,difficulty,cuisine,category")
+      .select(FIELDS)
       .eq("published", true)
       .eq("category_slug", categorySlug)
-      .neq("slug", currentSlug)
-      .limit(4);
-    for (const r of sameCat || []) {
-      if (related.length >= 4) break;
-      if (!existingSlugs.has(r.slug)) related.push(r);
-    }
+      .not("slug", "in", `(${slugsToExclude.join(",")})`)
+      .order("published_at", { ascending: false })
+      .limit(4 - (sameCuisine || []).length);
+    categoryFill = catData || [];
   }
+
+  const related = [...(sameCuisine || []), ...categoryFill].slice(0, 4);
 
   if (related.length === 0) return null;
 
@@ -87,7 +66,7 @@ export async function RelatedRecipes({ currentSlug, cuisineSlug, categorySlug }:
             <div className="p-3">
               <h3 className="text-sm font-semibold text-stone-800 line-clamp-2">{r.title}</h3>
               <p className="mt-1 text-xs text-stone-500">
-                {capitalize(r.cuisine)} · {capitalize(r.category)} · {r.prep_time_minutes + r.cook_time_minutes} min
+                {humanize(r.cuisine)} · {humanize(r.category)} · {(r.prep_time_minutes ?? 0) + (r.cook_time_minutes ?? 0)} min
               </p>
             </div>
           </Link>

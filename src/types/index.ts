@@ -113,3 +113,24 @@ export interface Recipe {
   created_at: string;
   updated_at: string;
 }
+
+/** Lightweight recipe type for list/card views (matches CARD_FIELDS query) */
+export type RecipeSummary = Pick<
+  Recipe,
+  | 'id'
+  | 'slug'
+  | 'title'
+  | 'description'
+  | 'image_url'
+  | 'image_alt'
+  | 'prep_time_minutes'
+  | 'cook_time_minutes'
+  | 'servings'
+  | 'difficulty'
+  | 'category'
+  | 'category_slug'
+  | 'cuisine'
+  | 'cuisine_slug'
+  | 'calories_per_serving'
+  | 'published_at'
+>;

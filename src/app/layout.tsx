@@ -11,18 +11,18 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   metadataBase: new URL("https://zaffaron.com"),
   title: {
-    default: "Zaffaron — Authentic Persian & World Recipes",
+    default: "Zaffaron — Authentic Recipes from Every Kitchen",
     template: "%s — Zaffaron",
   },
   description:
-    "Discover authentic, verified Persian recipes and world cuisine. Every recipe tested, every detail perfected.",
+    "Discover authentic, verified recipes from Persian, Turkish, Afghan, Lebanese, Azerbaijani, Indian, Moroccan, Greek, and world cuisines. Every recipe tested, every detail perfected.",
   openGraph: {
-    title: "Zaffaron — Authentic Persian & World Recipes",
-    description: "Verified recipes from the heart of Persian cuisine and beyond.",
+    title: "Zaffaron — Authentic Recipes from Every Kitchen",
+    description: "Verified recipes from Persian, Turkish, Afghan, Lebanese, Azerbaijani, Indian, Moroccan, Greek, and world cuisines. Every detail perfected.",
     type: "website",
     siteName: "Zaffaron",
     locale: "en_US",
-    images: [{ url: "https://zaffaron.com/og-default.jpg", width: 1200, height: 630, alt: "Zaffaron — Authentic Persian Recipes" }],
+    images: [{ url: "https://zaffaron.com/og-default.jpg", width: 1200, height: 630, alt: "Zaffaron — Authentic Recipes from Every Kitchen" }],
   },
   twitter: {
     card: "summary_large_image",
@@ -54,9 +54,9 @@ export default function RootLayout({
               <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
                 {/* About Section */}
                 <div>
-                  <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-stone-900">
+                  <p className="mb-4 text-sm font-semibold uppercase tracking-wider text-stone-900">
                     About
-                  </h3>
+                  </p>
                   <ul className="space-y-3">
                     <li>
                       <Link href="/about" className="text-sm text-stone-600 hover:text-amber-600 transition">
@@ -78,9 +78,9 @@ export default function RootLayout({
 
                 {/* For Cooks Section */}
                 <div>
-                  <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-stone-900">
+                  <p className="mb-4 text-sm font-semibold uppercase tracking-wider text-stone-900">
                     For Cooks
-                  </h3>
+                  </p>
                   <ul className="space-y-3">
                     <li>
                       <Link href="/cook/apply" className="text-sm text-stone-600 hover:text-amber-600 transition">
@@ -102,9 +102,9 @@ export default function RootLayout({
 
                 {/* Support Section */}
                 <div>
-                  <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-stone-900">
+                  <p className="mb-4 text-sm font-semibold uppercase tracking-wider text-stone-900">
                     Support
-                  </h3>
+                  </p>
                   <ul className="space-y-3">
                     <li>
                       <Link href="/contact" className="text-sm text-stone-600 hover:text-amber-600 transition">
@@ -126,9 +126,9 @@ export default function RootLayout({
 
                 {/* Legal Section */}
                 <div>
-                  <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-stone-900">
+                  <p className="mb-4 text-sm font-semibold uppercase tracking-wider text-stone-900">
                     Legal
-                  </h3>
+                  </p>
                   <ul className="space-y-3">
                     <li>
                       <Link href="/privacy" className="text-sm text-stone-600 hover:text-amber-600 transition">

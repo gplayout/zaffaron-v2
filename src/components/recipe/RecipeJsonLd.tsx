@@ -1,5 +1,14 @@
 import type { Recipe, Ingredient, Instruction } from "@/types";
 
+/** Safely serialize JSON-LD to prevent XSS via script injection */
+function safeJsonLd(obj: unknown): string {
+  return JSON.stringify(obj)
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
+    .replace(/&/g, '\\u0026')
+    .replace(/'/g, '\\u0027');
+}
+
 interface RecipeJsonLdProps {
   recipe: Recipe;
   ratingValue?: number;
@@ -37,11 +46,15 @@ export function RecipeJsonLd({ recipe, ratingValue, ratingCount }: RecipeJsonLdP
     recipeCategory: recipe.category,
     recipeCuisine: recipe.cuisine,
     keywords: recipe.tags?.join(", ") || undefined,
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: ratingValue ?? 5,
-      ratingCount: ratingCount ?? 1,
-    },
+    ...(ratingCount && ratingCount > 0
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: ratingValue ?? 0,
+            ratingCount: ratingCount,
+          },
+        }
+      : {}),
     recipeIngredient: (recipe.ingredients || []).map(
       (i: Ingredient) =>
         `${i.amount} ${i.unit} ${i.item}${i.note ? ` (${i.note})` : ""}`.trim()
@@ -101,9 +114,7 @@ export function RecipeJsonLd({ recipe, ratingValue, ratingCount }: RecipeJsonLdP
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
-      }}
+      dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
     />
   );
 }
@@ -162,9 +173,7 @@ export function BreadcrumbJsonLd({ recipe }: BreadcrumbJsonLdProps) {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
-      }}
+      dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
     />
   );
 }

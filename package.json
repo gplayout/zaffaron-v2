@@ -9,16 +9,17 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@google/genai": "^1.45.0",
+    "@google/genai": "^1.48.0",
     "@supabase/ssr": "^0.10.0",
     "@supabase/supabase-js": "^2.99.0",
     "@tailwindcss/typography": "^0.5.19",
     "@vercel/analytics": "^2.0.1",
     "lucide-react": "^0.577.0",
     "next": "16.1.6",
-    "openai": "^6.27.0",
+    "openai": "^6.33.0",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

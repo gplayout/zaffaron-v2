@@ -3,18 +3,17 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChefHat, Menu, X, Search, UtensilsCrossed, Grid3X3, Users, UserPlus, ShoppingBag } from "lucide-react";
+import { ChefHat, Menu, X, Search, UtensilsCrossed, Users, UserPlus, ShoppingBag } from "lucide-react";
 import { HeaderAuthWithFavorites } from "./HeaderAuthWithFavorites";
 
 const navLinks = [
   { href: "/recipes", label: "Recipes", icon: UtensilsCrossed },
-  { href: "/recipes", label: "Cuisines", icon: null },
-  { href: "/recipes", label: "Categories", icon: Grid3X3 },
+  { href: "/search", label: "Search", icon: Search },
   { href: "/cooks", label: "Cooks", icon: Users },
 ];
 
 const becomeCookLink = { href: "/cook/apply", label: "Become a Cook", icon: UserPlus };
-const orderFoodLink = { href: "#", label: "Order Food", icon: ShoppingBag };
+const orderFoodLink = { href: "/cooks", label: "Order Food" };
 
 export default function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -40,6 +39,7 @@ export default function Navigation() {
             <Link
               key={link.href}
               href={link.href}
+              aria-current={isActive(link.href) ? "page" : undefined}
               className={`rounded-md px-3 py-2 text-sm font-medium transition ${
                 isActive(link.href)
                   ? "bg-amber-50 text-amber-700"
@@ -98,6 +98,7 @@ export default function Navigation() {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-nav-menu"
           >
             {mobileMenuOpen ? (
               <X className="h-5 w-5" />
@@ -110,7 +111,7 @@ export default function Navigation() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="border-t border-stone-200 bg-white md:hidden">
+        <div id="mobile-nav-menu" className="border-t border-stone-200 bg-white md:hidden">
           <nav className="space-y-1 px-4 py-4">
             {navLinks.map((link) => {
               const Icon = link.icon;

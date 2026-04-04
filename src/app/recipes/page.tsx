@@ -18,7 +18,7 @@ export async function generateMetadata({
 
   return {
     title: "All Recipes",
-    description: "Browse all authentic Persian and world recipes on Zaffaron. Every recipe tested, every detail perfected.",
+    description: "Browse all 1,500+ authentic recipes on Zaffaron — Persian, Turkish, Indian, Moroccan, Greek, and more. Every recipe tested, every detail perfected.",
     alternates: { canonical },
   };
 }

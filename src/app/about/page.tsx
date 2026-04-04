@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { ChefHat, Heart, Shield } from "lucide-react";
+import { ChefHat, Heart, Shield, Globe } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "About",
-  description: "Zaffaron brings you authentic, tested recipes from the heart of Persian cuisine and beyond.",
-  alternates: { canonical: "/about" },
+  description: "Zaffaron brings you authentic, tested recipes from Persian, Turkish, Indian, Moroccan, Greek, and world cuisines. Every recipe verified.",
+  alternates: { canonical: "https://zaffaron.com/about" },
 };
 
 export default function AboutPage() {
@@ -15,12 +15,13 @@ export default function AboutPage() {
       </h1>
 
       <p className="mt-4 text-lg leading-relaxed text-stone-600">
-        Zaffaron (زعفران) is named after saffron — the golden spice at the heart of
-        Persian cooking. We believe great recipes should be accessible, accurate, and
+        Zaffaron (زعفران) is named after saffron — the golden thread that connects
+        kitchens across the world, from Persian stews to Moroccan tagines, Indian biryanis
+        to Greek pastries. We believe great recipes should be accessible, accurate, and
         beautiful. No life stories before the recipe. No vague measurements. No guesswork.
       </p>
 
-      <div className="mt-10 grid gap-8 sm:grid-cols-3">
+      <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
         <div className="text-center">
           <Shield className="mx-auto h-8 w-8 text-amber-600" />
           <h3 className="mt-3 font-semibold">Tested & Verified</h3>
@@ -31,10 +32,18 @@ export default function AboutPage() {
         </div>
         <div className="text-center">
           <ChefHat className="mx-auto h-8 w-8 text-amber-600" />
-          <h3 className="mt-3 font-semibold">Persian Heritage</h3>
+          <h3 className="mt-3 font-semibold">Persian Roots</h3>
           <p className="mt-1 text-sm text-stone-500">
-            We specialize in authentic Persian cuisine — from classic stews and
-            rice dishes to kebabs and sweets.
+            We started with Persian cuisine — saffron rice, herb stews, and kebabs —
+            and grew to embrace the world&apos;s kitchens.
+          </p>
+        </div>
+        <div className="text-center">
+          <Globe className="mx-auto h-8 w-8 text-amber-600" />
+          <h3 className="mt-3 font-semibold">8 Cuisines & Growing</h3>
+          <p className="mt-1 text-sm text-stone-500">
+            Persian, Turkish, Afghan, Lebanese, Azerbaijani, Indian, Moroccan,
+            and Greek — with more on the way.
           </p>
         </div>
         <div className="text-center">
@@ -49,18 +58,20 @@ export default function AboutPage() {
 
       <h2 className="mt-12 text-2xl font-bold">Our Mission</h2>
       <p className="mt-3 text-stone-600 leading-relaxed">
-        Persian food is one of the world&apos;s great cuisines, yet it remains
-        underrepresented online. Zaffaron exists to change that — starting with the
-        most reliable, well-tested Persian recipes on the internet, then expanding to
-        share the best of Middle Eastern and world cuisine.
+        The world&apos;s most vibrant cuisines often remain underrepresented online.
+        Zaffaron exists to change that — starting with Persian food as our foundation,
+        then expanding through the &quot;saffron belt&quot; of cuisines that share ingredients,
+        techniques, and stories. From Turkish mezes to Indian curries, Moroccan tagines
+        to Greek seafood, every recipe is researched, verified, and presented with the
+        cultural context it deserves.
       </p>
 
       <h2 className="mt-10 text-2xl font-bold">Contact</h2>
       <p className="mt-3 text-stone-600">
         Questions, corrections, or partnership inquiries?{" "}
-        <a href="mailto:hello@zaffaron.com" className="text-amber-600 underline hover:text-amber-700">
-          hello@zaffaron.com
-        </a>
+        <a href="/contact" className="text-amber-600 underline hover:text-amber-700">
+          Get in touch
+        </a>.
       </p>
     </article>
   );

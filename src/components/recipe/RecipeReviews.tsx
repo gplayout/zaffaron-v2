@@ -179,7 +179,7 @@ export function RecipeReviews({ reviews: initialReviews, recipeId }: RecipeRevie
           </div>
 
           {submitError && (
-            <div className="rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-700">
+            <div role="alert" aria-live="polite" className="rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-700">
               {submitError}
             </div>
           )}

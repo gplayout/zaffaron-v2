@@ -9,3 +9,5 @@ export { DietaryBadges } from "./DietaryBadges";
 export { AllergenWarning } from "./AllergenWarning";
 export { RecipeReviews } from "./RecipeReviews";
 export { StarRating } from "./StarRating";
+export { ShareButtons } from "./ShareButtons";
+export { RecipeProvenance } from "./RecipeProvenance";

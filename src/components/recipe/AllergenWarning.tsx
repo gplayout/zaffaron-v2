@@ -14,7 +14,7 @@ export function AllergenWarning({ dietary }: AllergenWarningProps) {
       <AlertTriangle className="h-4 w-4 shrink-0 text-amber-600 mt-0.5" />
       <div>
         <span className="font-medium text-amber-800">Contains: </span>
-        <span className="text-amber-700">{allergens.join(", ")}</span>
+        <span className="text-amber-700">{allergens.map(a => String(a).replace(/[<>&"']/g, '')).join(", ")}</span>
       </div>
     </div>
   );

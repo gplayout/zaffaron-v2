@@ -4,7 +4,9 @@ import { createServerSupabase } from "@/lib/supabase-server-auth";
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/";
+  const rawNext = searchParams.get("next") ?? "/";
+  // Prevent open redirect: only allow relative paths, not protocol-relative
+  const next = (rawNext.startsWith('/') && !rawNext.startsWith('//')) ? rawNext : '/';
 
   if (code) {
     const supabase = await createServerSupabase();

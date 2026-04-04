@@ -30,14 +30,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Check initial session
+    let cancelled = false;
     const getInitialSession = async () => {
       try {
         const { data: { user: initialUser } } = await supabase.auth.getUser();
-        setUser(initialUser);
+        if (!cancelled) setUser(initialUser);
       } catch (error) {
         console.error("Error getting initial session:", error);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
 
@@ -52,6 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     );
 
     return () => {
+      cancelled = true;
       subscription.unsubscribe();
     };
   }, [supabase]);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import type { Ingredient, Substitution } from "@/types";
 
 interface RecipeIngredientsProps {
@@ -11,17 +11,14 @@ interface RecipeIngredientsProps {
 export function RecipeIngredients({ ingredients, substitutions }: RecipeIngredientsProps) {
   const [checkedItems, setCheckedItems] = useState<Set<number>>(new Set());
 
-  const toggleItem = (index: number) => {
+  const toggleItem = useCallback((index: number) => {
     setCheckedItems((prev) => {
       const newSet = new Set(prev);
-      if (newSet.has(index)) {
-        newSet.delete(index);
-      } else {
-        newSet.add(index);
-      }
+      if (newSet.has(index)) newSet.delete(index);
+      else newSet.add(index);
       return newSet;
     });
-  };
+  }, []);
 
   return (
     <section id="recipe-ingredients">
@@ -32,10 +29,14 @@ export function RecipeIngredients({ ingredients, substitutions }: RecipeIngredie
           return (
             <li
               key={i}
+              role="checkbox"
+              aria-checked={isChecked}
+              tabIndex={0}
               className={`flex gap-2 text-sm cursor-pointer transition-opacity ${
                 isChecked ? "opacity-50" : "opacity-100"
               }`}
               onClick={() => toggleItem(i)}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleItem(i); } }}
             >
               <input
                 type="checkbox"

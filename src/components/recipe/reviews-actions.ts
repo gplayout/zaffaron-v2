@@ -74,6 +74,28 @@ export async function submitRecipeReview(
       return { ok: false, error: 'Review text is required' };
     }
 
+    if (body.trim().length > 2000) {
+      return { ok: false, error: 'Review is too long (max 2000 characters)' };
+    }
+
+    if (body.trim().length < 10) {
+      return { ok: false, error: 'Review is too short (min 10 characters)' };
+    }
+
+    // Simple rate limit: check if user submitted a review in the last 60 seconds
+    const { data: recent } = await supabase
+      .from('recipe_reviews')
+      .select('created_at')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(1);
+    if (recent?.[0]) {
+      const lastReview = new Date(recent[0].created_at).getTime();
+      if (Date.now() - lastReview < 60000) {
+        return { ok: false, error: 'Please wait a minute before submitting another review' };
+      }
+    }
+
     // Get user's display name from metadata
     const authorName =
       user.user_metadata?.full_name ||

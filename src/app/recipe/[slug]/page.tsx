@@ -12,18 +12,24 @@ import {
   BreadcrumbJsonLd,
   RelatedRecipes,
   RecipeReviews,
+  ShareButtons,
+  RecipeProvenance,
 } from "@/components/recipe";
 import type { Metadata } from "next";
 
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
-  const { data } = await supabaseServer
+  const { data, error } = await supabaseServer
     .from("recipes_v2")
     .select("slug")
     .eq("published", true)
     .order("published_at", { ascending: false })
     .limit(500);
+  if (error) {
+    console.error("generateStaticParams (recipe) failed:", error);
+    return [];
+  }
   return (data || []).map((r) => ({ slug: r.slug }));
 }
 
@@ -89,6 +95,19 @@ export default async function RecipePage({ params }: Props) {
           />
           <RecipeInstructions instructions={recipe.instructions} />
         </div>
+
+        <RecipeProvenance
+          cuisineSlug={recipe.cuisine_slug}
+          culturalSignificance={recipe.cultural_significance}
+          regionalVariations={recipe.regional_variations}
+          author={recipe.author}
+          publishedAt={recipe.published_at}
+        />
+
+        <ShareButtons
+          title={recipe.title}
+          url={`https://zaffaron.com/recipe/${recipe.slug}`}
+        />
 
         <RecipeNutrition
           nutrition={recipe.nutrition_per_serving}

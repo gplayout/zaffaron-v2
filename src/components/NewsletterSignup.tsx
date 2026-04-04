@@ -43,7 +43,7 @@ export function NewsletterSignup() {
           You&apos;re Subscribed!
         </h2>
         <p className="mt-2 text-stone-600">
-          Thank you for joining our newsletter. Look out for delicious Persian recipes in your inbox every Friday!
+          Thank you for joining our newsletter. Look out for delicious recipes from every kitchen in your inbox every Friday!
         </p>
         <button
           onClick={() => setIsSuccess(false)}
@@ -63,11 +63,11 @@ export function NewsletterSignup() {
         </div>
         
         <h2 className="mt-4 text-2xl font-bold text-stone-800 sm:text-3xl">
-          🌿 Get Persian Recipes Weekly
+          🌿 Get Recipes from Every Kitchen
         </h2>
         
         <p className="mt-3 text-stone-600">
-          Join thousands of home cooks receiving authentic Persian recipes, cooking tips, and cultural stories delivered straight to your inbox every Friday.
+          Join thousands of home cooks receiving authentic recipes from Persian, Turkish, Indian, Moroccan, and more — cooking tips and cultural stories delivered to your inbox every Friday.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-6">

@@ -1,18 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Clock, Users, Flame } from "lucide-react";
-import type { Recipe } from "@/types";
-
-const labelMap: Record<string, string> = {
-  persian: "Persian", indian: "Indian", "middle-eastern": "Middle Eastern",
-  stew: "Stews", rice: "Rice Dishes", kebab: "Kebabs", appetizer: "Appetizers",
-  soup: "Soups", dessert: "Desserts", drink: "Drinks", breakfast: "Breakfast",
-  main: "Main Courses", salad: "Salads", side: "Side Dishes",
-  pickle: "Pickles", sweet: "Sweets", bread: "Breads",
-};
-function humanize(s: string) {
-  return labelMap[s?.toLowerCase()] || (s ? s.charAt(0).toUpperCase() + s.slice(1).replace(/-/g, ' ') : s);
-}
+import type { RecipeSummary } from "@/types";
+import { humanize } from "@/lib/formatting";
 
 const difficultyColor: Record<string, string> = {
   easy: "bg-green-100 text-green-700",
@@ -21,7 +11,7 @@ const difficultyColor: Record<string, string> = {
   expert: "bg-purple-100 text-purple-700",
 };
 
-export default function RecipeCard({ recipe, priority = false }: { recipe: Recipe; priority?: boolean }) {
+export default function RecipeCard({ recipe, priority = false }: { recipe: RecipeSummary; priority?: boolean }) {
   const totalTime = recipe.prep_time_minutes + recipe.cook_time_minutes;
 
   return (

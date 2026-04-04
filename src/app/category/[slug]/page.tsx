@@ -8,19 +8,19 @@ export const revalidate = 3600;
 export const dynamicParams = true;
 
 const categoryDescriptions: Record<string, { title: string; emoji: string; description: string }> = {
-  stew: { title: "Stew Recipes", emoji: "🍲", description: "Rich, slow-cooked stews that form the heart of Persian cuisine. From the herb-laden Ghormeh Sabzi to the tangy-sweet Fesenjān, these dishes reward patience with extraordinary depth of flavor." },
-  rice: { title: "Rice Dishes", emoji: "🍚", description: "Persian rice is an art form — fluffy, fragrant, and crowned with golden tahdig. Explore our collection of polo and chelow dishes, each a celebration of saffron, herbs, and perfect technique." },
-  kebab: { title: "Kebab Recipes", emoji: "🍢", description: "The pride of Persian grilling — from juicy Joojeh Kabab marinated in saffron to the legendary Koobideh. Master the techniques behind Iran's most beloved street and restaurant food." },
-  appetizer: { title: "Appetizers & Sides", emoji: "🥗", description: "Start your Persian feast right with creamy dips, fresh salads, and vibrant small plates — from Kashk-e Bademjan to Salad Shirazi." },
-  soup: { title: "Soup Recipes", emoji: "🥣", description: "Hearty, nourishing soups that warm the soul — including the beloved Ash Reshteh and traditional Abgoosht." },
-  dessert: { title: "Desserts & Sweets", emoji: "🍮", description: "Persian sweets are legendary — from saffron-scented Sholeh Zard to delicate Nan-e Berenji cookies and refreshing Faloodeh." },
-  drink: { title: "Drinks & Beverages", emoji: "🥛", description: "Traditional Persian beverages to complement your meal — including the refreshing yogurt drink Doogh." },
-  breakfast: { title: "Breakfast Recipes", emoji: "🍳", description: "Start your morning the Persian way with hearty, warming breakfast dishes like Halim." },
-  main: { title: "Main Courses", emoji: "🍽️", description: "Complete main dishes from cuisines around the world." },
-  salad: { title: "Salad Recipes", emoji: "🥗", description: "Fresh, vibrant salads from Persian and world cuisines." },
-  side: { title: "Side Dishes", emoji: "🫒", description: "Perfect accompaniments to complete your meal." },
-  pickle: { title: "Pickles & Preserves", emoji: "🫙", description: "Traditional Persian pickles and preserves — the tangy, crunchy companion to every meal." },
-  sweet: { title: "Sweets", emoji: "🍯", description: "Traditional sweets and confections from Persian and Middle Eastern kitchens." },
+  stew: { title: "Stew Recipes", emoji: "🍲", description: "Rich, slow-cooked stews from around the world — Persian Ghormeh Sabzi, Moroccan tagines, Greek stifado, and Indian curries. These dishes reward patience with extraordinary depth of flavor." },
+  rice: { title: "Rice Dishes", emoji: "🍚", description: "From Persian saffron tahdig to Indian biryani, Afghan Kabuli Palaw to Azerbaijani plov — explore rice dishes that are the centerpiece of cuisines across the saffron belt." },
+  kebab: { title: "Kebab Recipes", emoji: "🍢", description: "Grilled perfection from every tradition — Persian Koobideh, Turkish Adana, Afghan Chopan, Lebanese Shish Tawook, and Greek Souvlaki. Master the art of fire and spice." },
+  appetizer: { title: "Appetizers & Sides", emoji: "🥗", description: "Start your feast with creamy hummus, smoky baba ganoush, Greek saganaki, Indian samosas, and Moroccan zaalouk — small plates with big flavor." },
+  soup: { title: "Soup Recipes", emoji: "🥣", description: "Hearty, nourishing soups — from Persian Ash Reshteh to Moroccan Harira, Turkish Mercimek to Greek Avgolemono. Warmth in every bowl." },
+  dessert: { title: "Desserts & Sweets", emoji: "🍮", description: "Sweet endings from every kitchen — Persian Sholeh Zard, Turkish Baklava, Indian Gulab Jamun, Moroccan Chebakia, and Greek Galaktoboureko." },
+  drink: { title: "Drinks & Beverages", emoji: "🥛", description: "Traditional beverages — Persian Doogh, Indian Lassi, Moroccan Mint Tea, and Afghan Qaimaq Chai. The perfect complement to any meal." },
+  breakfast: { title: "Breakfast Recipes", emoji: "🍳", description: "Morning traditions from around the world — Turkish Menemen, Indian Upma, Lebanese Manoushe, and Greek Bougatsa." },
+  main: { title: "Main Courses", emoji: "🍽️", description: "Complete main dishes from 8 cuisines — curries, tagines, roasts, and braises. Every recipe tested and verified." },
+  salad: { title: "Salad Recipes", emoji: "🥗", description: "Fresh, vibrant salads — Turkish Çoban, Greek Horiatiki, Lebanese Fattoush, Moroccan Taktouka, and more." },
+  side: { title: "Side Dishes", emoji: "🫒", description: "Perfect accompaniments from every cuisine to complete your meal." },
+  pickle: { title: "Pickles & Preserves", emoji: "🫙", description: "Pickles and preserves from Persian Torshi to Moroccan Preserved Lemons, Indian Mango Pickle, and Lebanese Makdous." },
+  sweet: { title: "Sweets", emoji: "🍯", description: "Traditional sweets and confections from Persian, Turkish, Indian, Moroccan, and Greek kitchens." },
 };
 
 const defaultDesc = (slug: string) => ({

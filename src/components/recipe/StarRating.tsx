@@ -90,7 +90,8 @@ export function StarRating({
 
   return (
     <div className="flex items-center gap-1">
-      <div className="flex gap-0.5">
+      <span className="sr-only">Rated {rating.toFixed(1)} out of {maxRating} stars</span>
+      <div className="flex gap-0.5" aria-hidden="true">
         {Array.from({ length: maxRating }, (_, i) => renderStar(i + 1))}
       </div>
       {showValue && (

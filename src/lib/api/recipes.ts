@@ -1,12 +1,12 @@
 import { supabaseServer } from "@/lib/supabase-server";
-import type { Recipe } from "@/types";
+import type { Recipe, RecipeSummary } from "@/types";
 
 const CARD_FIELDS = `id,slug,title,description,image_url,image_alt,prep_time_minutes,cook_time_minutes,servings,difficulty,category,category_slug,cuisine,cuisine_slug,calories_per_serving,published_at`;
 
 /**
  * Get the latest published recipes
  */
-export async function getLatestRecipes(limit: number): Promise<Recipe[]> {
+export async function getLatestRecipes(limit: number): Promise<RecipeSummary[]> {
   const { data, error } = await supabaseServer
     .from("recipes_v2")
     .select(CARD_FIELDS)
@@ -19,13 +19,13 @@ export async function getLatestRecipes(limit: number): Promise<Recipe[]> {
     throw new Error("Failed to load recipes. Please try again later.");
   }
 
-  return (data as Recipe[]) || [];
+  return (data as RecipeSummary[]) || [];
 }
 
 /**
  * Get popular/editor's pick recipes (oldest first for variety)
  */
-export async function getPopularRecipes(limit: number): Promise<Recipe[]> {
+export async function getPopularRecipes(limit: number): Promise<RecipeSummary[]> {
   const { data, error } = await supabaseServer
     .from("recipes_v2")
     .select(CARD_FIELDS)
@@ -38,7 +38,46 @@ export async function getPopularRecipes(limit: number): Promise<Recipe[]> {
     throw new Error("Failed to load recipes. Please try again later.");
   }
 
-  return (data as Recipe[]) || [];
+  return (data as RecipeSummary[]) || [];
+}
+
+/**
+ * Get featured recipes per cuisine (for homepage showcase)
+ * Single query + group in memory (fixes N+1)
+ */
+export async function getFeaturedByCuisine(
+  cuisineSlugs: string[],
+  perCuisine: number = 3
+): Promise<Record<string, RecipeSummary[]>> {
+  if (cuisineSlugs.length === 0) return {};
+
+  // Single query: fetch top recipes across all requested cuisines
+  // Over-fetch to ensure we get enough per cuisine after grouping
+  const { data, error } = await supabaseServer
+    .from("recipes_v2")
+    .select(CARD_FIELDS)
+    .eq("published", true)
+    .in("cuisine_slug", cuisineSlugs)
+    .order("published_at", { ascending: false })
+    .limit(cuisineSlugs.length * perCuisine * 2);
+
+  if (error) {
+    console.error("Failed to fetch featured recipes:", error);
+    return {};
+  }
+
+  // Group by cuisine_slug and take top perCuisine from each
+  const result: Record<string, RecipeSummary[]> = {};
+  for (const slug of cuisineSlugs) {
+    result[slug] = [];
+  }
+  for (const row of (data || []) as RecipeSummary[]) {
+    const slug = row.cuisine_slug;
+    if (slug && result[slug] && result[slug].length < perCuisine) {
+      result[slug].push(row);
+    }
+  }
+  return result;
 }
 
 /**
@@ -48,7 +87,7 @@ export async function getRecipesByCategory(
   slug: string,
   page: number,
   pageSize: number
-): Promise<{ recipes: Recipe[]; count: number }> {
+): Promise<{ recipes: RecipeSummary[]; count: number }> {
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
@@ -65,7 +104,7 @@ export async function getRecipesByCategory(
     throw new Error("Failed to load recipes. Please try again later.");
   }
 
-  return { recipes: (data as Recipe[]) || [], count: count || 0 };
+  return { recipes: (data as RecipeSummary[]) || [], count: count || 0 };
 }
 
 /**
@@ -75,7 +114,7 @@ export async function getRecipesByCuisine(
   slug: string,
   page: number,
   pageSize: number
-): Promise<{ recipes: Recipe[]; count: number }> {
+): Promise<{ recipes: RecipeSummary[]; count: number }> {
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
@@ -92,7 +131,7 @@ export async function getRecipesByCuisine(
     throw new Error("Failed to load recipes. Please try again later.");
   }
 
-  return { recipes: (data as Recipe[]) || [], count: count || 0 };
+  return { recipes: (data as RecipeSummary[]) || [], count: count || 0 };
 }
 
 /**
@@ -115,10 +154,10 @@ export async function getRecipeCount(): Promise<number> {
 /**
  * Search recipes by query string
  */
-export async function searchRecipes(query: string, limit: number): Promise<Recipe[]> {
-  // Sanitize input
-  const clean = query.replace(/[%_\\(),."']/g, "").trim().slice(0, 100);
-  if (!clean) return [];
+export async function searchRecipes(query: string, limit: number): Promise<RecipeSummary[]> {
+  // Sanitize input: strip PostgREST-meaningful chars + colons
+  const clean = query.replace(/[%_\\(),."':;]/g, "").replace(/\s+/g, " ").trim().slice(0, 100);
+  if (!clean || clean.length < 2) return [];
 
   const { data, error } = await supabaseServer
     .from("recipes_v2")
@@ -135,7 +174,7 @@ export async function searchRecipes(query: string, limit: number): Promise<Recip
     return [];
   }
 
-  return (data as Recipe[]) || [];
+  return (data as RecipeSummary[]) || [];
 }
 
 /**
@@ -144,7 +183,7 @@ export async function searchRecipes(query: string, limit: number): Promise<Recip
 export async function getRecipes(
   page: number,
   pageSize: number
-): Promise<{ recipes: Recipe[]; count: number }> {
+): Promise<{ recipes: RecipeSummary[]; count: number }> {
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
@@ -160,7 +199,7 @@ export async function getRecipes(
     throw new Error("Failed to load recipes. Please try again later.");
   }
 
-  return { recipes: (data as Recipe[]) || [], count: count || 0 };
+  return { recipes: (data as RecipeSummary[]) || [], count: count || 0 };
 }
 
 /**

@@ -1,15 +1,12 @@
-import type { Metadata } from "next";
+"use client";
+
 import { Mail } from "lucide-react";
-
-export const metadata: Metadata = {
-  title: "Contact Us",
-  description: "Get in touch with Zaffaron. We'd love to hear from you!",
-  alternates: {
-    canonical: "https://zaffaron.com/contact",
-  },
-};
-
+import { submitContactForm } from './actions';
+import { useState } from 'react';
 export default function ContactPage() {
+  const [submitting, setSubmitting] = useState(false);
+  const [status, setStatus] = useState<string | null>(null);
+
   return (
     <div className="mx-auto max-w-2xl">
       <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Contact Us</h1>
@@ -19,7 +16,13 @@ export default function ContactPage() {
 
       {/* Contact Form */}
       <div className="mt-8 rounded-xl border border-stone-200 bg-white p-6 sm:p-8">
-        <form className="space-y-6" action="#" method="POST">
+        <form className="space-y-6" action={async (formData) => {
+          setSubmitting(true);
+          setStatus(null);
+          const result = await submitContactForm(formData);
+          setSubmitting(false);
+          setStatus(result.ok ? 'sent' : result.error || 'Failed');
+        }}>
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-stone-700">
               Name

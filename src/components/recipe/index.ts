@@ -1,4 +1,5 @@
 export { RecipeHero } from "./RecipeHero";
+export { RecipeQuickCard } from "./RecipeQuickCard";
 export { RecipeIngredients } from "./RecipeIngredients";
 export { RecipeInstructions } from "./RecipeInstructions";
 export { RecipeNutrition } from "./RecipeNutrition";

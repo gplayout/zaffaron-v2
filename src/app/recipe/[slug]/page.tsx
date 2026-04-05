@@ -4,6 +4,7 @@ import { getRecipeBySlug } from "@/lib/get-recipe";
 import { getRecipeReviews } from "@/components/recipe/reviews-actions";
 import {
   RecipeHero,
+  RecipeQuickCard,
   RecipeIngredients,
   RecipeInstructions,
   RecipeNutrition,
@@ -89,6 +90,8 @@ export default async function RecipePage({ params }: Props) {
       <BreadcrumbJsonLd recipe={recipe} />
       <article className="mx-auto max-w-3xl">
         <RecipeHero recipe={recipe} />
+
+        <RecipeQuickCard recipe={recipe} />
 
         <RecipeTips recipe={recipe} />
 

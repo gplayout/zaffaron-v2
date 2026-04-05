@@ -1,1 +1,26 @@
 @import "tailwindcss";
+
+/* Print-friendly defaults (used by the existing PrintButton -> window.print()). */
+@media print {
+  /* Remove chrome */
+  nav,
+  footer {
+    display: none !important;
+  }
+
+  /* Reduce page padding */
+  main {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  body {
+    background: white !important;
+  }
+
+  /* Avoid odd link styling in print */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}

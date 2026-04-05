@@ -17,6 +17,7 @@ import {
   RecipeProvenance,
   RecipeFAQ,
   RecipeVariations,
+  RecipeInternalLinks,
 } from "@/components/recipe";
 import type { Metadata } from "next";
 import { getRecipeFaq } from "@/lib/seo/recipe-faq";
@@ -124,6 +125,8 @@ export default async function RecipePage({ params }: Props) {
           nutrition={recipe.nutrition_per_serving}
           calories={recipe.calories_per_serving}
         />
+
+        <RecipeInternalLinks recipe={recipe} />
 
         <RelatedRecipes
           currentSlug={recipe.slug}

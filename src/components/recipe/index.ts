@@ -14,3 +14,4 @@ export { RecipeReviews } from "./RecipeReviews";
 export { StarRating } from "./StarRating";
 export { ShareButtons } from "./ShareButtons";
 export { RecipeProvenance } from "./RecipeProvenance";
+export { RecipeInternalLinks } from "./RecipeInternalLinks";

@@ -15,9 +15,11 @@ import {
   ShareButtons,
   RecipeProvenance,
   RecipeFAQ,
+  RecipeVariations,
 } from "@/components/recipe";
 import type { Metadata } from "next";
 import { getRecipeFaq } from "@/lib/seo/recipe-faq";
+import { getRecipeVariations } from "@/lib/seo/recipe-variations";
 
 export const revalidate = 3600;
 
@@ -99,6 +101,8 @@ export default async function RecipePage({ params }: Props) {
           />
           <RecipeInstructions instructions={recipe.instructions} />
         </div>
+
+        <RecipeVariations sections={getRecipeVariations(recipe.slug)} />
 
         <RecipeProvenance
           cuisineSlug={recipe.cuisine_slug}

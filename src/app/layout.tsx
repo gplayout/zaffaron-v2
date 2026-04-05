@@ -10,6 +10,9 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://zaffaron.com"),
+  verification: {
+    google: "6ulA9oxsqC_SdVSnIQEoZxuW0zD03ZeicET7ZEyT2ro",
+  },
   title: {
     default: "Zaffaron — Authentic Recipes from Every Kitchen",
     template: "%s — Zaffaron",

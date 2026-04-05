@@ -39,6 +39,48 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      // Old site: numeric recipe IDs → homepage
+      {
+        source: '/recipe/:id(\\d+)',
+        destination: '/',
+        permanent: true, // 301
+      },
+      // Old site: www → non-www (Vercel handles this, but explicit for clarity)
+      // Common old slugs → new slugs (most impactful 404s from GSC)
+      {
+        source: '/recipe/koobideh',
+        destination: '/recipe/kabab-koobideh-kebab',
+        permanent: true,
+      },
+      {
+        source: '/recipe/ash-reshteh',
+        destination: '/recipe/ash-reshteh-soup',
+        permanent: true,
+      },
+      {
+        source: '/recipe/kuku-ye-shevid',
+        destination: '/recipe/kuku-shevid-persian-dill-frittata',
+        permanent: true,
+      },
+      {
+        source: '/recipe/soup-e-balal-corn-soup',
+        destination: '/recipe/soup-e-balal-creamy-corn-soup',
+        permanent: true,
+      },
+      {
+        source: '/recipe/qalieh-kadu-halvaee',
+        destination: '/recipe/qalieh-kadu-halvaee-pumpkin-stew',
+        permanent: true,
+      },
+      {
+        source: '/recipe/luqmeh-goushti-lavash-meat-morsels',
+        destination: '/recipe/luqmeh-goushti-persian-meat-morsels',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

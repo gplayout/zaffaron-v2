@@ -28,14 +28,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const count = await getCuisineRecipeCount(slug);
     if (count === 0) return { title: "Not Found", robots: { index: false } };
     return {
-      title: `${humanize(slug)} Recipes | Zaffaron`,
+      // NOTE: layout.tsx applies the site template ("%s — Zaffaron").
+      // Avoid repeating the brand name here.
+      title: `${humanize(slug)} Recipes`,
       description: `Browse our collection of authentic ${humanize(slug).toLowerCase()} recipes.`,
       alternates: { canonical: `https://zaffaron.com/cuisine/${slug}` },
     };
   }
 
   return {
-    title: `${cuisine.name} Recipes | Zaffaron`,
+    // NOTE: layout.tsx applies the site template ("%s — Zaffaron").
+    // Avoid repeating the brand name here.
+    title: `${cuisine.name} Recipes`,
     description: cuisine.description,
     alternates: { canonical: `https://zaffaron.com/cuisine/${slug}` },
     openGraph: {

@@ -22,13 +22,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!ingredient) return { title: "Not Found" };
 
   const firstLocal = Object.values(ingredient.localNames)[0] || "";
+  // NOTE: layout.tsx applies the site template ("%s — Zaffaron").
+  // Avoid repeating the brand name here.
+  const title = `${ingredient.name}${firstLocal ? ` (${firstLocal})` : ""} — Complete Guide`;
+  const description = ingredient.description.length > 155
+    ? ingredient.description.slice(0, 152).trimEnd() + "..."
+    : ingredient.description;
+
   return {
-    title: `${ingredient.name}${firstLocal ? ` (${firstLocal})` : ""} - Complete Guide | Zaffaron`,
-    description: ingredient.description.slice(0, 155) + "...",
+    title,
+    description,
     alternates: { canonical: `https://zaffaron.com/ingredients/${slug}` },
     openGraph: {
-      title: `${ingredient.name} - Everything You Need to Know`,
-      description: ingredient.description.slice(0, 155) + "...",
+      title: `${ingredient.name} — Complete Guide`,
+      description,
       url: `https://zaffaron.com/ingredients/${slug}`,
     },
   };

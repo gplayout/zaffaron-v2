@@ -17,8 +17,9 @@ export const metadata: Metadata = {
     default: "Zaffaron — Authentic Recipes from Every Kitchen",
     template: "%s — Zaffaron",
   },
+  // Keep description under ~155 chars to reduce Google truncation.
   description:
-    "Discover authentic, verified recipes from Persian, Turkish, Afghan, Lebanese, Azerbaijani, Indian, Moroccan, Greek, and world cuisines. Every recipe tested, every detail perfected.",
+    "Discover authentic, verified recipes from Persian, Turkish, Afghan, Lebanese, Indian, Moroccan, Greek, and world cuisines. Cook tonight.",
   openGraph: {
     title: "Zaffaron — Authentic Recipes from Every Kitchen",
     description: "Verified recipes from Persian, Turkish, Afghan, Lebanese, Azerbaijani, Indian, Moroccan, Greek, and world cuisines. Every detail perfected.",

@@ -34,6 +34,21 @@ const CURATED_LINKS_BY_SLUG: Record<string, string[]> = {
     'chelow-e-sadeh-persian-steamed-rice',
     'chelow-saffron-tahdig-persian-steamed-rice',
   ],
+  'cheesy-kabab-koobideh': [
+    'authentic-persian-kabab-koobideh',
+    'salad-shirazi-persian-cucumber-tomato-salad',
+    'persian-chelo-fluffy-steamed-rice',
+  ],
+  'kabab-koobideh-morgh-ground-chicken-kebabs': [
+    'authentic-persian-kabab-koobideh',
+    'salad-shirazi-persian-cucumber-tomato-salad',
+    'chelow-e-sadeh-persian-steamed-rice',
+  ],
+  'chelo-kebab-koobideh': [
+    'authentic-persian-kabab-koobideh',
+    'salad-shirazi-persian-cucumber-tomato-salad',
+    'chelow-saffron-tahdig-persian-steamed-rice',
+  ],
   'chelo-goosht-semnani': [
     'chelow-e-sadeh-persian-steamed-rice',
     'chelow-saffron-tahdig-persian-steamed-rice',

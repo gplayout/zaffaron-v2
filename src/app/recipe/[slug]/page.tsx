@@ -85,9 +85,14 @@ export default async function RecipePage({ params }: Props) {
   const reviewsResult = await getRecipeReviews(recipe.id);
   const reviews = reviewsResult.ok ? reviewsResult.reviews : [];
 
+  const ratingCount = reviews.length;
+  const ratingValue = ratingCount
+    ? Math.round((reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / ratingCount) * 10) / 10
+    : undefined;
+
   return (
     <>
-      <RecipeJsonLd recipe={recipe} />
+      <RecipeJsonLd recipe={recipe} ratingCount={ratingCount} ratingValue={ratingValue} />
       <BreadcrumbJsonLd recipe={recipe} />
       <article className="mx-auto max-w-3xl">
         <RecipeHero recipe={recipe} />

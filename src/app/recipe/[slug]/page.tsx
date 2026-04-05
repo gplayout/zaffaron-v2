@@ -14,8 +14,10 @@ import {
   RecipeReviews,
   ShareButtons,
   RecipeProvenance,
+  RecipeFAQ,
 } from "@/components/recipe";
 import type { Metadata } from "next";
+import { getRecipeFaq } from "@/lib/seo/recipe-faq";
 
 export const revalidate = 3600;
 
@@ -87,6 +89,8 @@ export default async function RecipePage({ params }: Props) {
         <RecipeHero recipe={recipe} />
 
         <RecipeTips recipe={recipe} />
+
+        <RecipeFAQ items={getRecipeFaq(recipe.slug)} />
 
         <div id="recipe-ingredients" className="grid gap-8 md:grid-cols-[1fr_2fr] mt-8">
           <RecipeIngredients

@@ -3,6 +3,7 @@ export { RecipeIngredients } from "./RecipeIngredients";
 export { RecipeInstructions } from "./RecipeInstructions";
 export { RecipeNutrition } from "./RecipeNutrition";
 export { RecipeTips } from "./RecipeTips";
+export { RecipeFAQ } from "./RecipeFAQ";
 export { RecipeJsonLd, BreadcrumbJsonLd } from "./RecipeJsonLd";
 export { RelatedRecipes } from "./RelatedRecipes";
 export { DietaryBadges } from "./DietaryBadges";

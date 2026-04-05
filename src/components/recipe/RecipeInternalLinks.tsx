@@ -26,19 +26,56 @@ async function findSameCuisine(recipe: Recipe, limit = 4) {
   return data || [];
 }
 
+const CURATED_LINKS_BY_SLUG: Record<string, string[]> = {
+  // Keep this list SMALL + high-confidence. Every slug is verified via DB before linking.
+  'authentic-persian-kabab-koobideh': [
+    'salad-shirazi-persian-cucumber-tomato-salad',
+    'persian-chelo-fluffy-steamed-rice',
+    'chelow-e-sadeh-persian-steamed-rice',
+    'chelow-saffron-tahdig-persian-steamed-rice',
+  ],
+  'chelo-goosht-semnani': [
+    'chelow-e-sadeh-persian-steamed-rice',
+    'chelow-saffron-tahdig-persian-steamed-rice',
+    'tahchin-e-goosht-saffron-rice-cake',
+  ],
+  'samboseh-sabzi-persian-herb-samosas': [
+    'salad-shirazi-persian-cucumber-tomato-salad',
+    'fattoush-lebanese-toasted-pita-salad-with-sumac-dressing',
+  ],
+};
+
+async function fetchSlugs(slugs: string[]) {
+  if (!slugs || slugs.length === 0) return [];
+  const { data } = await supabaseServer
+    .from('recipes_v2')
+    .select('slug,title')
+    .eq('published', true)
+    .in('slug', slugs);
+
+  const map = new Map((data || []).map((r) => [r.slug, r]));
+  return slugs.map((s) => map.get(s)).filter(Boolean) as { slug: string; title: string }[];
+}
+
 export async function RecipeInternalLinks({ recipe }: { recipe: Recipe }) {
   // Build a small, guaranteed-real set of internal links.
   // IMPORTANT: We only link to recipes we actually found in the DB.
 
   const picks: { slug: string; title: string }[] = [];
 
-  // Heuristic: for kebabs, try to link to a chelo (rice) page.
+  // 1) Curated links for high-priority pages (verified via DB)
+  const curated = CURATED_LINKS_BY_SLUG[recipe.slug];
+  if (curated && curated.length > 0) {
+    const found = await fetchSlugs(curated);
+    for (const r of found) picks.push({ slug: r.slug, title: r.title });
+  }
+
+  // 2) Heuristics (fallback)
   if ((recipe.category_slug || recipe.category.toLowerCase()) === 'kebab') {
     const chelo = await findByTitleKeyword('Chelo', 2);
     for (const r of chelo) picks.push({ slug: r.slug, title: r.title });
   }
 
-  // Heuristic: for Persian snacks/appetizers, try to link to other Persian items.
   const sameCuisine = await findSameCuisine(recipe, 4);
   for (const r of sameCuisine) picks.push({ slug: r.slug, title: r.title });
 

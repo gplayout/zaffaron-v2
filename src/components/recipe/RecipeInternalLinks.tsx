@@ -43,6 +43,18 @@ const CURATED_LINKS_BY_SLUG: Record<string, string[]> = {
     'salad-shirazi-persian-cucumber-tomato-salad',
     'fattoush-lebanese-toasted-pita-salad-with-sumac-dressing',
   ],
+  'esnak-holandi-chicken-toast-sandwich': [
+    'khorak-e-chips-o-panir',
+    'persian-pizza-chips-bake',
+    'saffron-chicken-mozzarella-toastie',
+    'sandwich-kaseei-morgh',
+  ],
+  'fondou-ye-gojeh-farangi': [
+    'omlet-e-gojeh-persian-tomato-omelet',
+    'persian-tomato-feta-omelette',
+    'omelet-e-reyhan-basil-tomato-omelette',
+    'taktouka-moroccan-cooked-tomato-and-roasted-pepper-salad',
+  ],
 };
 
 async function fetchSlugs(slugs: string[]) {

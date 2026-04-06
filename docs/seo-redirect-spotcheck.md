@@ -1,0 +1,112 @@
+# Redirect Spot-Check (Sample 20)
+
+Generated: 2026-04-06T03:06:44.665Z
+
+Checked: 308 redirect correctness + destination canonical self-reference.
+
+- Redirect map size: **80**
+- Sample size: **20**
+- Problems: **0**
+
+## Results
+
+- tahchin-e-goosht-saffron-rice-cake-lamb → tahchin-e-goosht-saffron-rice-cake
+  - status: 308
+  - location: /recipe/tahchin-e-goosht-saffron-rice-cake
+  - redirect OK: ✅
+  - destination canonical OK: ✅
+- kabab-e-shotormorgh-ostrich-kebabs-tomato-olive-salsa → kabab-shotormorgh-ostrich-kebabs-tomato-olive-salsa
+  - status: 308
+  - location: /recipe/kabab-shotormorgh-ostrich-kebabs-tomato-olive-salsa
+  - redirect OK: ✅
+  - destination canonical OK: ✅
+- kabab-e-gharch-crispy-persian-mushroom-kebabs → kabab-e-gharch-crispy-mushroom-kebabs
+  - status: 308
+  - location: /recipe/kabab-e-gharch-crispy-mushroom-kebabs
+  - redirect OK: ✅
+  - destination canonical OK: ✅
+- authentic-russian-borscht-beet-beef-soup → authentic-russian-borscht-beef-beet-soup
+  - status: 308
+  - location: /recipe/authentic-russian-borscht-beef-beet-soup
+  - redirect OK: ✅
+  - destination canonical OK: ✅
+- fileh-mahi-kababi-lemon-basil-fish-fillet → fileh-mahi-kababi-lemon-basil-fish
+  - status: 308
+  - location: /recipe/fileh-mahi-kababi-lemon-basil-fish
+  - redirect OK: ✅
+  - destination canonical OK: ✅
+- noon-e-khorma-style-date-cheese-flatbread → noon-e-khorma-date-cheese-flatbread
+  - status: 308
+  - location: /recipe/noon-e-khorma-date-cheese-flatbread
+  - redirect OK: ✅
+  - destination canonical OK: ✅
+- kuku-ye-morgh-persian-chicken-frittata → kuku-ye-morgh-persian-chicken-kuku
+  - status: 308
+  - location: /recipe/kuku-ye-morgh-persian-chicken-kuku
+  - redirect OK: ✅
+  - destination canonical OK: ✅
+- adas-polo-makhsoos-special-lentil-rice → adas-polo-makhsoos-lentil-rice
+  - status: 308
+  - location: /recipe/adas-polo-makhsoos-lentil-rice
+  - redirect OK: ✅
+  - destination canonical OK: ✅
+- paye-broccoli-cream-broccoli-almond-pie → paye-broccoli-almond-pie
+  - status: 308
+  - location: /recipe/paye-broccoli-almond-pie
+  - redirect OK: ✅
+  - destination canonical OK: ✅
+- khoresht-e-meygoo-persian-shrimp-stew → khoresht-e-meygoo-shrimp-stew
+  - status: 308
+  - location: /recipe/khoresht-e-meygoo-shrimp-stew
+  - redirect OK: ✅
+  - destination canonical OK: ✅
+- kaalbaas-morgh-persian-chicken-mortadella → kaalbaas-morgh-chicken-mortadella
+  - status: 308
+  - location: /recipe/kaalbaas-morgh-chicken-mortadella
+  - redirect OK: ✅
+  - destination canonical OK: ✅
+- soup-e-zorrat-persian-sweet-corn-soup → persian-sweet-corn-soup-e-zorrat
+  - status: 308
+  - location: /recipe/persian-sweet-corn-soup-e-zorrat
+  - redirect OK: ✅
+  - destination canonical OK: ✅
+- persian-kabab-barg-lamb-tenderloin-skewers → kabab-barg-lamb-tenderloin-skewers
+  - status: 308
+  - location: /recipe/kabab-barg-lamb-tenderloin-skewers
+  - redirect OK: ✅
+  - destination canonical OK: ✅
+- koofteh-rusi-persian-potato-herb-kofta → koofteh-rusi-potato-herb-kofta
+  - status: 308
+  - location: /recipe/koofteh-rusi-potato-herb-kofta
+  - redirect OK: ✅
+  - destination canonical OK: ✅
+- tahchin-tahdig-saffron-yogurt-rice-crust → tahchin-tahdig-saffron-crust
+  - status: 308
+  - location: /recipe/tahchin-tahdig-saffron-crust
+  - redirect OK: ✅
+  - destination canonical OK: ✅
+- noodle-soy-pepper-persian-style → persian-noodles-with-soy-and-peppers
+  - status: 308
+  - location: /recipe/persian-noodles-with-soy-and-peppers
+  - redirect OK: ✅
+  - destination canonical OK: ✅
+- persian-stuffed-grape-leaves-with-chicken → dolmeh-barg-e-mo-chicken
+  - status: 308
+  - location: /recipe/dolmeh-barg-e-mo-chicken
+  - redirect OK: ✅
+  - destination canonical OK: ✅
+- dolmeh-bademjan-baqchehi-eggplant-pouches → dolmeh-bademjan-baghchei-eggplant-pouches
+  - status: 308
+  - location: /recipe/dolmeh-bademjan-baghchei-eggplant-pouches
+  - redirect OK: ✅
+  - destination canonical OK: ✅
+- dolmeh-kebab-persian-stuffed-cabbage-rolls → dolmeh-kebab-cabbage-rolls
+  - status: 308
+  - location: /recipe/dolmeh-kebab-cabbage-rolls
+  - redirect OK: ✅
+  - destination canonical OK: ✅
+- chelow-saffron-tahdig-persian-steamed-rice → chelow-saffron-tahdig
+  - status: 308
+  - location: /recipe/chelow-saffron-tahdig
+  - redirect OK: ✅
+  - destination canonical OK: ✅

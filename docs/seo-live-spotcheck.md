@@ -1,0 +1,133 @@
+# Live SEO Spot-Check (Sample 20 recipe pages)
+
+Generated: 2026-04-06T02:51:15.143Z
+
+Checked: <title>, canonical, Recipe JSON-LD, FAQ JSON-LD presence.
+
+## Summary
+
+- Pages checked: **20**
+- Problems found: **0**
+
+## Results
+
+- loobia-polo-persian-green-bean-rice
+  - status: 200
+  - title (55): Loobia Polo (Persian Green Bean Rice) Recipe — Zaffaron
+  - canonical: https://zaffaron.com/recipe/loobia-polo-persian-green-bean-rice ✅
+  - Recipe JSON-LD: ✅
+  - FAQ JSON-LD: —
+- ash-e-doogh
+  - status: 200
+  - title (56): Ash-e Doogh Recipe (Persian Yogurt Herb Soup) — Zaffaron
+  - canonical: https://zaffaron.com/recipe/ash-e-doogh ✅
+  - Recipe JSON-LD: ✅
+  - FAQ JSON-LD: —
+- santorini-fava-puree
+  - status: 200
+  - title (57): Santorini Fava Purée (Greek Yellow Split Peas) — Zaffaron
+  - canonical: https://zaffaron.com/recipe/santorini-fava-puree ✅
+  - Recipe JSON-LD: ✅
+  - FAQ JSON-LD: —
+- lahanodolmades-greek-stuffed-cabbage-rolls-avgolemono
+  - status: 200
+  - title (52): Lahanodolmades (Greek Cabbage Rolls) with — Zaffaron
+  - canonical: https://zaffaron.com/recipe/lahanodolmades-greek-stuffed-cabbage-rolls-avgolemono ✅
+  - Recipe JSON-LD: ✅
+  - FAQ JSON-LD: —
+- bougatsa-greek-custard-filled-phyllo-pastry
+  - status: 200
+  - title (59): Authentic Greek Bougatsa (Custard Phyllo Pastry) — Zaffaron
+  - canonical: https://zaffaron.com/recipe/bougatsa-greek-custard-filled-phyllo-pastry ✅
+  - Recipe JSON-LD: ✅
+  - FAQ JSON-LD: —
+- greek-yogurt-with-honey-and-walnuts
+  - status: 200
+  - title (46): Greek Yogurt with Honey and Walnuts — Zaffaron
+  - canonical: https://zaffaron.com/recipe/greek-yogurt-with-honey-and-walnuts ✅
+  - Recipe JSON-LD: ✅
+  - FAQ JSON-LD: —
+- tsoureki-greek-sweet-easter-bread-with-mahlab
+  - status: 200
+  - title (59): Tsoureki Recipe (Greek Easter Bread with Mahlab) — Zaffaron
+  - canonical: https://zaffaron.com/recipe/tsoureki-greek-sweet-easter-bread-with-mahlab ✅
+  - Recipe JSON-LD: ✅
+  - FAQ JSON-LD: —
+- ravani-greek-semolina-cake-with-citrus-syrup
+  - status: 200
+  - title (24): Ravani Recipe — Zaffaron
+  - canonical: https://zaffaron.com/recipe/ravani-greek-semolina-cake-with-citrus-syrup ✅
+  - Recipe JSON-LD: ✅
+  - FAQ JSON-LD: —
+- greek-lamb-fricassee
+  - status: 200
+  - title (51): Greek Lamb Fricassee (Avgolemono) Recipe — Zaffaron
+  - canonical: https://zaffaron.com/recipe/greek-lamb-fricassee ✅
+  - Recipe JSON-LD: ✅
+  - FAQ JSON-LD: —
+- dakos-greek-cretan-barley-rusk-salad
+  - status: 200
+  - title (50): Dakos Recipe (Cretan Barley Rusk Salad) — Zaffaron
+  - canonical: https://zaffaron.com/recipe/dakos-greek-cretan-barley-rusk-salad ✅
+  - Recipe JSON-LD: ✅
+  - FAQ JSON-LD: —
+- havij-polow-persian-carrot-beef-pilaf
+  - status: 200
+  - title (54): Havij Polow — Persian Carrot and Beef Pilaf — Zaffaron
+  - canonical: https://zaffaron.com/recipe/havij-polow-persian-carrot-beef-pilaf ✅
+  - Recipe JSON-LD: ✅
+  - FAQ JSON-LD: —
+- tahchin-alu-esfenaj-morgh
+  - status: 200
+  - title (49): Tahchin (Chicken, Spinach &amp; Plums) — Zaffaron
+  - canonical: https://zaffaron.com/recipe/tahchin-alu-esfenaj-morgh ✅
+  - Recipe JSON-LD: ✅
+  - FAQ JSON-LD: —
+- baliq-plov-azerbaijani-fish-and-saffron-rice
+  - status: 200
+  - title (59): Baliq Plov (Azerbaijani Fish &amp; Saffron Rice) — Zaffaron
+  - canonical: https://zaffaron.com/recipe/baliq-plov-azerbaijani-fish-and-saffron-rice ✅
+  - Recipe JSON-LD: ✅
+  - FAQ JSON-LD: —
+- kaghineh-kalbas-persian-sausage-omelette
+  - status: 200
+  - title (60): Kaghineh Kalbas — Persian Sausage Omelette Recipe — Zaffaron
+  - canonical: https://zaffaron.com/recipe/kaghineh-kalbas-persian-sausage-omelette ✅
+  - Recipe JSON-LD: ✅
+  - FAQ JSON-LD: —
+- tah-mahi-ba-reshteh-tuna-noodles
+  - status: 200
+  - title (53): Tah-Mahi ba Reshteh — Persian Tuna Noodles — Zaffaron
+  - canonical: https://zaffaron.com/recipe/tah-mahi-ba-reshteh-tuna-noodles ✅
+  - Recipe JSON-LD: ✅
+  - FAQ JSON-LD: —
+- kashmiri-lamb-rogan-josh-yogurt-gravy
+  - status: 200
+  - title (57): Kashmiri Lamb Rogan Josh (Yogurt Gravy) Recipe — Zaffaron
+  - canonical: https://zaffaron.com/recipe/kashmiri-lamb-rogan-josh-yogurt-gravy ✅
+  - Recipe JSON-LD: ✅
+  - FAQ JSON-LD: —
+- pure-ye-sib-zamini-persian-potato-puree
+  - status: 200
+  - title (52): Persian Potato Puree (Pure-ye Sib Zamini) — Zaffaron
+  - canonical: https://zaffaron.com/recipe/pure-ye-sib-zamini-persian-potato-puree ✅
+  - Recipe JSON-LD: ✅
+  - FAQ JSON-LD: —
+- kufteh-holoo-persian-peach-meatballs
+  - status: 200
+  - title (23): Kufteh Holoo — Zaffaron
+  - canonical: https://zaffaron.com/recipe/kufteh-holoo-persian-peach-meatballs ✅
+  - Recipe JSON-LD: ✅
+  - FAQ JSON-LD: —
+- dogramach-azerbaijani-cold-yogurt-and-cucumber-soup
+  - status: 200
+  - title (59): Dogramach: Azerbaijani Cold Yogurt Cucumber Soup — Zaffaron
+  - canonical: https://zaffaron.com/recipe/dogramach-azerbaijani-cold-yogurt-and-cucumber-soup ✅
+  - Recipe JSON-LD: ✅
+  - FAQ JSON-LD: —
+- persian-tomato-pumpkin-pasta
+  - status: 200
+  - title (49): Persian-Style Tomato and Pumpkin Pasta — Zaffaron
+  - canonical: https://zaffaron.com/recipe/persian-tomato-pumpkin-pasta ✅
+  - Recipe JSON-LD: ✅
+  - FAQ JSON-LD: —

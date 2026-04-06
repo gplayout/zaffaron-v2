@@ -13,7 +13,7 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: "anthropic-ai", disallow: "/" },
       { userAgent: "ClaudeBot", disallow: "/" },
       { userAgent: "Bytespider", disallow: "/" },
-      { userAgent: "FacebookBot", disallow: "/" },
+      // FacebookBot allowed (needed for Open Graph link previews)
       { userAgent: "Omgilibot", disallow: "/" },
       { userAgent: "Diffbot", disallow: "/" },
       { userAgent: "PerplexityBot", disallow: "/" },

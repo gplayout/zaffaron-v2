@@ -3,6 +3,7 @@ import RecipeCard from "@/components/RecipeCard";
 import Link from "next/link";
 import { getRecipesByCuisine, getCuisineRecipeCount } from "@/lib/api/recipes";
 import { getCuisine, getAllCuisineSlugs } from "@/lib/cuisines";
+import { safeJsonLd } from "@/lib/seo/safe-json-ld";
 import { humanize } from "@/lib/formatting";
 import type { Metadata } from "next";
 
@@ -87,7 +88,7 @@ export default async function CuisinePage({ params, searchParams }: Props) {
       {itemListSchema && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
+          dangerouslySetInnerHTML={{ __html: safeJsonLd(itemListSchema) }}
         />
       )}
 

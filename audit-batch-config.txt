@@ -1,20 +1,21 @@
+=== next.config.ts ===
 import type { NextConfig } from "next";
 
 const securityHeaders = [
   { key: 'X-Frame-Options', value: 'DENY' },
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-  { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
+  { key: 'X-XSS-Protection', value: '1; mode=block' },
   { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
   {
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com",
+      "script-src 'self' 'unsafe-inline'",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
       "img-src 'self' data: https://givukaorkjkksslrzuum.supabase.co",
-      "connect-src 'self' https://givukaorkjkksslrzuum.supabase.co https://vitals.vercel-insights.com https://va.vercel-scripts.com",
+      "connect-src 'self' https://givukaorkjkksslrzuum.supabase.co",
       "frame-ancestors 'none'",
     ].join('; '),
   },
@@ -84,3 +85,80 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
+
+=== package.json ===
+{
+  "name": "zaffaron-v2",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@google/genai": "^1.48.0",
+    "@supabase/ssr": "^0.10.0",
+    "@supabase/supabase-js": "^2.99.0",
+    "@tailwindcss/typography": "^0.5.19",
+    "@vercel/analytics": "^2.0.1",
+    "lucide-react": "^0.577.0",
+    "next": "16.1.6",
+    "openai": "^6.33.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "server-only": "^0.0.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6",
+    "pg": "^8.20.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
+
+
+=== tsconfig.json ===
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts"
+  ],
+  "exclude": ["node_modules"]
+}
+
+

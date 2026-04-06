@@ -26,6 +26,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = async () => {
     await supabase.auth.signOut();
     setUser(null);
+    // Force full page refresh so server-rendered private content is cleared
+    window.location.href = '/';
   };
 
   useEffect(() => {

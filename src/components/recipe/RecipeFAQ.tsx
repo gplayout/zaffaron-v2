@@ -1,4 +1,5 @@
 import type { RecipeFaqItem } from '@/lib/seo/recipe-faq';
+import { safeJsonLd } from '@/lib/seo/safe-json-ld';
 
 function buildFaqJsonLd(items: RecipeFaqItem[]) {
   return {
@@ -25,7 +26,7 @@ export function RecipeFAQ({ items }: { items: RecipeFaqItem[] }) {
       {/* JSON-LD */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
 
       <h2 className="text-xl font-bold text-stone-900">FAQ</h2>

@@ -1,8 +1,8 @@
 import RecipeCard from "@/components/RecipeCard";
-import { NewsletterSignup } from "@/components/NewsletterSignup";
 import Link from "next/link";
 import { getLatestRecipes, getPopularRecipes, getRecipeCount, getFeaturedByCuisine } from "@/lib/api/recipes";
 import { getActiveCuisines } from "@/lib/cuisines";
+import { safeJsonLd } from "@/lib/seo/safe-json-ld";
 import type { Metadata } from "next";
 import type { RecipeSummary } from "@/types";
 
@@ -78,16 +78,16 @@ export default async function Home() {
       {/* Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildWebSiteSchema()) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(buildWebSiteSchema()) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildOrganizationSchema()) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(buildOrganizationSchema()) }}
       />
       {popularItems.length > 0 && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildItemListSchema(popularItems, "Editor's Picks")) }}
+          dangerouslySetInnerHTML={{ __html: safeJsonLd(buildItemListSchema(popularItems, "Editor's Picks")) }}
         />
       )}
 
@@ -200,8 +200,6 @@ export default async function Home() {
         </Link>
       </div>
 
-      {/* Newsletter Signup */}
-      <NewsletterSignup />
     </>
   );
 }

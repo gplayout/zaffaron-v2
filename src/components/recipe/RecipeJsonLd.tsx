@@ -1,13 +1,5 @@
 import type { Recipe, Ingredient, Instruction } from "@/types";
-
-/** Safely serialize JSON-LD to prevent XSS via script injection */
-function safeJsonLd(obj: unknown): string {
-  return JSON.stringify(obj)
-    .replace(/</g, '\\u003c')
-    .replace(/>/g, '\\u003e')
-    .replace(/&/g, '\\u0026')
-    .replace(/'/g, '\\u0027');
-}
+import { safeJsonLd } from "@/lib/seo/safe-json-ld";
 
 interface RecipeJsonLdProps {
   recipe: Recipe;

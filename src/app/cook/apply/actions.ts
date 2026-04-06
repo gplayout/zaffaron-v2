@@ -34,7 +34,8 @@ export async function submitCookApplication(
     const kitchenType = String(data.kitchenType || '').trim();
     const availability = String(data.availability || '').trim();
     const specialties = Array.isArray(data.specialties) ? data.specialties.map(s => String(s).trim()).filter(Boolean).slice(0, 10) : [];
-    const yearsExp = Math.max(0, Math.min(80, parseInt(data.yearsOfExperience, 10) || 0));
+    const validYearsRanges = ['0-1', '1-3', '3-5', '5-10', '10+'];
+    const yearsExp = validYearsRanges.includes(data.yearsOfExperience) ? data.yearsOfExperience : '0-1';
 
     if (name.length < 2 || name.length > 100) return { ok: false, error: 'Name must be 2-100 characters.' };
     if (phone.length < 5 || phone.length > 30) return { ok: false, error: 'Invalid phone number.' };
@@ -65,7 +66,8 @@ export async function submitCookApplication(
 
     if (insertError) {
       console.error('Failed to submit cook application:', insertError);
-      return { ok: false, error: insertError.message };
+      console.error('Cook application insert error:', insertError.message);
+      return { ok: false, error: 'Failed to submit application. Please try again.' };
     }
 
     return { ok: true };

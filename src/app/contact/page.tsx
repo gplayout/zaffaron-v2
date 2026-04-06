@@ -65,12 +65,25 @@ export default function ContactPage() {
             />
           </div>
 
+          {/* Honeypot — hidden from real users, bots fill it */}
+          <div className="hidden" aria-hidden="true">
+            <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+          </div>
+
           <button
             type="submit"
-            className="w-full rounded-lg bg-amber-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-amber-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2"
+            disabled={submitting}
+            className="w-full rounded-lg bg-amber-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-amber-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Send Message
+            {submitting ? 'Sending...' : 'Send Message'}
           </button>
+
+          {status === 'sent' && (
+            <p className="text-sm text-green-600 text-center">✅ Message sent! We&apos;ll get back to you soon.</p>
+          )}
+          {status && status !== 'sent' && (
+            <p className="text-sm text-red-600 text-center">❌ {status}</p>
+          )}
         </form>
       </div>
 
@@ -78,11 +91,11 @@ export default function ContactPage() {
       <div className="mt-8 text-center">
         <p className="text-sm text-stone-500">Or reach us directly at</p>
         <a
-          href="mailto:mehdi@smarterbroadcast.com"
+          href="mailto:hello@zaffaron.com"
           className="mt-2 inline-flex items-center gap-2 text-amber-600 hover:text-amber-700"
         >
           <Mail className="h-4 w-4" />
-          mehdi@smarterbroadcast.com
+          hello@zaffaron.com
         </a>
       </div>
     </div>

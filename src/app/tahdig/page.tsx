@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
-import { Camera, Upload, Loader2, RotateCcw, Share2, Download, Star } from "lucide-react";
+import { Camera, Upload, Loader2, RotateCcw, Share2, Star } from "lucide-react";
 import { rateTahdig } from "./actions";
 import type { TahdigResult } from "./lib/scoring";
 

@@ -59,7 +59,10 @@ export async function rateTahdig(
     const base64 = Buffer.from(bytes).toString('base64');
 
     // Call Gemini Vision
-    const google = new GoogleGenAI({ apiKey: process.env.GOOGLE_AI_KEY! });
+    if (!process.env.GOOGLE_AI_KEY) {
+      return { ok: false, error: 'Service temporarily unavailable. Please try again later.' };
+    }
+    const google = new GoogleGenAI({ apiKey: process.env.GOOGLE_AI_KEY });
     const resp = await google.models.generateContent({
       model: 'gemini-2.0-flash',
       contents: [

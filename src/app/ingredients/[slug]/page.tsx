@@ -112,7 +112,7 @@ export default async function IngredientPage({ params }: Props) {
       {/* Buying Guide */}
       <section className="mb-8 rounded-xl border border-stone-200 bg-stone-50 p-6">
         <h2 className="text-xl font-bold text-stone-800 mb-3">🛒 Buying Guide</h2>
-        <div className="text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: ingredient.buyingGuide.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
+        <div className="text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: ingredient.buyingGuide.replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c] || c)).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
       </section>
 
       {/* Storage */}

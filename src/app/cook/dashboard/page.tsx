@@ -22,8 +22,9 @@ import { useAuth } from '@/components/AuthProvider';
 const SIDEBAR_ITEMS = [
   { icon: LayoutDashboard, label: 'Overview', href: '/cook/dashboard' },
   { icon: UtensilsCrossed, label: 'Menu', href: '/cook/dashboard/menu' },
-  { icon: ShoppingBag, label: 'Orders', href: '/cook/dashboard/orders' },
-  { icon: Star, label: 'Reviews', href: '/cook/dashboard/reviews' },
+  // TODO: enable when routes exist
+  // { icon: ShoppingBag, label: 'Orders', href: '/cook/dashboard/orders' },
+  // { icon: Star, label: 'Reviews', href: '/cook/dashboard/reviews' },
   { icon: Settings, label: 'Settings', href: '/cook/dashboard/settings' },
 ];
 

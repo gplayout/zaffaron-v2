@@ -1,0 +1,2972 @@
+=== src\components\recipe\RecipeInternalLinks.tsx ===
+import Link from 'next/link';
+import { supabaseServer } from '@/lib/supabase-server';
+import type { Recipe } from '@/types';
+
+async function findByTitleKeyword(keyword: string, limit = 1) {
+  const { data } = await supabaseServer
+    .from('recipes_v2')
+    .select('slug,title,cuisine_slug,category_slug')
+    .eq('published', true)
+    .ilike('title', `%${keyword}%`)
+    .order('published_at', { ascending: false })
+    .limit(limit);
+  return data || [];
+}
+
+async function findSameCuisine(recipe: Recipe, limit = 4) {
+  const cuisineSlug = recipe.cuisine_slug || recipe.cuisine.toLowerCase();
+  const { data } = await supabaseServer
+    .from('recipes_v2')
+    .select('slug,title')
+    .eq('published', true)
+    .eq('cuisine_slug', cuisineSlug)
+    .neq('slug', recipe.slug)
+    .order('published_at', { ascending: false })
+    .limit(limit);
+  return data || [];
+}
+
+const CURATED_LINKS_BY_SLUG: Record<string, string[]> = {
+  // Keep this list SMALL + high-confidence. Every slug is verified via DB before linking.
+  'authentic-persian-kabab-koobideh': [
+    'salad-shirazi-persian-cucumber-tomato-salad',
+    'persian-chelo-fluffy-steamed-rice',
+    'chelow-e-sadeh-persian-steamed-rice',
+    'chelow-saffron-tahdig-persian-steamed-rice',
+  ],
+  'cheesy-kabab-koobideh': [
+    'authentic-persian-kabab-koobideh',
+    'salad-shirazi-persian-cucumber-tomato-salad',
+    'persian-chelo-fluffy-steamed-rice',
+  ],
+  'kabab-koobideh-morgh-ground-chicken-kebabs': [
+    'authentic-persian-kabab-koobideh',
+    'salad-shirazi-persian-cucumber-tomato-salad',
+    'chelow-e-sadeh-persian-steamed-rice',
+  ],
+  'chelo-kebab-koobideh': [
+    'authentic-persian-kabab-koobideh',
+    'salad-shirazi-persian-cucumber-tomato-salad',
+    'chelow-saffron-tahdig-persian-steamed-rice',
+  ],
+  'chelo-goosht-semnani': [
+    'chelow-e-sadeh-persian-steamed-rice',
+    'chelow-saffron-tahdig-persian-steamed-rice',
+    'tahchin-e-goosht-saffron-rice-cake',
+  ],
+  'samboseh-sabzi-persian-herb-samosas': [
+    'salad-shirazi-persian-cucumber-tomato-salad',
+    'fattoush-lebanese-toasted-pita-salad-with-sumac-dressing',
+  ],
+  'esnak-holandi-chicken-toast-sandwich': [
+    'khorak-e-chips-o-panir',
+    'persian-pizza-chips-bake',
+    'saffron-chicken-mozzarella-toastie',
+    'sandwich-kaseei-morgh',
+  ],
+  'fondou-ye-gojeh-farangi': [
+    'omlet-e-gojeh-persian-tomato-omelet',
+    'persian-tomato-feta-omelette',
+    'omelet-e-reyhan-basil-tomato-omelette',
+    'taktouka-moroccan-cooked-tomato-and-roasted-pepper-salad',
+  ],
+};
+
+async function fetchSlugs(slugs: string[]) {
+  if (!slugs || slugs.length === 0) return [];
+  const { data } = await supabaseServer
+    .from('recipes_v2')
+    .select('slug,title')
+    .eq('published', true)
+    .in('slug', slugs);
+
+  const map = new Map((data || []).map((r) => [r.slug, r]));
+  return slugs.map((s) => map.get(s)).filter(Boolean) as { slug: string; title: string }[];
+}
+
+export async function RecipeInternalLinks({ recipe }: { recipe: Recipe }) {
+  // Build a small, guaranteed-real set of internal links.
+  // IMPORTANT: We only link to recipes we actually found in the DB.
+
+  const picks: { slug: string; title: string }[] = [];
+
+  // 1) Curated links for high-priority pages (verified via DB)
+  const curated = CURATED_LINKS_BY_SLUG[recipe.slug];
+  if (curated && curated.length > 0) {
+    const found = await fetchSlugs(curated);
+    for (const r of found) picks.push({ slug: r.slug, title: r.title });
+  }
+
+  // 2) Heuristics (fallback)
+  if ((recipe.category_slug || recipe.category.toLowerCase()) === 'kebab') {
+    const chelo = await findByTitleKeyword('Chelo', 2);
+    for (const r of chelo) picks.push({ slug: r.slug, title: r.title });
+  }
+
+  const sameCuisine = await findSameCuisine(recipe, 4);
+  for (const r of sameCuisine) picks.push({ slug: r.slug, title: r.title });
+
+  // De-dupe + cap
+  const uniq = new Map<string, { slug: string; title: string }>();
+  for (const p of picks) {
+    if (!p.slug || p.slug === recipe.slug) continue;
+    if (!uniq.has(p.slug)) uniq.set(p.slug, p);
+  }
+  const final = [...uniq.values()].slice(0, 5);
+
+  if (final.length === 0) return null;
+
+  return (
+    <section className="mt-10 rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
+      <h2 className="text-xl font-bold text-stone-900">Pairs well with</h2>
+      <p className="mt-2 text-sm text-stone-600">
+        If you enjoyed this recipe, here are a few related Zaffaron recipes to try next.
+      </p>
+      <ul className="mt-4 space-y-2">
+        {final.map((r) => (
+          <li key={r.slug}>
+            <Link href={`/recipe/${r.slug}`} className="text-sm font-medium text-amber-700 hover:text-amber-800">
+              {r.title}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+
+=== src\components\recipe\RecipeJsonLd.tsx ===
+import type { Recipe, Ingredient, Instruction } from "@/types";
+
+/** Safely serialize JSON-LD to prevent XSS via script injection */
+function safeJsonLd(obj: unknown): string {
+  return JSON.stringify(obj)
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
+    .replace(/&/g, '\\u0026')
+    .replace(/'/g, '\\u0027');
+}
+
+interface RecipeJsonLdProps {
+  recipe: Recipe;
+  ratingValue?: number;
+  ratingCount?: number;
+}
+
+export function RecipeJsonLd({ recipe, ratingValue, ratingCount }: RecipeJsonLdProps) {
+  const totalMinutes = recipe.prep_time_minutes + recipe.cook_time_minutes;
+  const url = `https://zaffaron.com/recipe/${recipe.slug}`;
+  const nutrition = recipe.nutrition_per_serving;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Recipe",
+    "@id": `${url}#recipe`,
+    url,
+    mainEntityOfPage: url,
+    name: recipe.title,
+    description: recipe.seo_description || recipe.description,
+    inLanguage: "en",
+    isAccessibleForFree: true,
+    datePublished: recipe.published_at ?? recipe.created_at,
+    dateModified: recipe.updated_at,
+    image: recipe.image_url
+      ? {
+          "@type": "ImageObject",
+          url: recipe.image_url,
+          caption: recipe.image_alt || recipe.title,
+        }
+      : undefined,
+    prepTime: `PT${recipe.prep_time_minutes}M`,
+    cookTime: `PT${recipe.cook_time_minutes}M`,
+    totalTime: `PT${totalMinutes}M`,
+    recipeYield: `${recipe.servings} servings`,
+    recipeCategory: recipe.category,
+    recipeCuisine: recipe.cuisine,
+    keywords: recipe.tags?.join(", ") || undefined,
+    ...(ratingCount && ratingCount > 0
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: ratingValue ?? 0,
+            ratingCount: ratingCount,
+          },
+        }
+      : {}),
+    recipeIngredient: (recipe.ingredients || []).map(
+      (i: Ingredient) =>
+        `${i.amount} ${i.unit} ${i.item}${i.note ? ` (${i.note})` : ""}`.trim()
+    ),
+    recipeInstructions: (recipe.instructions || []).map((s: Instruction) => ({
+      "@type": "HowToStep",
+      name: `Step ${s.step}`,
+      text: s.text,
+      url: `${url}#step-${s.step}`,
+    })),
+    author: {
+      "@type": "Organization",
+      name: "Zaffaron Kitchen",
+      url: "https://zaffaron.com",
+      logo: { "@type": "ImageObject", url: "https://zaffaron.com/icon-512.png" },
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Zaffaron",
+      url: "https://zaffaron.com",
+      logo: { "@type": "ImageObject", url: "https://zaffaron.com/icon-512.png" },
+    },
+    ...(recipe.dietary_info
+      ? {
+          suitableForDiet: [
+            ...(recipe.dietary_info.vegetarian ? ["https://schema.org/VegetarianDiet"] : []),
+            ...(recipe.dietary_info.vegan ? ["https://schema.org/VeganDiet"] : []),
+            ...(recipe.dietary_info.gluten_free ? ["https://schema.org/GlutenFreeDiet"] : []),
+            ...(recipe.dietary_info.dairy_free ? ["https://schema.org/DairyFreeDiet"] : []),
+          ].filter(Boolean),
+        }
+      : {}),
+    ...(nutrition
+      ? {
+          nutrition: {
+            "@type": "NutritionInformation",
+            calories: nutrition.calories ? `${nutrition.calories} calories` : undefined,
+            fatContent: nutrition.fat_g ? `${nutrition.fat_g} g` : undefined,
+            saturatedFatContent: nutrition.saturated_fat_g ? `${nutrition.saturated_fat_g} g` : undefined,
+            carbohydrateContent: nutrition.carbs_g ? `${nutrition.carbs_g} g` : undefined,
+            proteinContent: nutrition.protein_g ? `${nutrition.protein_g} g` : undefined,
+            fiberContent: nutrition.fiber_g ? `${nutrition.fiber_g} g` : undefined,
+            sugarContent: nutrition.sugar_g ? `${nutrition.sugar_g} g` : undefined,
+            sodiumContent: nutrition.sodium_mg ? `${nutrition.sodium_mg} mg` : undefined,
+          },
+        }
+      : recipe.calories_per_serving
+        ? {
+            nutrition: {
+              "@type": "NutritionInformation",
+              calories: `${recipe.calories_per_serving} calories`,
+            },
+          }
+        : {}),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
+    />
+  );
+}
+
+const labelMap: Record<string, string> = {
+  persian: "Persian",
+  indian: "Indian",
+  "middle-eastern": "Middle Eastern",
+  stew: "Stews",
+  rice: "Rice Dishes",
+  kebab: "Kebabs",
+  appetizer: "Appetizers",
+  soup: "Soups",
+  dessert: "Desserts",
+  drink: "Drinks",
+  breakfast: "Breakfast",
+  main: "Main Courses",
+  salad: "Salads",
+  side: "Side Dishes",
+  pickle: "Pickles",
+  sweet: "Sweets",
+  bread: "Breads",
+};
+
+function capitalize(s: string) {
+  if (!s) return s;
+  return labelMap[s.toLowerCase()] || s.charAt(0).toUpperCase() + s.slice(1).replace(/-/g, " ");
+}
+
+interface BreadcrumbJsonLdProps {
+  recipe: Recipe;
+}
+
+export function BreadcrumbJsonLd({ recipe }: BreadcrumbJsonLdProps) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://zaffaron.com" },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: capitalize(recipe.cuisine),
+        item: `https://zaffaron.com/cuisine/${recipe.cuisine_slug || recipe.cuisine.toLowerCase()}`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: capitalize(recipe.category),
+        item: `https://zaffaron.com/category/${recipe.category_slug || recipe.category.toLowerCase()}`,
+      },
+      { "@type": "ListItem", position: 4, name: recipe.title },
+    ],
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
+    />
+  );
+}
+
+
+=== src\components\recipe\RecipeNutrition.tsx ===
+import type { NutritionInfo } from "@/types";
+
+interface NutritionItem {
+  label: string;
+  value: number | null | undefined;
+  unit: string;
+}
+
+interface RecipeNutritionProps {
+  nutrition: NutritionInfo | null;
+  calories: number | null;
+}
+
+export function RecipeNutrition({ nutrition, calories }: RecipeNutritionProps) {
+  if (!nutrition && !calories) return null;
+
+  const items: NutritionItem[] = nutrition
+    ? [
+        { label: "Calories", value: nutrition.calories, unit: "" },
+        { label: "Protein", value: nutrition.protein_g, unit: "g" },
+        { label: "Fat", value: nutrition.fat_g, unit: "g" },
+        { label: "Carbs", value: nutrition.carbs_g, unit: "g" },
+        { label: "Fiber", value: nutrition.fiber_g, unit: "g" },
+        { label: "Sodium", value: nutrition.sodium_mg, unit: "mg" },
+      ].filter((i) => i.value != null)
+    : [{ label: "Calories", value: calories, unit: "" }];
+
+  return (
+    <section className="mt-6 rounded-lg border border-stone-200 p-4">
+      <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-stone-500">
+        Nutrition per serving
+      </h2>
+      <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
+        {items.map((item) => (
+          <div key={item.label} className="text-center">
+            <div className="text-lg font-bold text-stone-800">
+              {item.value}
+              {item.unit}
+            </div>
+            <div className="text-xs text-stone-500">{item.label}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+
+=== src\components\recipe\RecipeProvenance.tsx ===
+import { humanize } from "@/lib/formatting";
+
+interface RecipeProvenanceProps {
+  cuisineSlug: string | null;
+  culturalSignificance: string | null;
+  regionalVariations: Array<{ region: string; description?: string; difference?: string }> | null;
+  author: string | null;
+  publishedAt: string | null;
+}
+
+export function RecipeProvenance({
+  cuisineSlug,
+  culturalSignificance,
+  regionalVariations,
+  author,
+  publishedAt,
+}: RecipeProvenanceProps) {
+  const hasContent = culturalSignificance || (regionalVariations && regionalVariations.length > 0);
+  if (!hasContent) return null;
+
+  return (
+    <div className="mt-8 rounded-xl border border-stone-200 bg-stone-50 p-6">
+      <h2 className="text-lg font-bold text-stone-800 mb-3">
+        🪪 Recipe Passport
+      </h2>
+
+      {/* Origin */}
+      <div className="flex flex-wrap gap-4 text-sm text-stone-600 mb-4">
+        {cuisineSlug && (
+          <div>
+            <span className="font-medium text-stone-700">Origin:</span>{" "}
+            {humanize(cuisineSlug)} Cuisine
+          </div>
+        )}
+        {author && (
+          <div>
+            <span className="font-medium text-stone-700">Researched by:</span>{" "}
+            {author}
+          </div>
+        )}
+        {publishedAt && (
+          <div>
+            <span className="font-medium text-stone-700">Published:</span>{" "}
+            {new Date(publishedAt).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Cultural context */}
+      {culturalSignificance && (
+        <div className="mb-4">
+          <h3 className="text-sm font-semibold text-stone-700 mb-1">Cultural Background</h3>
+          <p className="text-sm leading-relaxed text-stone-600">{culturalSignificance}</p>
+        </div>
+      )}
+
+      {/* Regional variations */}
+      {regionalVariations && regionalVariations.length > 0 && (
+        <div>
+          <h3 className="text-sm font-semibold text-stone-700 mb-2">Regional Variations</h3>
+          <div className="space-y-2">
+            {regionalVariations.map((v, i) => (
+              <div key={i} className="text-sm text-stone-600">
+                <span className="font-medium text-stone-700">{v.region}:</span>{" "}
+                {v.description || v.difference}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Provenance note */}
+      <p className="mt-4 text-xs text-stone-400 border-t border-stone-200 pt-3">
+        Researched from multiple sources and validated by the Zaffaron editorial team.
+        Every recipe is tested for accuracy, measurements, and cultural authenticity.
+      </p>
+    </div>
+  );
+}
+
+
+=== src\components\recipe\RecipeQuickCard.tsx ===
+import type { Recipe } from '@/types';
+import PrintButton from '@/components/PrintButton';
+
+function fmtIngredient(i: Recipe['ingredients'][number]) {
+  const amt = [i.amount, i.unit].filter(Boolean).join(' ').trim();
+  const base = [amt, i.item].filter(Boolean).join(' ').trim();
+  return i.note ? `${base} (${i.note})` : base;
+}
+
+export function RecipeQuickCard({ recipe }: { recipe: Recipe }) {
+  const total = (recipe.prep_time_minutes || 0) + (recipe.cook_time_minutes || 0);
+  const ingredients = recipe.ingredients || [];
+  const instructions = recipe.instructions || [];
+
+  // Keep card compact: top N ingredients/steps.
+  const topIngredients = ingredients.slice(0, 12);
+  const topSteps = instructions.slice(0, 6);
+
+  return (
+    <section className="mt-6 rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h2 className="text-lg font-bold text-stone-900">Printable Recipe Card</h2>
+          <p className="mt-1 text-sm text-stone-600">
+            Servings: <span className="font-medium text-stone-800">{recipe.servings}</span> · Total:{' '}
+            <span className="font-medium text-stone-800">{total} min</span> · Difficulty:{' '}
+            <span className="font-medium text-stone-800">{recipe.difficulty}</span>
+          </p>
+        </div>
+
+        <div className="print:hidden">
+          <PrintButton />
+        </div>
+      </div>
+
+      <div className="mt-5 grid gap-6 md:grid-cols-2">
+        <div>
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-stone-700">Ingredients (quick list)</h3>
+          <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-stone-700">
+            {topIngredients.map((i, idx) => (
+              <li key={`${i.item}-${idx}`}>{fmtIngredient(i)}</li>
+            ))}
+          </ul>
+          {ingredients.length > topIngredients.length && (
+            <p className="mt-2 text-xs text-stone-500">
+              + {ingredients.length - topIngredients.length} more in the full ingredients section below.
+            </p>
+          )}
+        </div>
+
+        <div>
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-stone-700">Steps (summary)</h3>
+          <ol className="mt-3 list-decimal space-y-1 pl-5 text-sm text-stone-700">
+            {topSteps.map((s) => (
+              <li key={s.step}>
+                {s.text.length > 130 ? s.text.slice(0, 127).trimEnd() + '…' : s.text}
+              </li>
+            ))}
+          </ol>
+          {instructions.length > topSteps.length && (
+            <p className="mt-2 text-xs text-stone-500">
+              + {instructions.length - topSteps.length} more steps in the full instructions section below.
+            </p>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
+=== src\components\recipe\RecipeReviews.tsx ===
+"use client";
+
+import { useState } from "react";
+import { StarRating } from "./StarRating";
+import { User, Calendar, MessageSquare, Star, Loader2 } from "lucide-react";
+import { submitRecipeReview } from "./reviews-actions";
+import { useAuth } from "@/hooks/useAuth";
+
+interface Review {
+  id: string;
+  rating: number;
+  text: string;
+  authorName: string;
+  createdAt: string;
+}
+
+interface RecipeReviewsProps {
+  reviews: Review[];
+  recipeId: string;
+}
+
+export function RecipeReviews({ reviews: initialReviews, recipeId }: RecipeReviewsProps) {
+  const { user } = useAuth();
+  const [reviews, setReviews] = useState<Review[]>(initialReviews);
+  const [userRating, setUserRating] = useState(0);
+  const [reviewText, setReviewText] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const averageRating = reviews.length > 0
+    ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+    : 0;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitError(null);
+
+    if (userRating === 0) {
+      setSubmitError("Please select a star rating");
+      return;
+    }
+
+    if (!user) {
+      setSubmitError("You must be signed in to submit a review");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    const result = await submitRecipeReview(recipeId, userRating, reviewText);
+
+    setIsSubmitting(false);
+
+    if (result.ok) {
+      // Add or update the review in the list
+      setReviews((prev) => {
+        const existingIndex = prev.findIndex((r) => r.id === result.review.id);
+        if (existingIndex >= 0) {
+          // Update existing review
+          const updated = [...prev];
+          updated[existingIndex] = result.review;
+          return updated;
+        }
+        // Add new review at the beginning
+        return [result.review, ...prev];
+      });
+
+      setSubmitSuccess(true);
+      setUserRating(0);
+      setReviewText("");
+
+      // Hide success message after 3 seconds
+      setTimeout(() => setSubmitSuccess(false), 3000);
+    } else if (result.error === 'auth') {
+      setSubmitError("You must be signed in to submit a review. Please sign in and try again.");
+    } else {
+      setSubmitError(result.error || "Failed to submit review. Please try again.");
+    }
+  };
+
+  const formatDate = (dateStr: string) => {
+    return new Date(dateStr).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  return (
+    <section className="mt-12 border-t border-stone-200 pt-8">
+      <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-stone-800">
+        <MessageSquare className="h-6 w-6 text-amber-600" />
+        Reviews
+      </h2>
+
+      {/* Rating Summary */}
+      <div className="mb-8 rounded-xl bg-stone-50 p-6">
+        <div className="flex flex-wrap items-center gap-6">
+          <div className="text-center">
+            <div className="text-4xl font-bold text-stone-800">
+              {averageRating > 0 ? averageRating.toFixed(1) : "—"}
+            </div>
+            <div className="mt-1">
+              <StarRating rating={averageRating} size="sm" />
+            </div>
+            <div className="mt-1 text-sm text-stone-500">
+              {reviews.length} {reviews.length === 1 ? "review" : "reviews"}
+            </div>
+          </div>
+
+          {reviews.length > 0 && (
+            <div className="flex-1 min-w-[200px]">
+              {[5, 4, 3, 2, 1].map((star) => {
+                const count = reviews.filter((r) => Math.round(r.rating) === star).length;
+                const percentage = reviews.length > 0 ? (count / reviews.length) * 100 : 0;
+                return (
+                  <div key={star} className="flex items-center gap-2 text-sm">
+                    <span className="w-3 text-stone-600">{star}</span>
+                    <Star className="h-3 w-3 text-amber-500" fill="currentColor" />
+                    <div className="flex-1 h-2 rounded-full bg-stone-200 overflow-hidden">
+                      <div
+                        className="h-full rounded-full bg-amber-500 transition-all"
+                        style={{ width: `${percentage}%` }}
+                      />
+                    </div>
+                    <span className="w-8 text-right text-stone-500">{count}</span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Write a Review Form */}
+      <div className="mb-8 rounded-xl border border-stone-200 bg-white p-6">
+        <h3 className="mb-4 text-lg font-semibold text-stone-800">
+          Write a Review
+        </h3>
+
+        {!user && (
+          <div className="mb-4 rounded-lg bg-amber-50 border border-amber-200 p-4 text-sm text-amber-800">
+            Please <a href="/auth/login" className="font-medium underline">sign in</a> to leave a review.
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="mb-2 block text-sm font-medium text-stone-700">
+              Your Rating
+            </label>
+            <StarRating
+              rating={userRating}
+              interactive
+              onRatingChange={setUserRating}
+              size="lg"
+              disabled={!user}
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="review-text"
+              className="mb-2 block text-sm font-medium text-stone-700"
+            >
+              Your Review
+            </label>
+            <textarea
+              id="review-text"
+              rows={4}
+              value={reviewText}
+              onChange={(e) => setReviewText(e.target.value)}
+              placeholder={user ? "Share your experience with this recipe..." : "Sign in to write a review..."}
+              className="w-full rounded-lg border border-stone-300 px-4 py-3 text-stone-800 placeholder:text-stone-400 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 disabled:bg-stone-50 disabled:text-stone-400"
+              required
+              disabled={!user}
+            />
+          </div>
+
+          {submitError && (
+            <div role="alert" aria-live="polite" className="rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-700">
+              {submitError}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={isSubmitting || !user || userRating === 0}
+            className="rounded-lg bg-amber-600 px-6 py-2.5 font-medium text-white transition hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-50 inline-flex items-center gap-2"
+          >
+            {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
+            {isSubmitting ? "Submitting..." : "Submit Review"}
+          </button>
+
+          {submitSuccess && (
+            <p className="text-sm font-medium text-emerald-600">
+              Thank you! Your review has been submitted.
+            </p>
+          )}
+        </form>
+      </div>
+
+      {/* Existing Reviews List */}
+      {reviews.length > 0 ? (
+        <div className="space-y-4">
+          {reviews.map((review) => (
+            <div
+              key={review.id}
+              className="rounded-xl border border-stone-200 bg-white p-5"
+            >
+              <div className="mb-3 flex flex-wrap items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100">
+                  <User className="h-5 w-5 text-amber-600" />
+                </div>
+                <div className="flex-1">
+                  <div className="font-medium text-stone-800">
+                    {review.authorName}
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-stone-500">
+                    <StarRating rating={review.rating} size="sm" />
+                    <span>·</span>
+                    <span className="flex items-center gap-1">
+                      <Calendar className="h-3 w-3" />
+                      {formatDate(review.createdAt)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <p className="text-stone-700 leading-relaxed">{review.text}</p>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="rounded-xl border border-dashed border-stone-300 bg-stone-50 p-8 text-center">
+          <MessageSquare className="mx-auto h-10 w-10 text-stone-400" />
+          <p className="mt-3 text-stone-600">
+            No reviews yet. Be the first to review this recipe!
+          </p>
+        </div>
+      )}
+    </section>
+  );
+}
+
+
+=== src\components\recipe\RecipeTips.tsx ===
+import { MapPin, Calendar, Utensils } from "lucide-react";
+import type { Recipe, CommonMistake, RegionalVariation } from "@/types";
+
+function parseTips(tips: string | string[] | null): string[] {
+  if (!tips) return [];
+  if (Array.isArray(tips)) return tips;
+  if (typeof tips === "string") {
+    try {
+      const p = JSON.parse(tips);
+      if (Array.isArray(p)) return p;
+    } catch {}
+    return tips.split("\n").filter(Boolean);
+  }
+  return [];
+}
+
+function parseServeWith(val: string | string[] | null): string[] {
+  if (!val) return [];
+  if (Array.isArray(val)) return val;
+  if (typeof val === "string") {
+    try {
+      const p = JSON.parse(val);
+      if (Array.isArray(p)) return p;
+    } catch {}
+    return val.split(",").map((s) => s.trim()).filter(Boolean);
+  }
+  return [];
+}
+
+interface RecipeTipsProps {
+  recipe: Recipe;
+}
+
+export function RecipeTips({ recipe }: RecipeTipsProps) {
+  const tips = parseTips(recipe.tips);
+  const mistakes = recipe.common_mistakes;
+  const variations = recipe.regional_variations;
+  const flavor = recipe.flavor_profile;
+  const serveWith = parseServeWith(recipe.serve_with);
+
+  return (
+    <>
+      {/* Cultural Significance */}
+      {recipe.cultural_significance && (
+        <section className="mb-8 rounded-lg border-l-4 border-amber-400 bg-amber-50/50 px-5 py-4">
+          <h2 className="mb-2 text-sm font-bold uppercase tracking-wide text-amber-700">
+            Cultural Background
+          </h2>
+          <p className="text-sm leading-relaxed text-stone-700">{recipe.cultural_significance}</p>
+        </section>
+      )}
+
+      {/* Flavor Profile */}
+      {flavor && (
+        <div className="mb-8 flex flex-wrap gap-2">
+          {flavor.taste?.map((t: string) => (
+            <span key={t} className="rounded-full bg-rose-50 px-2.5 py-0.5 text-xs text-rose-600">
+              {t}
+            </span>
+          ))}
+          {flavor.texture?.map((t: string) => (
+            <span key={t} className="rounded-full bg-violet-50 px-2.5 py-0.5 text-xs text-violet-600">
+              {t}
+            </span>
+          ))}
+          {flavor.aroma?.map((a: string) => (
+            <span key={a} className="rounded-full bg-orange-50 px-2.5 py-0.5 text-xs text-orange-600">
+              {a}
+            </span>
+          ))}
+          {flavor.spice_level && flavor.spice_level !== "none" && (
+            <span className="rounded-full bg-red-50 px-2.5 py-0.5 text-xs text-red-600">
+              🌶 {flavor.spice_level}
+            </span>
+          )}
+        </div>
+      )}
+
+      {/* Equipment */}
+      {recipe.equipment && Array.isArray(recipe.equipment) && recipe.equipment.length > 0 && (
+        <section className="mb-8">
+          <h2 className="mb-2 flex items-center gap-1.5 text-sm font-bold uppercase tracking-wide text-stone-500">
+            <Utensils className="h-4 w-4" /> Equipment
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {recipe.equipment.map((e: string) => (
+              <span
+                key={e}
+                className="rounded-full border border-stone-200 bg-white px-3 py-1 text-xs text-stone-600"
+              >
+                {e}
+              </span>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Tips */}
+      {tips.length > 0 && (
+        <section className="mt-6 rounded-lg bg-amber-50 p-6">
+          <h2 className="mb-3 text-lg font-bold text-amber-800">💡 Tips</h2>
+          <ul className="space-y-2 text-sm leading-relaxed text-amber-900 list-disc list-inside">
+            {tips.map((tip: string, i: number) => (
+              <li key={i}>{tip}</li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {/* Common Mistakes */}
+      {mistakes && Array.isArray(mistakes) && mistakes.length > 0 && (
+        <section className="mt-6 rounded-lg bg-red-50 p-6">
+          <h2 className="mb-3 text-lg font-bold text-red-800">⚠️ Common Mistakes</h2>
+          <ul className="space-y-3">
+            {mistakes.map((m: CommonMistake, i: number) => (
+              <li key={i} className="text-sm">
+                <p className="font-medium text-red-700">{m.mistake}</p>
+                <p className="text-red-600">Why: {m.why}</p>
+                <p className="text-emerald-700">Fix: {m.fix}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {/* Storage Notes */}
+      {recipe.storage_notes && (
+        <section className="mt-6 rounded-lg bg-stone-100 p-6">
+          <h2 className="mb-3 text-lg font-bold text-stone-800">🧊 How to Store</h2>
+          <p className="text-sm leading-relaxed text-stone-700">{recipe.storage_notes}</p>
+        </section>
+      )}
+
+      {/* Make Ahead */}
+      {recipe.make_ahead && (
+        <section className="mt-6 rounded-lg bg-blue-50 p-6">
+          <h2 className="mb-3 text-lg font-bold text-blue-800">📅 Make Ahead</h2>
+          <p className="text-sm leading-relaxed text-blue-700">{recipe.make_ahead}</p>
+        </section>
+      )}
+
+      {/* Serve With */}
+      {serveWith.length > 0 && (
+        <section className="mt-6">
+          <h2 className="mb-3 text-lg font-bold">🍽️ Pairs Well With</h2>
+          <ul className="list-disc pl-5 text-sm text-stone-600 space-y-1">
+            {serveWith.map((item, i) => (
+              <li key={i}>{item}</li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {/* Regional Variations */}
+      {variations && Array.isArray(variations) && variations.length > 0 && (
+        <section className="mt-6">
+          <h2 className="mb-3 flex items-center gap-1.5 text-lg font-bold">
+            <MapPin className="h-5 w-5 text-stone-400" /> Regional Variations
+          </h2>
+          <ul className="space-y-2">
+            {variations.map((v: RegionalVariation, i: number) => (
+              <li key={i} className="rounded-lg border border-stone-200 p-3 text-sm">
+                <span className="font-medium text-stone-800">{v.region}</span>
+                <span className="block mt-0.5 text-stone-600">
+                  {v.description || v.difference}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {/* Occasions */}
+      {recipe.occasions && Array.isArray(recipe.occasions) && recipe.occasions.length > 0 && (
+        <div className="mt-6 flex flex-wrap gap-2">
+          {recipe.occasions.map((o: string) => (
+            <span
+              key={o}
+              className="flex items-center gap-1 rounded-full border border-stone-200 bg-white px-3 py-1 text-xs text-stone-600"
+            >
+              <Calendar className="h-3 w-3" /> {o}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Tags */}
+      {recipe.tags?.length > 0 && (
+        <div className="mt-6 flex flex-wrap gap-2">
+          {recipe.tags.map((tag: string) => (
+            <span key={tag} className="rounded-full bg-stone-100 px-3 py-1 text-xs text-stone-500">
+              #{tag}
+            </span>
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
+
+
+=== src\components\recipe\RecipeVariations.tsx ===
+import type { RecipeVariationSection } from '@/lib/seo/recipe-variations';
+
+export function RecipeVariations({ sections }: { sections: RecipeVariationSection[] }) {
+  if (!sections || sections.length === 0) return null;
+
+  return (
+    <section className="mt-10">
+      {sections.map((section) => (
+        <div key={section.title} className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
+          <h2 className="text-xl font-bold text-stone-900">{section.title}</h2>
+          <div className="mt-4 space-y-4">
+            {section.items.map((it) => (
+              <div key={it.heading}>
+                <h3 className="font-semibold text-stone-900">{it.heading}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-stone-600">{it.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </section>
+  );
+}
+
+
+=== src\components\recipe\RelatedRecipes.tsx ===
+import Image from "next/image";
+import Link from "next/link";
+import { supabaseServer } from "@/lib/supabase-server";
+import { humanize } from "@/lib/formatting";
+
+interface RelatedRecipesProps {
+  currentSlug: string;
+  cuisineSlug: string;
+  categorySlug: string;
+}
+
+export async function RelatedRecipes({ currentSlug, cuisineSlug, categorySlug }: RelatedRecipesProps) {
+  // Two queries: same cuisine first, then same category as fallback
+  const FIELDS = "slug,title,image_url,image_alt,prep_time_minutes,cook_time_minutes,difficulty,cuisine,category,cuisine_slug";
+
+  // Primary: same cuisine (most relevant)
+  const { data: sameCuisine } = await supabaseServer
+    .from("recipes_v2")
+    .select(FIELDS)
+    .eq("published", true)
+    .eq("cuisine_slug", cuisineSlug)
+    .neq("slug", currentSlug)
+    .order("published_at", { ascending: false })
+    .limit(4);
+
+  // Fallback: same category, different cuisine (for variety)
+  const slugsToExclude = [currentSlug, ...(sameCuisine || []).map(r => r.slug)];
+  let categoryFill: typeof sameCuisine = [];
+  if ((sameCuisine || []).length < 4) {
+    const { data: catData } = await supabaseServer
+      .from("recipes_v2")
+      .select(FIELDS)
+      .eq("published", true)
+      .eq("category_slug", categorySlug)
+      .not("slug", "in", `(${slugsToExclude.join(",")})`)
+      .order("published_at", { ascending: false })
+      .limit(4 - (sameCuisine || []).length);
+    categoryFill = catData || [];
+  }
+
+  const related = [...(sameCuisine || []), ...categoryFill].slice(0, 4);
+
+  if (related.length === 0) return null;
+
+  return (
+    <section className="mt-10 border-t border-stone-200 pt-8">
+      <h2 className="text-xl font-bold text-stone-800 mb-4">You Might Also Like</h2>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {related.map((r) => (
+          <Link
+            key={r.slug}
+            href={`/recipe/${r.slug}`}
+            className="group rounded-lg border border-stone-200 overflow-hidden hover:shadow-md transition-shadow"
+          >
+            {r.image_url && (
+              <div className="relative aspect-[4/3] overflow-hidden bg-stone-100">
+                <Image
+                  src={r.image_url}
+                  alt={r.image_alt || r.title}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform"
+                  sizes="(max-width:640px) 50vw, 25vw"
+                />
+              </div>
+            )}
+            <div className="p-3">
+              <h3 className="text-sm font-semibold text-stone-800 line-clamp-2">{r.title}</h3>
+              <p className="mt-1 text-xs text-stone-500">
+                {humanize(r.cuisine)} · {humanize(r.category)} · {(r.prep_time_minutes ?? 0) + (r.cook_time_minutes ?? 0)} min
+              </p>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+
+=== src\components\recipe\ShareButtons.tsx ===
+"use client";
+
+import { useState } from "react";
+
+interface ShareButtonsProps {
+  title: string;
+  url: string;
+}
+
+export function ShareButtons({ title, url }: ShareButtonsProps) {
+  const [copied, setCopied] = useState(false);
+
+  const encodedTitle = encodeURIComponent(title);
+  const encodedUrl = encodeURIComponent(url);
+
+  const shareLinks = [
+    {
+      name: "WhatsApp",
+      href: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`,
+      icon: (
+        <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+        </svg>
+      ),
+      color: "hover:text-green-600",
+    },
+    {
+      name: "X",
+      href: `https://x.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`,
+      icon: (
+        <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+        </svg>
+      ),
+      color: "hover:text-stone-900",
+    },
+    {
+      name: "Pinterest",
+      href: `https://pinterest.com/pin/create/button/?url=${encodedUrl}&description=${encodedTitle}`,
+      icon: (
+        <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12.017 24c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.001 12.017.001z" />
+        </svg>
+      ),
+      color: "hover:text-red-600",
+    },
+  ];
+
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback
+    }
+  }
+
+  return (
+    <div className="flex items-center gap-3 mt-6 pt-4 border-t border-stone-200">
+      <span className="text-sm font-medium text-stone-500">Share:</span>
+      {shareLinks.map((link) => (
+        <a
+          key={link.name}
+          href={link.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`text-stone-400 transition ${link.color}`}
+          aria-label={`Share on ${link.name}`}
+        >
+          {link.icon}
+        </a>
+      ))}
+      <button
+        onClick={copyLink}
+        className="text-stone-400 transition hover:text-amber-600"
+        aria-label="Copy link"
+      >
+        {copied ? (
+          <svg className="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+        ) : (
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
+        )}
+      </button>
+    </div>
+  );
+}
+
+
+=== src\components\recipe\StarRating.tsx ===
+"use client";
+
+import { Star } from "lucide-react";
+import { useState } from "react";
+
+interface StarRatingProps {
+  rating: number;
+  maxRating?: number;
+  size?: "sm" | "md" | "lg";
+  interactive?: boolean;
+  onRatingChange?: (rating: number) => void;
+  showValue?: boolean;
+  disabled?: boolean;
+}
+
+const sizeClasses = {
+  sm: "h-4 w-4",
+  md: "h-5 w-5",
+  lg: "h-6 w-6",
+};
+
+export function StarRating({
+  rating,
+  maxRating = 5,
+  size = "md",
+  interactive = false,
+  onRatingChange,
+  showValue = false,
+  disabled = false,
+}: StarRatingProps) {
+  const [hoverRating, setHoverRating] = useState(0);
+
+  const displayRating = hoverRating || rating;
+
+  const handleClick = (starIndex: number) => {
+    if (interactive && !disabled && onRatingChange) {
+      onRatingChange(starIndex);
+    }
+  };
+
+  const handleMouseEnter = (starIndex: number) => {
+    if (interactive && !disabled) {
+      setHoverRating(starIndex);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (interactive && !disabled) {
+      setHoverRating(0);
+    }
+  };
+
+  const renderStar = (starIndex: number) => {
+    const filled = starIndex <= Math.floor(displayRating);
+    const partial = !filled && starIndex === Math.ceil(displayRating);
+    const partialPercent = partial ? (displayRating % 1) * 100 : 0;
+
+    return (
+      <button
+        key={starIndex}
+        type="button"
+        onClick={() => handleClick(starIndex)}
+        onMouseEnter={() => handleMouseEnter(starIndex)}
+        onMouseLeave={handleMouseLeave}
+        disabled={!interactive || disabled}
+        className={`relative ${interactive && !disabled ? "cursor-pointer hover:scale-110" : "cursor-default"} transition-transform disabled:opacity-50`}
+        aria-label={`${starIndex} star${starIndex !== 1 ? "s" : ""}`}
+      >
+        {/* Background star (empty) */}
+        <Star
+          className={`${sizeClasses[size]} text-stone-300`}
+          fill="currentColor"
+        />
+        
+        {/* Filled star overlay */}
+        {(filled || partial) && (
+          <div
+            className="absolute inset-0 overflow-hidden"
+            style={{ width: partial ? `${partialPercent}%` : "100%" }}
+          >
+            <Star
+              className={`${sizeClasses[size]} text-amber-500`}
+              fill="currentColor"
+            />
+          </div>
+        )}
+      </button>
+    );
+  };
+
+  return (
+    <div className="flex items-center gap-1">
+      <span className="sr-only">Rated {rating.toFixed(1)} out of {maxRating} stars</span>
+      <div className="flex gap-0.5" aria-hidden="true">
+        {Array.from({ length: maxRating }, (_, i) => renderStar(i + 1))}
+      </div>
+      {showValue && (
+        <span className="ml-2 text-sm font-medium text-stone-600">
+          {rating.toFixed(1)}
+        </span>
+      )}
+    </div>
+  );
+}
+
+
+=== src\components\recipe\favorites-actions.ts ===
+'use server';
+
+import { createServerSupabase } from '@/lib/supabase-server-auth';
+
+export async function getIsFavorited(
+  recipeId: string
+): Promise<{ ok: true; isFavorited: boolean } | { ok: false; error: string }> {
+  try {
+    const supabase = await createServerSupabase();
+
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return { ok: false, error: 'auth' };
+    }
+
+    const { data, error } = await supabase
+      .from('recipe_favorites')
+      .select('recipe_id')
+      .eq('recipe_id', recipeId)
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Failed to check favorite status:', error);
+      return { ok: false, error: error.message };
+    }
+
+    return { ok: true, isFavorited: !!data };
+  } catch (error) {
+    console.error('Unexpected error checking favorite status:', error);
+    return { ok: false, error: 'An unexpected error occurred.' };
+  }
+}
+
+export async function toggleFavorite(
+  recipeId: string
+): Promise<{ ok: true; isFavorited: boolean } | { ok: false; error: string }> {
+  try {
+    const supabase = await createServerSupabase();
+
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return { ok: false, error: 'auth' };
+    }
+
+    const { data: existing, error: checkError } = await supabase
+      .from('recipe_favorites')
+      .select('recipe_id')
+      .eq('recipe_id', recipeId)
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    if (checkError) {
+      console.error('Failed to check favorite status:', checkError);
+      return { ok: false, error: checkError.message };
+    }
+
+    if (existing) {
+      const { error: deleteError } = await supabase
+        .from('recipe_favorites')
+        .delete()
+        .eq('recipe_id', recipeId)
+        .eq('user_id', user.id);
+
+      if (deleteError) {
+        console.error('Failed to remove favorite:', deleteError);
+        return { ok: false, error: deleteError.message };
+      }
+
+      return { ok: true, isFavorited: false };
+    } else {
+      const { error: upsertError } = await supabase
+        .from('recipe_favorites')
+        .upsert(
+          {
+            recipe_id: recipeId,
+            user_id: user.id,
+          },
+          {
+            onConflict: 'recipe_id,user_id',
+          }
+        );
+
+      if (upsertError) {
+        console.error('Failed to add favorite:', upsertError);
+        return { ok: false, error: upsertError.message };
+      }
+
+      return { ok: true, isFavorited: true };
+    }
+  } catch (error) {
+    console.error('Unexpected error toggling favorite:', error);
+    return { ok: false, error: 'An unexpected error occurred.' };
+  }
+}
+
+
+=== src\components\recipe\index.ts ===
+export { RecipeHero } from "./RecipeHero";
+export { RecipeQuickCard } from "./RecipeQuickCard";
+export { RecipeIngredients } from "./RecipeIngredients";
+export { RecipeInstructions } from "./RecipeInstructions";
+export { RecipeNutrition } from "./RecipeNutrition";
+export { RecipeTips } from "./RecipeTips";
+export { RecipeFAQ } from "./RecipeFAQ";
+export { RecipeVariations } from "./RecipeVariations";
+export { RecipeJsonLd, BreadcrumbJsonLd } from "./RecipeJsonLd";
+export { RelatedRecipes } from "./RelatedRecipes";
+export { DietaryBadges } from "./DietaryBadges";
+export { AllergenWarning } from "./AllergenWarning";
+export { RecipeReviews } from "./RecipeReviews";
+export { StarRating } from "./StarRating";
+export { ShareButtons } from "./ShareButtons";
+export { RecipeProvenance } from "./RecipeProvenance";
+export { RecipeInternalLinks } from "./RecipeInternalLinks";
+
+
+=== src\components\recipe\reviews-actions.ts ===
+'use server';
+
+import { createServerSupabase } from '@/lib/supabase-server-auth';
+import { supabaseServer } from '@/lib/supabase-server';
+
+export interface Review {
+  id: string;
+  rating: number;
+  text: string;
+  authorName: string;
+  createdAt: string;
+}
+
+interface ReviewRow {
+  id: string;
+  rating: number;
+  body: string | null;
+  author_name: string | null;
+  created_at: string;
+}
+
+export async function getRecipeReviews(
+  recipeId: string
+): Promise<{ ok: true; reviews: Review[] } | { ok: false; error: string }> {
+  try {
+    if (!recipeId) {
+      return { ok: true, reviews: [] };
+    }
+    const { data, error } = await supabaseServer
+      .from('recipe_reviews')
+      .select('id, rating, body, author_name, created_at')
+      .eq('recipe_id', recipeId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Failed to fetch reviews:', error);
+      return { ok: false, error: error.message };
+    }
+
+    const reviews: Review[] = (data as ReviewRow[] || []).map((item) => ({
+      id: item.id,
+      rating: item.rating,
+      text: item.body || "",
+      authorName: item.author_name || 'Anonymous',
+      createdAt: item.created_at,
+    }));
+
+    return { ok: true, reviews };
+  } catch (error) {
+    console.error('Unexpected error fetching reviews:', error);
+    return { ok: false, error: 'An unexpected error occurred.' };
+  }
+}
+
+export async function submitRecipeReview(
+  recipeId: string,
+  rating: number,
+  body: string
+): Promise<{ ok: true; review: Review } | { ok: false; error: string }> {
+  try {
+    const supabase = await createServerSupabase();
+
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return { ok: false, error: 'auth' };
+    }
+
+    if (rating < 1 || rating > 5) {
+      return { ok: false, error: 'Rating must be between 1 and 5' };
+    }
+
+    if (!body.trim()) {
+      return { ok: false, error: 'Review text is required' };
+    }
+
+    if (body.trim().length > 2000) {
+      return { ok: false, error: 'Review is too long (max 2000 characters)' };
+    }
+
+    if (body.trim().length < 10) {
+      return { ok: false, error: 'Review is too short (min 10 characters)' };
+    }
+
+    // Simple rate limit: check if user submitted a review in the last 60 seconds
+    const { data: recent } = await supabase
+      .from('recipe_reviews')
+      .select('created_at')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(1);
+    if (recent?.[0]) {
+      const lastReview = new Date(recent[0].created_at).getTime();
+      if (Date.now() - lastReview < 60000) {
+        return { ok: false, error: 'Please wait a minute before submitting another review' };
+      }
+    }
+
+    // Get user's display name from metadata
+    const authorName =
+      user.user_metadata?.full_name ||
+      user.user_metadata?.name ||
+      user.email?.split('@')[0] ||
+      'Anonymous';
+
+    const { data, error } = await supabase
+      .from('recipe_reviews')
+      .upsert(
+        {
+          recipe_id: recipeId,
+          user_id: user.id,
+          rating,
+          body: body.trim(),
+          author_name: authorName,
+        },
+        {
+          onConflict: 'recipe_id,user_id',
+        }
+      )
+      .select('id, rating, body, author_name, created_at')
+      .single();
+
+    if (error) {
+      console.error('Failed to submit review:', error);
+      return { ok: false, error: error.message };
+    }
+
+    const row = data as ReviewRow;
+    const review: Review = {
+      id: row.id,
+      rating: row.rating,
+      text: row.body || "",
+      authorName: row.author_name || authorName,
+      createdAt: row.created_at,
+    };
+
+    return { ok: true, review };
+  } catch (error) {
+    console.error('Unexpected error submitting review:', error);
+    return { ok: false, error: 'An unexpected error occurred.' };
+  }
+}
+
+
+=== src\hooks\useAuth.ts ===
+export { useAuth } from "@/components/AuthProvider";
+
+
+=== src\lib\api\recipes.ts ===
+import { supabaseServer } from "@/lib/supabase-server";
+import type { Recipe, RecipeSummary } from "@/types";
+
+const CARD_FIELDS = `id,slug,title,description,image_url,image_alt,prep_time_minutes,cook_time_minutes,servings,difficulty,category,category_slug,cuisine,cuisine_slug,calories_per_serving,published_at`;
+
+/**
+ * Get the latest published recipes
+ */
+export async function getLatestRecipes(limit: number): Promise<RecipeSummary[]> {
+  const { data, error } = await supabaseServer
+    .from("recipes_v2")
+    .select(CARD_FIELDS)
+    .eq("published", true)
+    .order("published_at", { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    console.error("Failed to fetch latest recipes:", error);
+    throw new Error("Failed to load recipes. Please try again later.");
+  }
+
+  return (data as RecipeSummary[]) || [];
+}
+
+/**
+ * Get popular/editor's pick recipes (oldest first for variety)
+ */
+export async function getPopularRecipes(limit: number): Promise<RecipeSummary[]> {
+  const { data, error } = await supabaseServer
+    .from("recipes_v2")
+    .select(CARD_FIELDS)
+    .eq("published", true)
+    .order("published_at", { ascending: true })
+    .limit(limit);
+
+  if (error) {
+    console.error("Failed to fetch popular recipes:", error);
+    throw new Error("Failed to load recipes. Please try again later.");
+  }
+
+  return (data as RecipeSummary[]) || [];
+}
+
+/**
+ * Get featured recipes per cuisine (for homepage showcase)
+ * Single query + group in memory (fixes N+1)
+ */
+export async function getFeaturedByCuisine(
+  cuisineSlugs: string[],
+  perCuisine: number = 3
+): Promise<Record<string, RecipeSummary[]>> {
+  if (cuisineSlugs.length === 0) return {};
+
+  // Single query: fetch top recipes across all requested cuisines
+  // Over-fetch to ensure we get enough per cuisine after grouping
+  const { data, error } = await supabaseServer
+    .from("recipes_v2")
+    .select(CARD_FIELDS)
+    .eq("published", true)
+    .in("cuisine_slug", cuisineSlugs)
+    .order("published_at", { ascending: false })
+    .limit(cuisineSlugs.length * perCuisine * 2);
+
+  if (error) {
+    console.error("Failed to fetch featured recipes:", error);
+    return {};
+  }
+
+  // Group by cuisine_slug and take top perCuisine from each
+  const result: Record<string, RecipeSummary[]> = {};
+  for (const slug of cuisineSlugs) {
+    result[slug] = [];
+  }
+  for (const row of (data || []) as RecipeSummary[]) {
+    const slug = row.cuisine_slug;
+    if (slug && result[slug] && result[slug].length < perCuisine) {
+      result[slug].push(row);
+    }
+  }
+  return result;
+}
+
+/**
+ * Get recipes by category with pagination
+ */
+export async function getRecipesByCategory(
+  slug: string,
+  page: number,
+  pageSize: number
+): Promise<{ recipes: RecipeSummary[]; count: number }> {
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
+  const { data, count, error } = await supabaseServer
+    .from("recipes_v2")
+    .select(CARD_FIELDS, { count: "exact" })
+    .eq("published", true)
+    .eq("category_slug", slug)
+    .order("published_at", { ascending: false })
+    .range(from, to);
+
+  if (error) {
+    console.error("Failed to fetch recipes by category:", error);
+    throw new Error("Failed to load recipes. Please try again later.");
+  }
+
+  return { recipes: (data as RecipeSummary[]) || [], count: count || 0 };
+}
+
+/**
+ * Get recipes by cuisine with pagination
+ */
+export async function getRecipesByCuisine(
+  slug: string,
+  page: number,
+  pageSize: number
+): Promise<{ recipes: RecipeSummary[]; count: number }> {
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
+  const { data, count, error } = await supabaseServer
+    .from("recipes_v2")
+    .select(CARD_FIELDS, { count: "exact" })
+    .eq("published", true)
+    .eq("cuisine_slug", slug)
+    .order("published_at", { ascending: false })
+    .range(from, to);
+
+  if (error) {
+    console.error("Failed to fetch recipes by cuisine:", error);
+    throw new Error("Failed to load recipes. Please try again later.");
+  }
+
+  return { recipes: (data as RecipeSummary[]) || [], count: count || 0 };
+}
+
+/**
+ * Get total count of published recipes
+ */
+export async function getRecipeCount(): Promise<number> {
+  const { count, error } = await supabaseServer
+    .from("recipes_v2")
+    .select("id", { count: "exact", head: true })
+    .eq("published", true);
+
+  if (error) {
+    console.error("Failed to fetch recipe count:", error);
+    throw new Error("Failed to load recipe count. Please try again later.");
+  }
+
+  return count || 0;
+}
+
+/**
+ * Search recipes by query string
+ */
+export async function searchRecipes(query: string, limit: number): Promise<RecipeSummary[]> {
+  // Sanitize input: strip PostgREST-meaningful chars + colons
+  const clean = query.replace(/[%_\\(),."':;]/g, "").replace(/\s+/g, " ").trim().slice(0, 100);
+  if (!clean || clean.length < 2) return [];
+
+  const { data, error } = await supabaseServer
+    .from("recipes_v2")
+    .select(CARD_FIELDS)
+    .eq("published", true)
+    .or(
+      `title.ilike.%${clean}%,description.ilike.%${clean}%,cuisine.ilike.%${clean}%,category.ilike.%${clean}%`
+    )
+    .order("published_at", { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    console.error("Search error:", error);
+    return [];
+  }
+
+  return (data as RecipeSummary[]) || [];
+}
+
+/**
+ * Get paginated recipes (for /recipes page)
+ */
+export async function getRecipes(
+  page: number,
+  pageSize: number
+): Promise<{ recipes: RecipeSummary[]; count: number }> {
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
+  const { data, count, error } = await supabaseServer
+    .from("recipes_v2")
+    .select(CARD_FIELDS, { count: "exact" })
+    .eq("published", true)
+    .order("published_at", { ascending: false })
+    .range(from, to);
+
+  if (error) {
+    console.error("Failed to fetch recipes:", error);
+    throw new Error("Failed to load recipes. Please try again later.");
+  }
+
+  return { recipes: (data as RecipeSummary[]) || [], count: count || 0 };
+}
+
+/**
+ * Get all category slugs for generateStaticParams
+ */
+export async function getCategorySlugs(): Promise<string[]> {
+  const { data, error } = await supabaseServer
+    .from("recipes_v2")
+    .select("category_slug")
+    .eq("published", true);
+
+  if (error) {
+    console.error("Failed to fetch category slugs:", error);
+    return [];
+  }
+
+  return [...new Set((data || []).map((r) => r.category_slug).filter(Boolean))];
+}
+
+/**
+ * Get all cuisine slugs for generateStaticParams
+ */
+export async function getCuisineSlugs(): Promise<string[]> {
+  const { data, error } = await supabaseServer
+    .from("recipes_v2")
+    .select("cuisine_slug")
+    .eq("published", true);
+
+  if (error) {
+    console.error("Failed to fetch cuisine slugs:", error);
+    return [];
+  }
+
+  return [...new Set((data || []).map((r) => r.cuisine_slug).filter(Boolean))];
+}
+
+/**
+ * Get category recipe count
+ */
+export async function getCategoryRecipeCount(slug: string): Promise<number> {
+  const { count, error } = await supabaseServer
+    .from("recipes_v2")
+    .select("id", { count: "exact", head: true })
+    .eq("published", true)
+    .eq("category_slug", slug);
+
+  if (error) {
+    console.error("Failed to fetch category recipe count:", error);
+    return 0;
+  }
+
+  return count || 0;
+}
+
+/**
+ * Get cuisine recipe count
+ */
+export async function getCuisineRecipeCount(slug: string): Promise<number> {
+  const { count, error } = await supabaseServer
+    .from("recipes_v2")
+    .select("id", { count: "exact", head: true })
+    .eq("published", true)
+    .eq("cuisine_slug", slug);
+
+  if (error) {
+    console.error("Failed to fetch cuisine recipe count:", error);
+    return 0;
+  }
+
+  return count || 0;
+}
+
+
+=== src\lib\cuisines.ts ===
+/**
+ * Cuisine Registry — Single source of truth for all cuisines
+ * 
+ * Adding a new cuisine:
+ * 1. Add entry here
+ * 2. Generate recipes via pipeline with matching cuisine_slug
+ * 3. Hub page auto-generates from this data
+ */
+
+export interface CuisineInfo {
+  slug: string;
+  name: string;
+  emoji: string;
+  region: string;
+  description: string;
+  /** Longer cultural context for hub page */
+  cultural_context: string;
+  /** Key ingredients that define this cuisine */
+  pantry_essentials: string[];
+  /** Sub-categories specific to this cuisine */
+  sub_categories: string[];
+  /** Related/adjacent cuisines (for cross-linking) */
+  related_cuisines: string[];
+  /** Expansion phase (0=founding, 1=neighbors, 2=saffron belt, 3=global) */
+  phase: number;
+  /** Is this cuisine currently active (has recipes)? */
+  active: boolean;
+}
+
+export const CUISINES: CuisineInfo[] = [
+  // ═══ Phase 0: Founding ═══
+  {
+    slug: "persian",
+    name: "Persian",
+    emoji: "🇮🇷",
+    region: "Iran & Central Asia",
+    description: "Discover the rich flavors of Persian cuisine — from aromatic herb stews to jeweled saffron rice, succulent kebabs, and traditional sweets.",
+    cultural_context: "Persian cuisine is one of the world's oldest and most sophisticated culinary traditions, stretching back over 5,000 years. Built on a foundation of saffron, dried limes, barberries, and fresh herbs, it celebrates the balance of sweet, sour, and savory in every dish. From the elaborate rice dishes (polo) to the slow-cooked stews (khoresh), Persian cooking is an art form passed down through generations.",
+    pantry_essentials: ["Saffron", "Dried limes (limoo amani)", "Barberries (zereshk)", "Advieh spice blend", "Rosewater", "Turmeric", "Basmati rice", "Fresh herbs (parsley, cilantro, dill, fenugreek)", "Verjuice (ab-ghooreh)", "Pomegranate molasses"],
+    sub_categories: ["Rice Dishes (Polo)", "Stews (Khoresh)", "Kebabs", "Soups (Ash)", "Appetizers & Dips", "Breads (Nan)", "Sweets & Desserts", "Pickles (Torshi)"],
+    related_cuisines: ["turkish", "afghan", "azerbaijani", "kurdish", "iraqi"],
+    phase: 0,
+    active: true,
+  },
+
+  // ═══ Phase 1: Neighbors ═══
+  {
+    slug: "turkish",
+    name: "Turkish",
+    emoji: "🇹🇷",
+    region: "Turkey & Anatolia",
+    description: "Explore Turkish cuisine — from smoky kebabs and flaky böreks to rich mezes, aromatic pilafs, and legendary baklava.",
+    cultural_context: "Turkish cuisine sits at the crossroads of Mediterranean, Central Asian, and Middle Eastern traditions. Shaped by the Ottoman Empire's vast reach, it's a cuisine of incredible diversity — from the olive oil dishes of the Aegean coast to the fiery kebabs of southeastern Anatolia. Turkish breakfast (kahvaltı) is legendary, and the tradition of meze dining is an art of communal eating.",
+    pantry_essentials: ["Sumac", "Aleppo pepper (pul biber)", "Pomegranate molasses", "Tahini", "Bulgur wheat", "Turkish pepper paste (biber salçası)", "Dried mint", "Nigella seeds", "Yogurt", "Pistachios"],
+    sub_categories: ["Kebabs & Grills", "Mezes & Appetizers", "Böreks & Pastries", "Pilafs & Rice", "Soups (Çorba)", "Breakfast (Kahvaltı)", "Desserts & Sweets", "Salads"],
+    related_cuisines: ["persian", "lebanese", "greek", "azerbaijani", "kurdish"],
+    phase: 1,
+    active: true,
+  },
+  {
+    slug: "afghan",
+    name: "Afghan",
+    emoji: "🇦🇫",
+    region: "Afghanistan",
+    description: "Discover Afghan cuisine — hearty rice dishes, tender lamb, savory dumplings, and the legendary Kabuli Palaw.",
+    cultural_context: "Afghan cuisine is the unsung hero of Central Asian cooking. Sharing deep roots with Persian and Indian traditions, it has a distinct identity built around generous rice dishes, slow-braised meats, and hand-crafted dumplings (mantu, aushak). Kabuli Palaw — fragrant rice with carrots, raisins, and lamb — is the national dish and a symbol of Afghan hospitality.",
+    pantry_essentials: ["Cardamom", "Cumin", "Coriander", "Basmati rice", "Lamb/goat", "Dried fruits (raisins, apricots)", "Carrots", "Fresh cilantro", "Yogurt", "Green chutney"],
+    sub_categories: ["Rice Dishes (Palaw)", "Dumplings (Mantu, Aushak)", "Kebabs", "Soups (Shorwa)", "Breads (Nan)", "Salads & Sides", "Desserts"],
+    related_cuisines: ["persian", "indian", "uzbek", "tajik"],
+    phase: 1,
+    active: true,
+  },
+  {
+    slug: "lebanese",
+    name: "Lebanese",
+    emoji: "🇱🇧",
+    region: "Lebanon & Levant",
+    description: "Explore Lebanese cuisine — from creamy hummus and smoky baba ganoush to fragrant rice, grilled meats, and fresh tabbouleh.",
+    cultural_context: "Lebanese cuisine is the crown jewel of the Levant — a vibrant, fresh, and generous tradition built around meze culture. The Lebanese table is never about a single dish; it's a symphony of small plates, fresh herbs, olive oil, and grilled meats. From the seaside fish restaurants of Byblos to the mountain village kibbeh, Lebanese food celebrates ingredients in their purest form.",
+    pantry_essentials: ["Tahini", "Sumac", "Za'atar", "Pomegranate molasses", "Olive oil", "Bulgur wheat", "Pine nuts", "Fresh mint", "Lemon", "Flatbread (pita/khubz)"],
+    sub_categories: ["Meze & Dips", "Grills & Kebabs", "Rice & Grains", "Salads", "Soups & Stews", "Pastries & Pies", "Desserts", "Breakfast"],
+    related_cuisines: ["syrian", "palestinian", "turkish", "persian", "greek"],
+    phase: 1,
+    active: true,
+  },
+  {
+    slug: "azerbaijani",
+    name: "Azerbaijani",
+    emoji: "🇦🇿",
+    region: "Azerbaijan & South Caucasus",
+    description: "Discover Azerbaijani cuisine — saffron-infused pilafs, aromatic kebabs, herb-filled kutabs, and sweet tea traditions.",
+    cultural_context: "Azerbaijani cuisine blends Persian, Turkish, and Caucasian traditions into something uniquely its own. Saffron-rich pilafs (plov) are the centerpiece, served alongside fragrant kebabs and fresh herb platters. The tradition of tea drinking and the art of making kutab (stuffed flatbreads) reflect a culture that values both hospitality and craftsmanship.",
+    pantry_essentials: ["Saffron", "Sumac", "Fresh herbs (dill, cilantro, tarragon)", "Lamb", "Walnuts", "Pomegranate", "Dried fruits", "Yogurt", "Butter", "Chestnuts"],
+    sub_categories: ["Pilafs (Plov)", "Kebabs", "Kutabs & Flatbreads", "Soups (Piti)", "Dolma", "Salads & Sides", "Desserts & Sweets"],
+    related_cuisines: ["persian", "turkish", "georgian", "kurdish"],
+    phase: 1,
+    active: true,
+  },
+
+  // ═══ Phase 2: Saffron Belt ═══
+  {
+    slug: "indian",
+    name: "Indian",
+    emoji: "🇮🇳",
+    region: "India & South Asia",
+    description: "Explore the vast world of Indian cuisine — from creamy curries and fragrant biryanis to crispy dosas, tandoori dishes, and aromatic dal.",
+    cultural_context: "Indian cuisine is not one cuisine but hundreds — a vast tapestry of regional traditions spanning the subcontinent. From the rich Mughlai flavors of the north to the coconut-laced dishes of Kerala, from Rajasthani desert cooking to Bengali fish preparations, India's food heritage is among the world's most diverse and deeply documented.",
+    pantry_essentials: ["Garam masala", "Turmeric", "Cumin", "Coriander", "Cardamom", "Basmati rice", "Ghee", "Ginger-garlic paste", "Chili powder", "Mustard seeds"],
+    sub_categories: ["Curries", "Biryanis & Rice", "Tandoori & Grills", "Dal & Lentils", "Breads (Naan, Roti)", "Snacks & Street Food", "Desserts (Mithai)", "Chutneys & Pickles"],
+    related_cuisines: ["pakistani", "persian", "afghan", "bangladeshi", "sri-lankan"],
+    phase: 2,
+    active: true,
+  },
+  {
+    slug: "moroccan",
+    name: "Moroccan",
+    emoji: "🇲🇦",
+    region: "Morocco & North Africa",
+    description: "Discover Moroccan cuisine — slow-cooked tagines, fluffy couscous, aromatic spice blends, and the art of Moroccan hospitality.",
+    cultural_context: "Moroccan cuisine is a masterclass in patience and spice. The tagine — both the dish and the conical clay pot it's cooked in — is the heart of Moroccan cooking, slow-braising meats with dried fruits, preserved lemons, and complex spice blends like ras el hanout. Moroccan food reflects Arab, Berber, Andalusian, and French influences, creating one of the world's most layered culinary traditions.",
+    pantry_essentials: ["Ras el hanout", "Preserved lemons", "Harissa", "Saffron", "Cumin", "Couscous", "Dates", "Almonds", "Olive oil", "Fresh cilantro and parsley"],
+    sub_categories: ["Tagines", "Couscous", "Soups (Harira)", "Salads & Mezes", "Pastries (Pastilla, Msemen)", "Grills & Kebabs", "Desserts", "Teas & Drinks"],
+    related_cuisines: ["tunisian", "algerian", "lebanese", "spanish", "persian"],
+    phase: 2,
+    active: true,
+  },
+  {
+    slug: "greek",
+    name: "Greek",
+    emoji: "🇬🇷",
+    region: "Greece & Mediterranean",
+    description: "Explore Greek cuisine — fresh Mediterranean salads, grilled seafood, flaky spanakopita, and the simplicity of olive oil and lemon.",
+    cultural_context: "Greek cuisine celebrates simplicity — the best olive oil, the freshest tomatoes, the finest feta. It's a Mediterranean tradition that values quality ingredients over complex technique. From the islands' seafood to the mainland's lamb dishes, Greek food is about gathering, sharing, and savoring life's simple pleasures.",
+    pantry_essentials: ["Olive oil", "Feta cheese", "Lemon", "Oregano", "Honey", "Phyllo dough", "Yogurt", "Kalamata olives", "Garlic", "Fresh dill"],
+    sub_categories: ["Salads & Mezes", "Grilled Meats & Seafood", "Pies (Pita)", "Soups & Stews", "Pasta & Rice", "Breads", "Desserts & Pastries"],
+    related_cuisines: ["turkish", "lebanese", "italian", "mediterranean"],
+    phase: 2,
+    active: true,
+  },
+
+  // ═══ Phase 3: Global (not yet active) ═══
+  {
+    slug: "italian",
+    name: "Italian",
+    emoji: "🇮🇹",
+    region: "Italy",
+    description: "Explore Italian cuisine — from hand-made pasta and wood-fired pizza to rich risottos, fresh antipasti, and timeless desserts.",
+    cultural_context: "Italian cuisine is built on a philosophy of simplicity and respect for ingredients. Each of Italy's 20 regions has its own distinct culinary identity, from the butter-rich dishes of Lombardy to the seafood of Sicily. The Italian kitchen doesn't hide behind complexity — it elevates the best ingredients with minimal intervention.",
+    pantry_essentials: ["Olive oil", "San Marzano tomatoes", "Parmigiano-Reggiano", "Fresh basil", "Garlic", "Pasta (various shapes)", "Arborio rice", "Prosciutto", "Mozzarella", "Red wine vinegar"],
+    sub_categories: ["Pasta", "Pizza", "Risotto", "Antipasti", "Soups", "Seafood", "Meat & Poultry", "Desserts"],
+    related_cuisines: ["greek", "french", "spanish", "mediterranean"],
+    phase: 3,
+    active: false,
+  },
+  {
+    slug: "mexican",
+    name: "Mexican",
+    emoji: "🇲🇽",
+    region: "Mexico",
+    description: "Discover Mexican cuisine — from smoky salsas and handmade tortillas to rich moles, fresh ceviches, and vibrant street food.",
+    cultural_context: "Mexican cuisine is a UNESCO Intangible Cultural Heritage — and for good reason. It's one of the world's most complex culinary traditions, with roots in ancient Mesoamerican cooking blended with Spanish colonial influences. From the mole negro of Oaxaca to the seafood of Baja California, Mexican food is far more diverse than most people realize.",
+    pantry_essentials: ["Dried chilies (ancho, guajillo, chipotle)", "Cumin", "Corn tortillas", "Limes", "Cilantro", "Avocado", "Black beans", "Tomatillos", "Queso fresco", "Epazote"],
+    sub_categories: ["Tacos & Tortillas", "Salsas & Sauces", "Moles", "Soups (Pozole, Menudo)", "Rice & Beans", "Street Food", "Seafood", "Desserts"],
+    related_cuisines: ["central-american", "tex-mex", "spanish", "peruvian"],
+    phase: 3,
+    active: false,
+  },
+];
+
+/** Get all active cuisines */
+export function getActiveCuisines(): CuisineInfo[] {
+  return CUISINES.filter(c => c.active);
+}
+
+/** Get cuisine by slug */
+export function getCuisine(slug: string): CuisineInfo | undefined {
+  return CUISINES.find(c => c.slug === slug);
+}
+
+/** Get all cuisines for a given phase */
+export function getCuisinesByPhase(phase: number): CuisineInfo[] {
+  return CUISINES.filter(c => c.phase === phase);
+}
+
+/** Get all cuisine slugs (for sitemap, generateStaticParams, etc.) */
+export function getAllCuisineSlugs(): string[] {
+  return CUISINES.map(c => c.slug);
+}
+
+
+=== src\lib\formatting.ts ===
+/** Shared label map for cuisine/category slugs → human-readable names */
+export const LABEL_MAP: Record<string, string> = {
+  persian: "Persian",
+  indian: "Indian",
+  "middle-eastern": "Middle Eastern",
+  international: "International",
+  stew: "Stews",
+  rice: "Rice Dishes",
+  kebab: "Kebabs",
+  appetizer: "Appetizers",
+  soup: "Soups",
+  dessert: "Desserts",
+  drink: "Drinks",
+  breakfast: "Breakfast",
+  main: "Main Courses",
+  salad: "Salads",
+  side: "Side Dishes",
+  pickle: "Pickles",
+  sweet: "Sweets",
+  bread: "Breads",
+};
+
+export function humanize(slug: string): string {
+  if (!slug) return slug;
+  return LABEL_MAP[slug.toLowerCase()] || slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, " ");
+}
+
+
+=== src\lib\get-recipe.ts ===
+import { cache } from 'react';
+import { supabaseServer } from './supabase-server';
+import type { Recipe } from '@/types';
+
+// Shared cached fetch — deduplicates generateMetadata + page render calls
+export const getRecipeBySlug = cache(async (slug: string): Promise<Recipe | null> => {
+  const { data, error } = await supabaseServer
+    .from('recipes_v2')
+    .select('*')
+    .eq('slug', slug)
+    .eq('published', true)
+    .single();
+
+  if (error || !data) return null;
+  return data as Recipe;
+});
+
+
+=== src\lib\ingredients.ts ===
+/**
+ * Ingredient Encyclopedia — Registry
+ * Single source of truth for all ingredient pages.
+ */
+
+export interface IngredientInfo {
+  slug: string;
+  name: string;
+  /** Local names by language/culture — extensible for any future cuisine */
+  localNames: Record<string, string>;
+  emoji: string;
+  category: "spice" | "grain" | "condiment" | "dairy" | "herb" | "nut" | "other";
+  cuisines: string[]; // which cuisines use it heavily
+  description: string;
+  history: string;
+  buyingGuide: string;
+  storage: string;
+  substitutes: Array<{ name: string; note: string }>;
+  affiliateSearchTerm: string; // for Amazon/grocery links
+  recipeCount?: number; // populated at build time
+}
+
+export const INGREDIENTS: IngredientInfo[] = [
+  {
+    slug: "saffron",
+    name: "Saffron",
+    localNames: {
+      persian: "زعفران (Za'farān)",
+      arabic: "الزعفران (Az-Za'farān)",
+      hindi: "केसर (Kesar)",
+      turkish: "Safran",
+      azerbaijani: "Zəfəran",
+      greek: "Κρόκος (Krókos)",
+      moroccan: "الزعفران الحر (Za'fran l-Hor)",
+      spanish: "Azafrán",
+      italian: "Zafferano",
+    },
+    emoji: "🧡",
+    category: "spice",
+    cuisines: ["persian", "indian", "moroccan", "azerbaijani", "afghan"],
+    description: "The world's most precious spice — hand-harvested crimson stigmas of Crocus sativus. Saffron gives dishes a luminous golden hue, a haunting floral-honey aroma, and a subtle bittersweet depth that no other ingredient can replicate.",
+    history: "Saffron has been cultivated for over 3,500 years, with origins traced to Bronze Age Greece or Persia. Iran produces over 90% of the world's saffron, primarily from the Khorasan province. The spice was worth more than gold in medieval Europe and was used in royal Persian rice dishes (chelow), Indian biryanis, Moroccan tagines, and Spanish paella. The name comes from Arabic 'za'farān' (زعفران), meaning 'yellow.'",
+    buyingGuide: "Look for **Grade I / Sargol or Negin** saffron — deep crimson threads with no yellow or white tips. Good saffron smells like honey and hay, never musty. Test: place a thread in warm water — real saffron slowly releases golden color over 10-15 minutes (fake saffron colors water immediately). Buy from reputable Iranian, Spanish, or Kashmiri sources. Price: genuine saffron costs $8-15 per gram — if it's cheaper, it's likely adulterated.",
+    storage: "Store in an airtight container away from light and heat. Wrapped in foil inside a glass jar is ideal. Properly stored, saffron retains potency for 2-3 years. Never refrigerate (moisture damage). Grind only what you need — whole threads last longer than powder.",
+    substitutes: [
+      { name: "Saffron powder", note: "Use ¼ the amount of threads. Easier to find but often lower quality." },
+      { name: "Turmeric + pinch of paprika", note: "Gives color but not the flavor. Only for visual approximation." },
+      { name: "Safflower (substitute saffron)", note: "Gives color, zero flavor. Often sold as 'saffron' in markets — beware." },
+    ],
+    affiliateSearchTerm: "saffron threads premium grade",
+  },
+  {
+    slug: "sumac",
+    name: "Sumac",
+    localNames: {
+      persian: "سماق (Somāq)",
+      arabic: "السماق (As-Summāq)",
+      turkish: "Sumak",
+      azerbaijani: "Sumaq",
+      kurdish: "سوماخ (Sumakh)",
+    },
+    emoji: "🔴",
+    category: "spice",
+    cuisines: ["persian", "turkish", "lebanese", "azerbaijani"],
+    description: "A deep burgundy-red spice made from ground dried sumac berries, delivering a bright, tangy, lemony sourness. Sumac is the secret weapon of Middle Eastern and Persian cooking — it adds acidity without liquid, making it perfect for dry rubs, salads, and grilled meats.",
+    history: "Sumac (Rhus coriaria) has been used as a souring agent in the Mediterranean and Middle East for thousands of years — long before lemons arrived from Southeast Asia. Ancient Romans used it as a condiment the way we use lemon today. In Persian cuisine, it's sprinkled on kebabs and rice; in Lebanese cooking, it's essential in fattoush salad and za'atar blend; Turkish cooks scatter it over grilled meats and onion salads.",
+    buyingGuide: "Buy whole berries or coarsely ground sumac from Middle Eastern grocery stores. Good sumac is **deep burgundy/maroon**, slightly moist, and intensely tart when tasted. Avoid pale, dry, or brownish sumac — it's old. Some commercial brands add salt; check ingredients for pure sumac. Iranian and Turkish sumac are considered the finest.",
+    storage: "Store in an airtight container away from light. Keeps full potency for 6-12 months. After a year, it fades in both color and tartness. Refrigeration extends life slightly but isn't necessary.",
+    substitutes: [
+      { name: "Lemon zest + pinch of salt", note: "Closest flavor match. Use 1 tsp zest for 1 tbsp sumac." },
+      { name: "Za'atar blend", note: "Contains sumac already. Good for sprinkling, not for recipes needing pure sourness." },
+      { name: "Amchur (dried mango powder)", note: "Indian equivalent — tart, fruity, dry. Works well in rubs." },
+    ],
+    affiliateSearchTerm: "sumac spice ground pure",
+  },
+  {
+    slug: "dried-limes",
+    name: "Dried Limes (Limoo Amani)",
+    localNames: {
+      persian: "لیمو عمانی (Limoo Amani)",
+      arabic: "لومي (Loomi)",
+      iraqi: "نومي بصرة (Noomi Basra)",
+    },
+    emoji: "🟤",
+    category: "spice",
+    cuisines: ["persian", "iraqi", "afghan"],
+    description: "Small, hard, blackened limes that have been sun-dried until all moisture evaporates, concentrating their flavor into an intense, complex sourness — earthy, smoky, fermented, and deeply citric. They are the soul of many Persian stews and soups.",
+    history: "Dried limes originated in Oman (hence 'limoo Amani' — 'Omani lime') and traveled the Persian Gulf trade routes to become essential in Iranian, Iraqi, and Gulf cooking. They're made by boiling small limes in salt water, then sun-drying them for weeks until hard and dark. The drying process creates complex flavors impossible to replicate with fresh citrus — a fermented, almost umami-like sourness.",
+    buyingGuide: "Available at Middle Eastern grocery stores. **Black dried limes** are most intense (fully fermented); **brown/tan ones** are milder and more citrusy. Choose ones that feel light and hollow — heavy ones may be moldy inside. Avoid any with visible mold or off smell. Also sold as 'limoo omani', 'loomi', or 'black lime.'",
+    storage: "Store whole limes in an airtight container in a cool, dark place. They last 1-2 years easily. Ground dried lime loses potency faster — grind as needed. Pierce before adding to stews (or they may burst); remove before serving.",
+    substitutes: [
+      { name: "Lime juice + lime zest", note: "Adds sourness but misses the smoky, fermented depth. Use 2 tbsp juice per 1 dried lime." },
+      { name: "Tamarind paste", note: "Closer in complexity. Use 1 tbsp per dried lime." },
+      { name: "Amchur + lemon juice", note: "Combination gets closer to the earthy-sour profile." },
+    ],
+    affiliateSearchTerm: "dried limes persian limoo amani",
+  },
+  {
+    slug: "pomegranate-molasses",
+    name: "Pomegranate Molasses",
+    localNames: {
+      persian: "رب انار (Rob-e Anār)",
+      arabic: "دبس الرمان (Dibs Rummān)",
+      turkish: "Nar Ekşisi",
+      azerbaijani: "Narsharab",
+    },
+    emoji: "🍷",
+    category: "condiment",
+    cuisines: ["persian", "turkish", "lebanese", "azerbaijani"],
+    description: "A thick, syrupy reduction of pomegranate juice — intensely tart, slightly sweet, and deeply fruity. It adds a complex sweet-sour dimension to marinades, stews, salads, and glazes across Middle Eastern and Caucasian cuisines.",
+    history: "Pomegranate has been cultivated in Iran for over 4,000 years, and pomegranate molasses (rob-e anar) is one of the oldest condiments in Persian cooking. It's essential in fesenjan stew, used as a kebab marinade (kabab torsh), drizzled over hummus in Lebanon, and added to muhammara in Turkey and Syria. The fruit itself symbolizes prosperity and fertility in many Middle Eastern cultures.",
+    buyingGuide: "Look for bottles with **only one ingredient: pomegranate juice** (or 'pomegranate concentrate'). Avoid brands with added sugar, citric acid, or corn syrup — they lack the complex tartness of pure molasses. Good pomegranate molasses should be **very thick, dark ruby-brown**, and taste intensely sour with a sweet finish. Iranian and Lebanese brands are generally best quality.",
+    storage: "Refrigerate after opening — lasts 6-12 months. Unopened bottles keep for 1-2 years at room temperature. If it crystallizes, warm gently in hot water.",
+    substitutes: [
+      { name: "Balsamic vinegar reduction + honey", note: "Similar sweet-sour profile. Mix 3:1 balsamic:honey and reduce by half." },
+      { name: "Cranberry juice reduction", note: "Reduce unsweetened cranberry juice to syrup consistency. Close in tartness." },
+      { name: "Tamarind paste + touch of sugar", note: "Different fruit, similar function in cooking." },
+    ],
+    affiliateSearchTerm: "pomegranate molasses pure no sugar",
+  },
+  {
+    slug: "rose-water",
+    name: "Rose Water",
+    localNames: {
+      persian: "گلاب (Golāb)",
+      arabic: "ماء الورد (Mā' al-Ward)",
+      hindi: "गुलाब जल (Gulāb Jal)",
+      turkish: "Gül Suyu",
+      moroccan: "ماء الزهر (Mā' az-Zahr)",
+      french: "Eau de Rose",
+    },
+    emoji: "🌹",
+    category: "condiment",
+    cuisines: ["persian", "indian", "moroccan", "turkish", "lebanese"],
+    description: "A fragrant distillation of fresh rose petals in water — delicate, floral, and unmistakably romantic. Rose water transforms desserts, drinks, and even some savory dishes with its haunting perfume.",
+    history: "Iran is the world's largest producer of rose water, with the ancient city of Kashan producing the finest golab (گلاب) from Damask roses every spring during the Golab-Giri festival. Rose water has been central to Persian confections (faloodeh, bastani, sholeh zard) for over 2,500 years. It spread along the Silk Road to India (gulab jamun, lassi), Morocco (pastilla, mint tea), and Turkey (Turkish delight). The word 'julep' comes from the Persian 'golab.'",
+    buyingGuide: "Buy **food-grade rose water** (not cosmetic grade). The best comes from **Kashan, Iran** or **Taif, Saudi Arabia**. It should smell like fresh roses, not synthetic perfume. Quality rose water has a subtle pink tint and is never overpowering. Start with small amounts — too much makes food taste soapy. Brands: Sadaf, Cortas, or any Iranian import.",
+    storage: "Store in a cool, dark place. Lasts 1-2 years unopened. After opening, keep tightly sealed — the aroma fades with exposure to air. No refrigeration needed.",
+    substitutes: [
+      { name: "Rose extract", note: "Much more concentrated — use ¼ the amount." },
+      { name: "Orange blossom water", note: "Different floral note but works in most dessert recipes." },
+      { name: "Vanilla extract", note: "Not floral, but provides aromatic depth in desserts as a last resort." },
+    ],
+    affiliateSearchTerm: "rose water food grade persian",
+  },
+
+  // ═══ Batch 2: Spices & Grains ═══
+  {
+    slug: "turmeric",
+    name: "Turmeric",
+    localNames: {
+      persian: "زردچوبه (Zardchoobeh)",
+      hindi: "हल्दी (Haldi)",
+      arabic: "كركم (Kurkum)",
+      turkish: "Zerdeçal",
+      moroccan: "خرقوم (Kharqoum)",
+      indonesian: "Kunyit",
+      thai: "ขมิ้น (Khamin)",
+    },
+    emoji: "💛",
+    category: "spice",
+    cuisines: ["persian", "indian", "moroccan", "afghan", "azerbaijani", "turkish", "lebanese", "greek"],
+    description: "A vibrant golden-yellow root with an earthy, warm, slightly bitter flavor. Turmeric is the workhorse spice of Asian and Middle Eastern cooking — it colors rice, stews, and marinades while offering well-documented anti-inflammatory properties.",
+    history: "Turmeric (Curcuma longa) has been used in South Asia for over 4,500 years — first as a dye, then as medicine, and finally as a culinary spice. It reached Persia via ancient trade routes and became essential in Persian stews (khoresh), where it forms the base flavor alongside sautéed onions. In India, turmeric is sacred — used in wedding ceremonies, Ayurvedic medicine, and daily cooking. The Persian word 'zardchoobeh' literally means 'yellow wood.'",
+    buyingGuide: "Buy **whole turmeric root** for maximum freshness, or **ground turmeric** for convenience. Good ground turmeric should be **bright golden-orange**, not pale or brownish. For quality: smell it — fresh turmeric smells earthy and warm, never musty. Indian and Persian grocery stores typically offer better quality than supermarket brands. Store-bought is usually adequate; for premium dishes, use Alleppey turmeric (higher curcumin content, deeper color).",
+    storage: "Ground: 2-3 years in an airtight container away from light. Fresh root: wrap in paper towel, refrigerate (2-3 weeks) or freeze (6 months). Warning: turmeric stains everything — use gloves when handling fresh root.",
+    substitutes: [
+      { name: "Saffron (tiny pinch)", note: "For color only, not flavor. Much more expensive." },
+      { name: "Annatto powder", note: "Gives similar golden color with milder flavor." },
+      { name: "Curry powder", note: "Contains turmeric. Use ½ the amount but adds other spices." },
+    ],
+    affiliateSearchTerm: "turmeric powder organic ground",
+  },
+  {
+    slug: "basmati-rice",
+    name: "Basmati Rice",
+    localNames: {
+      persian: "برنج باسماتی (Berenj-e Basmati)",
+      hindi: "बासमती चावल (Basmati Chawal)",
+      urdu: "باسمتی چاول",
+      afghan: "برنج (Berenj)",
+      arabic: "أرز بسمتي",
+    },
+    emoji: "🍚",
+    category: "grain",
+    cuisines: ["persian", "indian", "afghan", "azerbaijani"],
+    description: "The king of rice — long, slender grains that elongate dramatically when cooked, releasing a distinctive nutty, popcorn-like aroma. Basmati is the only acceptable rice for Persian chelow, Indian biryani, and Afghan palaw.",
+    history: "Basmati has been cultivated in the foothills of the Himalayas for thousands of years. The word 'basmati' comes from Sanskrit 'vasmati' meaning 'fragrant.' India and Pakistan produce nearly all the world's basmati. In Persian cooking, the quality of rice determines the quality of the entire meal — aged basmati (1-2 years old) is prized because it cooks drier and fluffier. The Iranian rice varieties Tarom and Sadri are closely related to basmati.",
+    buyingGuide: "Look for **aged basmati** (1-2 years) — grains should be long, uniform, and translucent white with minimal broken pieces. **Indian brands:** Tilda, Royal, Daawat are reliable. **For Persian cooking:** extra-long grain is preferred. Always **soak before cooking** (30-60 minutes for Persian, 20-30 for Indian) — soaking prevents breakage and ensures even cooking. Avoid 'quick-cook' or 'easy-cook' varieties — they're par-boiled and won't produce proper tahdig.",
+    storage: "Uncooked: indefinite shelf life in a cool, dry place (technically improves with age). Keep sealed to prevent moisture and insects. Cooked: refrigerate within 1 hour, use within 2 days, or freeze for 3 months.",
+    substitutes: [
+      { name: "Jasmine rice", note: "Slightly sticky and floral — works for Indian dishes, NOT for Persian chelow/tahdig." },
+      { name: "Iranian Tarom/Sadri rice", note: "Premium alternative, considered superior to basmati by many Iranians. Harder to find outside Iran." },
+      { name: "Long-grain white rice", note: "Passable but lacks basmati's aroma and elongation. Last resort." },
+    ],
+    affiliateSearchTerm: "basmati rice extra long grain aged",
+  },
+  {
+    slug: "zaatar",
+    name: "Za'atar",
+    localNames: {
+      arabic: "زعتر (Za'tar)",
+      lebanese: "زعتر بلدي (Za'tar Baladi)",
+      turkish: "Zahter",
+      hebrew: "זעתר (Za'atar)",
+      persian: "آویشن (Avishan)",
+    },
+    emoji: "🌿",
+    category: "spice",
+    cuisines: ["lebanese", "turkish", "persian"],
+    description: "Both a wild herb (related to oregano/thyme) and a beloved spice blend — the blend typically combines dried za'atar herb, sumac, toasted sesame seeds, and salt. It's the taste of Lebanese breakfast, Turkish bread, and Levantine hospitality.",
+    history: "Za'atar is one of the oldest herb blends in the world, mentioned in the Old Testament and used in ancient Egyptian medicine. In Lebanon, mothers spread za'atar on flatbread for children before school — believed to sharpen the mind. Every family and region has their own ratio. Palestinian za'atar is heavy on sumac; Syrian versions add more sesame; Jordanian blends include cumin. The fresh herb (Origanum syriacum) grows wild across the Levant's hillsides.",
+    buyingGuide: "Buy from **Lebanese or Middle Eastern grocery stores** — supermarket versions are often stale. Good za'atar should be **greenish-brown** (not gray), fragrant, and slightly moist from the sesame oil. Taste it: it should be simultaneously herby, tangy (sumac), and nutty (sesame). For the freshest blend, buy components separately and mix: 2 parts dried za'atar herb, 1 part sumac, 1 part toasted sesame, ½ part salt.",
+    storage: "Airtight container, cool and dark. The blend keeps 6-12 months; sesame seeds go rancid first. Fresh herb (if you find it): use within a week, or dry it yourself.",
+    substitutes: [
+      { name: "Dried oregano + dried thyme + sumac + sesame", note: "DIY approximation: 1 tsp each oregano and thyme, 1 tsp sumac, 2 tsp toasted sesame, pinch of salt." },
+      { name: "Italian herb blend + lemon zest", note: "Very rough approximation — misses the sumac tartness." },
+    ],
+    affiliateSearchTerm: "zaatar spice blend authentic lebanese",
+  },
+  {
+    slug: "ras-el-hanout",
+    name: "Ras el Hanout",
+    localNames: {
+      moroccan: "رأس الحانوت (Ras el-Hanout)",
+      arabic: "رأس الحانوت",
+      french: "Ras el-Hanout",
+    },
+    emoji: "✨",
+    category: "spice",
+    cuisines: ["moroccan"],
+    description: "The name means 'head of the shop' — the spice merchant's best blend. A complex, aromatic North African spice mixture that can contain 10 to 30+ ingredients, including cardamom, cinnamon, cloves, coriander, cumin, nutmeg, peppercorns, rose petals, and turmeric.",
+    history: "Ras el Hanout is Morocco's signature spice blend, with every spice shop and family guarding their own recipe. Historically, it included exotic ingredients like Spanish fly (a supposed aphrodisiac) and hashish — modern versions focus on aromatic warmth. The blend reflects Morocco's position at the crossroads of Berber, Arab, Andalusian, and Sub-Saharan African trade routes. It's essential in tagines, couscous, and mrouzia (festive lamb).",
+    buyingGuide: "The best comes from **Moroccan spice shops** (souks) or specialty importers. Good ras el hanout should smell **warm, floral, and complex** — not like any single spice. Color ranges from golden-brown to reddish depending on the blend. Avoid pre-packaged versions with filler ingredients like flour or excessive salt. Look for blends listing **15+ spices**. Premium blends include rose petals and lavender.",
+    storage: "Airtight container, away from light. Loses potency faster than single spices due to volatile oils from many ingredients — use within 6 months for best results. Buy in small quantities.",
+    substitutes: [
+      { name: "Garam masala + pinch of cinnamon and rose petals", note: "Closest approximation — warm, complex, aromatic." },
+      { name: "Baharat (Middle Eastern spice blend)", note: "Simpler but similar warmth. Add a pinch of cardamom and cinnamon." },
+      { name: "DIY: equal parts cumin, coriander, cinnamon, cardamom, black pepper + half parts ginger, turmeric, nutmeg, cloves", note: "Quick 9-spice approximation." },
+    ],
+    affiliateSearchTerm: "ras el hanout moroccan spice blend",
+  },
+  {
+    slug: "tahini",
+    name: "Tahini",
+    localNames: {
+      arabic: "طحينة (Ṭaḥīnah)",
+      persian: "ارده (Ardeh)",
+      turkish: "Tahin",
+      hebrew: "טחינה (Techina)",
+      greek: "Ταχίνι (Tachíni)",
+    },
+    emoji: "🫘",
+    category: "condiment",
+    cuisines: ["lebanese", "turkish", "greek", "persian"],
+    description: "A silky paste made from ground toasted (or raw) sesame seeds — rich, nutty, slightly bitter, and extraordinarily versatile. Tahini is the backbone of hummus, the soul of halva, and a favorite drizzle over everything from grilled meats to roasted vegetables.",
+    history: "Tahini is one of the oldest condiments, dating back over 4,000 years to ancient Mesopotamia. The word comes from Arabic 'ṭaḥana' (to grind). It's fundamental to Levantine cuisine (hummus, baba ganoush, halva), Turkish cooking (tahin-pekmez, a tahini-grape molasses breakfast dip), and Greek baking. In Iran, the related 'ardeh' (a thicker, sometimes sweetened version) is a traditional confection from Isfahan.",
+    buyingGuide: "Buy **100% sesame seeds, no additives**. **Hulled tahini** (most common) is milder and smoother; **unhulled** is more bitter and nutritious. Stir well before use — oil separation is normal and a sign of quality (no emulsifiers). Best brands: Soom, Al Arz, Al Kanater. Middle Eastern grocery store brands are usually superior and cheaper than health-food store versions. Color should be **pale golden-beige**, not dark brown.",
+    storage: "Unopened: pantry for 1 year. Opened: refrigerate for 6+ months (cold makes it thicker — bring to room temp before using). Stir in the oil that separates on top. Never discard the oil.",
+    substitutes: [
+      { name: "Sunflower seed butter", note: "Closest texture and nuttiness for nut-free needs. Slightly sweeter." },
+      { name: "Cashew butter", note: "Creamy and mild. Works in hummus but changes the flavor profile." },
+      { name: "Peanut butter (natural, unsweetened)", note: "Very different flavor but works in a pinch for sauces/dressings." },
+    ],
+    affiliateSearchTerm: "tahini paste pure sesame",
+  },
+];
+
+/** Get all ingredients */
+export function getAllIngredients(): IngredientInfo[] {
+  return INGREDIENTS;
+}
+
+/** Get ingredient by slug */
+export function getIngredient(slug: string): IngredientInfo | undefined {
+  return INGREDIENTS.find(i => i.slug === slug);
+}
+
+/** Get all ingredient slugs */
+export function getAllIngredientSlugs(): string[] {
+  return INGREDIENTS.map(i => i.slug);
+}
+
+
+=== src\lib\seo\recipe-faq.ts ===
+export interface RecipeFaqItem {
+  question: string;
+  answer: string;
+}
+
+/**
+ * Hand-curated FAQs for high-priority recipes (SEO / People Also Ask).
+ *
+ * Rule: Only add FAQs we can answer confidently from the recipe itself.
+ * Keep answers concise (2-4 sentences) and practical.
+ */
+export const RECIPE_FAQ_BY_SLUG: Record<string, RecipeFaqItem[]> = {
+  // Top priority: currently striking distance
+  'chelo-goosht-semnani': [
+    {
+      question: 'What is Chelo Goosht?',
+      answer:
+        'Chelo Goosht is a traditional Persian dish of tender braised lamb served with fluffy steamed rice (chelo), often finished with saffron and paired with crisp tahdig. This Semnani version is known for its warm spices and rich, comforting braise.',
+    },
+    {
+      question: 'What cut of lamb is best for Chelo Goosht?',
+      answer:
+        'Bone-in, collagen-rich cuts work best for a silky braise—lamb neck or shank are ideal. They stay juicy through long cooking and create a deep, gelatinous sauce that tastes incredible with rice.',
+    },
+    {
+      question: 'Can I make Chelo Goosht ahead of time?',
+      answer:
+        'Yes—braises actually taste better the next day. Make the lamb and sauce ahead, chill, then gently reheat; cook the rice fresh for the best texture.',
+    },
+    {
+      question: 'How do I prevent dry or tough lamb?',
+      answer:
+        'Keep the heat low and steady, and cook until the meat is truly tender—rushing the braise at high heat can tighten the fibers. If the pot looks dry, add a little water or stock to maintain a gentle simmer.',
+    },
+  ],
+
+  'esnak-holandi-chicken-toast-sandwich': [
+    {
+      question: 'What is Esnak Holandi?',
+      answer:
+        'Esnak Holandi is an Iranian street-food style toasted sandwich—crispy on the outside with a warm, creamy filling (often chicken and potatoes) and melty cheese. It is usually pressed in a sandwich maker for a sealed, golden crust.',
+    },
+    {
+      question: 'Can I make esnak without a sandwich press?',
+      answer:
+        'Yes. Use a skillet or grill pan and press the sandwich with a heavy pan or spatula. Toast on medium heat so the filling heats through before the bread over-browns.',
+    },
+    {
+      question: 'What cheese works best for esnak?',
+      answer:
+        'A good melting cheese is key—Gouda, mozzarella, or a mild cheddar work well. If you want a more authentic deli-style stretch, mix a melty cheese with a small amount of creamier cheese.',
+    },
+    {
+      question: 'How do I keep the filling from leaking out?',
+      answer:
+        'Don’t overfill, and leave a small border around the edges. Press and toast long enough for the bread to seal; slightly thicker slices of bread also help.',
+    },
+  ],
+
+  'samboseh-sabzi-persian-herb-samosas': [
+    {
+      question: 'What is Samboseh Sabzi?',
+      answer:
+        'Samboseh Sabzi is a Persian-style samosa filled with aromatic herbs (often with leeks/green onions) and spices, then fried until crisp. It’s a popular street snack, especially in southern Iran.',
+    },
+    {
+      question: 'Can I bake samboseh instead of frying?',
+      answer:
+        'Yes—brush with oil and bake until deep golden, flipping once for even color. It won’t be exactly like fried samboseh, but it can still be crisp and delicious.',
+    },
+    {
+      question: 'How do I keep samboseh crispy?',
+      answer:
+        'Make sure the oil is hot enough before frying and avoid overcrowding the pan. Drain on a rack (not paper towels) so steam doesn’t soften the crust.',
+    },
+    {
+      question: 'What can I serve with samboseh?',
+      answer:
+        'A bright dipping sauce is perfect—tamarind sauce, lemony yogurt, or a spicy herb chutney. It also pairs well with pickles and fresh herbs.',
+    },
+  ],
+
+  'fondou-ye-gojeh-farangi': [
+    {
+      question: 'What is Fondou-ye Gojeh Farangi?',
+      answer:
+        'Fondou-ye Gojeh Farangi is a Persian-style tomato fondue: tomatoes slowly cooked down with butter and aromatics until silky and concentrated. It’s rich, savory, and meant to be scooped with bread or served alongside simple sides.',
+    },
+    {
+      question: 'How do I make tomato fondue thicker?',
+      answer:
+        'Cook it uncovered longer so water evaporates, and keep the heat low to prevent scorching. Using ripe tomatoes (or a mix of fresh plus a little tomato paste) also helps deepen body and flavor.',
+    },
+    {
+      question: 'Can I make it ahead?',
+      answer:
+        'Yes. It reheats well—warm gently over low heat and add a small splash of water if it’s too thick after chilling.',
+    },
+    {
+      question: 'What should I serve with it?',
+      answer:
+        'Crusty bread or flatbread is classic. It also works as a warm side for eggs, grilled chicken, or a rice plate when you want a tomato-forward sauce.',
+    },
+  ],
+
+  'authentic-persian-kabab-koobideh': [
+    {
+      question: 'Why does koobideh fall off the skewer?',
+      answer:
+        'The mixture is usually too wet or not kneaded enough. Squeeze excess juice from grated onion, chill the mixture well, and knead until it becomes sticky and cohesive so it grips the skewer.',
+    },
+    {
+      question: 'Can I make kabab koobideh in the oven?',
+      answer:
+        'Yes. Shape the kebab mixture onto skewers or as long logs on a lined baking tray, then bake under high heat and finish with broil to char. You will not get the exact charcoal flavor, but you can get juicy, well-browned kebabs.',
+    },
+    {
+      question: 'What meat ratio works best for koobideh?',
+      answer:
+        'A classic approach is a mix of beef and lamb with enough fat to stay juicy. If you use very lean meat, the kebabs can dry out and may not bind as well.',
+    },
+    {
+      question: 'What should I serve with koobideh?',
+      answer:
+        'The classic pairing is saffron rice (chelo), grilled tomatoes and peppers, and a simple salad like Shirazi. Flatbread, sumac, and torshi (pickles) also work great.',
+    },
+  ],
+
+  // Alternative koobideh variants (keep light for now)
+  'chelo-kebab-koobideh': [
+    {
+      question: 'Is Chelo Kebab Koobideh different from Koobideh?',
+      answer:
+        'Koobideh refers to the minced-meat kebab itself. Chelo Kebab Koobideh is the full plate: koobideh served with Persian steamed rice (chelo) and typical sides like grilled tomatoes.',
+    },
+  ],
+};
+
+export function getRecipeFaq(slug: string): RecipeFaqItem[] {
+  return RECIPE_FAQ_BY_SLUG[slug] || [];
+}
+
+
+=== src\lib\seo\recipe-redirects.json ===
+{
+  "tahchin-e-goosht-saffron-rice-cake-lamb": "tahchin-e-goosht-saffron-rice-cake",
+  "khoresht-e-tone-mahi-tuna-potato-stew": "khoresht-tone-mahi-tuna-potato-stew",
+  "khoresht-e-gharch-chicken-mushroom-stew": "khoresht-e-gharch-mushroom-chicken-stew",
+  "soup-e-jo-persian-creamy-barley-soup": "soup-e-jo-creamy-persian-barley-soup",
+  "kabab-e-shotormorgh-ostrich-kebabs-tomato-olive-salsa": "kabab-shotormorgh-ostrich-kebabs-tomato-olive-salsa",
+  "kabab-vijeh-persian-royal-mixed-grill": "kabab-vijeh-royal-persian-mixed-grill",
+  "kabab-tabei-koobideh-platter-golden-saffron-rice": "kabab-tabei-koobideh-saffron-rice-platter",
+  "kabab-tabei-koobideh-platter-saffron-rice": "kabab-tabei-koobideh-saffron-rice-platter",
+  "kabab-e-gharch-crispy-persian-mushroom-kebabs": "kabab-e-gharch-crispy-mushroom-kebabs",
+  "khorak-kadu-halvai-creamy-pumpkin-shell-pasta-stew": "khorak-kadu-halvai-pumpkin-shell-pasta-stew",
+  "khoresh-karafs-miniature-persian-celery-herb-stew": "khoresh-karafs-miniature-celery-herb-stew",
+  "rolet-esfenaj-va-panir-spinach-cheese-roll": "rolet-esfenaj-panir-spinach-cheese-roll",
+  "authentic-russian-borscht-beet-beef-soup": "authentic-russian-borscht-beef-beet-soup",
+  "adas-polo-makhsoos-special-persian-lentil-rice": "adas-polo-makhsoos-special-lentil-rice",
+  "kookoo-ye-piaz-sib-zamini-skillet-cakes": "kookoo-piaz-sib-zamini-skillet-cakes",
+  "kookoo-ye-piaz-va-sib-zamini-skillet-cakes": "kookoo-piaz-sib-zamini-skillet-cakes",
+  "fileh-mahi-kababi-lemon-basil-fish-fillet": "fileh-mahi-kababi-lemon-basil-fish",
+  "sir-torshi-aged-garlic-pickle-gilan": "sir-torshi-gilan-aged-garlic-pickle",
+  "keshmesh-polow-raisin-rice-lamb": "keshmesh-polow-lamb-raisin-rice",
+  "puree-kam-churi-chilled-persian-potato-egg-puree": "puree-kam-churi-chilled-potato-egg-puree",
+  "noon-e-khorma-style-date-cheese-flatbread": "noon-e-khorma-date-cheese-flatbread",
+  "bolgar-kabab-rolled-saffron-fillets": "bolgar-kabab-saffron-rolled-fillets",
+  "tahchin-tahdig-saffron-yogurt-crust": "tahchin-tahdig-saffron-crust",
+  "manoushe-style-sausage-egg-flatbread-pizza": "manoushe-style-sausage-egg-flatbread",
+  "kuku-ye-morgh-persian-chicken-frittata": "kuku-ye-morgh-persian-chicken-kuku",
+  "fatayer-sabanekh-spinach-hand-pies-sumac": "fatayer-sabanekh-spinach-hand-pies",
+  "dolma-mahshi-macaroni-stuffed-vine-leaves": "dolma-mahshi-macaroni-vine-leaves",
+  "kashmish-polow-persian-raisin-rice-lamb": "kashmish-polow-raisin-rice-lamb",
+  "adas-polo-makhsoos-special-lentil-rice": "adas-polo-makhsoos-lentil-rice",
+  "kabuli-pilaf-afghan-meat-chickpea-rice": "kabuli-pilaf-meat-chickpea-rice",
+  "persian-dolmeh-kuku-sabzi-platter": "dolmeh-kuku-sabzi-platter",
+  "kuku-rangi-persian-vegetable-cheese-frittata": "kuku-rangi-vegetable-cheese-frittata",
+  "paye-broccoli-cream-broccoli-almond-pie": "paye-broccoli-almond-pie",
+  "khoresht-e-tone-mahi-stew": "khoresht-tone-mahi-stew",
+  "saardi-polo-persian-carrot-raisin-rice": "saardi-polo-carrot-raisin-rice",
+  "polo-portugali-persian-portuguese-style-rice": "polo-portugali-persian-portuguese-rice",
+  "khoresht-e-meygoo-persian-shrimp-stew": "khoresht-e-meygoo-shrimp-stew",
+  "khoresht-karafs-persian-celery-saffron-stew": "khoresht-karafs-celery-saffron-stew",
+  "keshmesh-polow-persian-raisin-rice-lamb": "keshmesh-polow-lamb-raisin-rice",
+  "khoresh-goosht-ba-sabzijat-stew": "khoresh-goosht-ba-sabzijat",
+  "kaalbaas-morgh-persian-chicken-mortadella": "kaalbaas-morgh-chicken-mortadella",
+  "halzooni-kabab-persian-spiral-bakhtiari-kebab": "halzooni-kabab-spiral-bakhtiari-kebab",
+  "shorbat-adas-lentil-soup-with-meat": "shorbat-adas-meat-lentil-soup",
+  "sabzi-khordan-mezze-herbed-feta-eggs": "sabzi-khordan-herbed-feta-eggs",
+  "soup-e-zorrat-persian-sweet-corn-soup": "persian-sweet-corn-soup-e-zorrat",
+  "persian-peanut-glazed-crispy-chicken-wings": "persian-peanut-glazed-chicken-wings",
+  "khoresht-bademjan-persian-eggplant-lamb-stew": "khoresht-bademjan-eggplant-lamb-stew",
+  "smoky-eggplant-muttabal-with-kashk": "smoky-muttabal-eggplant-kashk",
+  "persian-kabab-barg-lamb-tenderloin-skewers": "kabab-barg-lamb-tenderloin-skewers",
+  "classic-chicken-kyiv-kotleta-po-kyivsky": "kotleta-po-kyivsky-classic-chicken-kyiv",
+  "chelow-e-sadeh-golden-persian-steamed-rice": "chelow-e-sadeh-persian-steamed-rice",
+  "dolmeh-kebab-stuffed-cabbage-rolls": "dolmeh-kebab-cabbage-rolls",
+  "koofteh-rusi-persian-potato-herb-kofta": "koofteh-rusi-potato-herb-kofta",
+  "khorak-e-chips-o-panir-bake": "khorak-e-chips-o-panir",
+
+  "russian-borscht-beet-beef-soup": "authentic-russian-borscht-beef-beet-soup",
+  "authentic-russian-borscht": "authentic-russian-borscht-beef-beet-soup",
+  "authentic-russian-borscht-beet-beef-soup": "authentic-russian-borscht-beef-beet-soup",
+
+  "tahchin-tahdig-saffron-yogurt-rice-crust": "tahchin-tahdig-saffron-crust",
+
+  "kuku-ye-morgh-chicken-herb-frittata": "kuku-ye-morgh-persian-chicken-kuku",
+
+  "dolmeh-ye-felfel-vegetarian-stuffed-peppers": "dolmeh-ye-felfel-e-giahi-stuffed-peppers",
+  "dolmeh-vegetarian-stuffed-peppers": "dolmeh-ye-felfel-e-giahi-stuffed-peppers",
+
+  "noodle-soy-pepper-persian-style": "persian-noodles-with-soy-and-peppers",
+  "persian-noodles-soy-peppers": "persian-noodles-with-soy-and-peppers",
+
+  "khoresht-e-rangarng-vegetable-meat-stew": "khoresht-e-rangarang-stew",
+  "khoresht-e-rangarang-colorful-vegetable-meat-stew": "khoresht-e-rangarang-stew",
+
+  "persian-stuffed-grape-leaves-with-chicken": "dolmeh-barg-e-mo-chicken",
+  "persian-chicken-stuffed-grape-leaves": "dolmeh-barg-e-mo-chicken",
+
+  "khoresh-e-tuna-and-potato-stew": "khoresht-tone-mahi-tuna-potato-stew",
+
+  "soupe-zorrat-persian-sweet-corn-soup": "soup-e-zorrat-persian-sweet-corn-soup",
+
+  "dolmeh-bademjan-baqchehi-eggplant-pouches": "dolmeh-bademjan-baghchei-eggplant-pouches",
+  "dolmeh-bademjan-baghchei": "dolmeh-bademjan-baghchei-eggplant-pouches",
+
+  "polow-loobia-ghermez": "polow-e-loobia-ghermez",
+  "polow-e-loobia-ghermez-red-bean-rice": "polow-e-loobia-ghermez",
+
+  "dolmeh-kebab-persian-stuffed-cabbage-rolls": "dolmeh-kebab-cabbage-rolls",
+
+  "saffron-yogurt-shish-kebab-chenjeh": "kabab-e-chenjeh-saffron-yogurt-shish-kebab",
+  "persian-saffron-yogurt-shish-kebab": "kabab-e-chenjeh-saffron-yogurt-shish-kebab",
+
+  "persian-beef-mushroom-pepper-skewers": "kabab-e-gharch-va-felfel",
+
+  "chelow-saffron-tahdig-persian-steamed-rice": "chelow-saffron-tahdig",
+
+  "kukuye-khanom-jaan": "kuku-ye-khanom-jaan",
+
+  "persian-tomato-kuku": "kuku-ye-gojeh-farangi-tomato-frittata",
+
+  "authentic-kabab-koobideh-lamb-skewers": "kabab-koobideh-minced-lamb-skewers",
+
+  "sir-torshi-aged-gilan-garlic-pickle": "sir-torshi-gilan-aged-garlic-pickle",
+
+  "persian-fusion-veal-sprout-macaroni-stir-fry": "persian-veal-sprout-macaroni-stir-fry",
+
+  "persian-saffron-yogurt-lamb-shishlik-kebabs": "persian-lamb-shishlik-saffron-yogurt-kebabs",
+
+  "tahchin-morgh-o-bareh-saffron-rice-cake": "tahchin-morgh-bareh-saffron-rice-cake",
+
+  "khoresht-e-bamieh-persian-okra-lamb-stew": "khoresht-bamieh-persian-okra-lamb-stew",
+
+  "soup-piazcheh-oat-spring-onion": "soup-piazcheh-spring-onion-oat-soup",
+
+  "dolmeh-kalam-barg-persian-stuffed-cabbage-rolls": "dolmeh-kalam-persian-stuffed-cabbage-rolls",
+
+  "fatayer-sabanekh-spinach-sumac-pies": "fatayer-sabanekh-spinach-pies-sumac",
+
+  "polow-topi-saffron-herb-rice-balls": "polow-topi-saffron-herb-stuffed-rice-balls",
+
+  "dami-e-bademjan-one-pot-eggplant-rice": "dami-bademjan-one-pot-eggplant-rice",
+
+  "rolat-morgh-va-goosht-roulade": "rolat-goosht-va-morgh-roulade",
+
+  "gheimeh-piazaq-onion-almond-stew": "gheimeh-piazaq-almond-onion-stew",
+
+  "sop-e-zhuleyn-persian-julienne-vegetable-soup": "sop-e-zhuleyn-julienne-vegetable-soup"
+}
+
+
+=== src\lib\seo\recipe-variations.ts ===
+export interface RecipeVariationSection {
+  title: string;
+  items: { heading: string; body: string }[];
+}
+
+export const RECIPE_VARIATIONS_BY_SLUG: Record<string, RecipeVariationSection[]> = {
+  'authentic-persian-kabab-koobideh': [
+    {
+      title: 'Oven Method (No Grill)',
+      items: [
+        {
+          heading: 'Best setup',
+          body:
+            'Use a preheated sheet pan and very high heat, then finish with a short broil for color. If you have metal skewers that fit in your oven, you can rest them on the edges of a roasting pan so heat circulates.',
+        },
+        {
+          heading: 'How to bake',
+          body:
+            'Shape the koobideh mixture into long logs (or onto skewers). Place on a parchment-lined tray, bake at 475°F (245°C) until browned and mostly cooked through, then broil briefly to char the top. Flip once for even browning.',
+        },
+        {
+          heading: 'Juiciness & binding tips',
+          body:
+            'Chill the shaped kebabs before baking so they hold their form. If the mix looks wet, squeeze onion juice harder and knead longer—cohesion matters more in the oven because there is no skewer grip from direct flame.',
+        },
+        {
+          heading: 'Smoke / grill flavor shortcut (optional)',
+          body:
+            'For a smoky note, finish with a quick torch on the surface or serve with heavily charred tomatoes/peppers. (Avoid liquid smoke—easy to overdo.)',
+        },
+      ],
+    },
+  ],
+};
+
+export function getRecipeVariations(slug: string): RecipeVariationSection[] {
+  return RECIPE_VARIATIONS_BY_SLUG[slug] || [];
+}
+
+
+=== src\lib\supabase-browser.ts ===
+import { createBrowserClient } from '@supabase/ssr'
+
+export function createClient() {
+  return createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+}
+
+
+=== src\lib\supabase-server-auth.ts ===
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
+
+export async function createServerSupabase() {
+  const cookieStore = await cookies()
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() { return cookieStore.getAll() },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            try { cookieStore.set(name, value, options) } catch {}
+          })
+        },
+      },
+    }
+  )
+}
+
+
+=== src\lib\supabase-server.ts ===
+import 'server-only';
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+// Use anon key for server-side reads — RLS enforces published-only access
+export const supabaseServer = createClient(supabaseUrl, supabaseAnonKey);
+
+
+=== src\lib\supabase.ts ===
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+
+=== src\middleware.ts ===
+import { createServerClient } from '@supabase/ssr';
+import { NextResponse, type NextRequest } from 'next/server';
+import recipeRedirects from '@/lib/seo/recipe-redirects.json';
+
+const PROTECTED_PATHS = ['/cook/dashboard', '/favorites'];
+
+function maybeRedirectRecipe(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  // Only handle legacy/duplicate slugs:
+  // /recipe/<slug> → /recipe/<canonical>
+  if (!pathname.startsWith('/recipe/')) return null;
+
+  const slug = pathname.slice('/recipe/'.length).split('/')[0];
+  if (!slug) return null;
+
+  const canonical = (recipeRedirects as Record<string, string>)[slug];
+  if (!canonical || canonical === slug) return null;
+
+  const url = request.nextUrl.clone();
+  url.pathname = `/recipe/${canonical}`;
+  // Permanent redirect (SEO)
+  return NextResponse.redirect(url, 308);
+}
+
+export async function middleware(request: NextRequest) {
+  // 1) SEO redirects first (fast path)
+  const redirect = maybeRedirectRecipe(request);
+  if (redirect) return redirect;
+
+  // 2) Auth for protected paths
+  const { pathname } = request.nextUrl;
+  const isProtected = PROTECTED_PATHS.some(p => pathname.startsWith(p));
+  if (!isProtected) return NextResponse.next();
+
+  const response = NextResponse.next();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll: () => request.cookies.getAll(),
+        setAll: (cookies) => {
+          cookies.forEach(({ name, value, options }) => {
+            response.cookies.set(name, value, options);
+          });
+        },
+      },
+    }
+  );
+
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    const loginUrl = new URL('/auth/login', request.url);
+    loginUrl.searchParams.set('redirect', pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  return response;
+}
+
+export const config = {
+  matcher: ['/recipe/:path*', '/cook/dashboard/:path*', '/favorites'],
+};
+
+
+=== src\types\cook.ts ===
+export interface Cook {
+  id: string;
+  name: string;
+  bio: string;
+  avatar_url: string | null;
+  specialties: string[];
+  location: string;
+  rating: number;
+  review_count: number;
+  verified: boolean;
+  created_at: string;
+}
+
+
+=== src\types\index.ts ===
+export type { Cook } from './cook';
+
+export interface Ingredient {
+  item: string;
+  amount: string;
+  unit: string;
+  note?: string;
+  group?: string;
+}
+
+export interface Instruction {
+  step: number;
+  text: string;
+  time_minutes?: number;
+}
+
+export interface Substitution {
+  original: string;
+  substitute: string;
+  note?: string;
+}
+
+export interface NutritionInfo {
+  calories?: number;
+  protein_g?: number;
+  fat_g?: number;
+  carbs_g?: number;
+  fiber_g?: number;
+  sugar_g?: number;
+  sodium_mg?: number;
+  saturated_fat_g?: number;
+}
+
+export interface DietaryInfo {
+  vegetarian?: boolean;
+  vegan?: boolean;
+  gluten_free?: boolean;
+  dairy_free?: boolean;
+  nut_free?: boolean;
+  halal?: boolean;
+  allergens?: string[];
+  tags?: string[];
+}
+
+export interface FlavorProfile {
+  taste?: string[];
+  texture?: string[];
+  aroma?: string[];
+  spice_level?: string;
+}
+
+export interface CommonMistake {
+  mistake: string;
+  why: string;
+  fix: string;
+}
+
+export interface RegionalVariation {
+  region: string;
+  description?: string;
+  difference?: string;
+}
+
+export interface CostEstimate {
+  per_serving_usd?: number;
+  total_usd?: number;
+  budget_level?: string;
+}
+
+export interface Recipe {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  image_url: string | null;
+  image_alt: string | null;
+  image_source: string | null;
+  image_prompt: string | null;
+  prep_time_minutes: number;
+  cook_time_minutes: number;
+  servings: number;
+  difficulty: 'easy' | 'medium' | 'hard' | 'expert';
+  category: string;
+  category_slug: string | null;
+  cuisine: string;
+  cuisine_slug: string | null;
+  calories_per_serving: number | null;
+  ingredients: Ingredient[];
+  instructions: Instruction[];
+  tags: string[];
+  tips: string | string[] | null;
+  storage_notes: string | null;
+  serve_with: string | null;
+  substitutions: Substitution[] | null;
+  nutrition_per_serving: NutritionInfo | null;
+  dietary_info: DietaryInfo | null;
+  flavor_profile: FlavorProfile | null;
+  cultural_significance: string | null;
+  equipment: string[] | null;
+  common_mistakes: CommonMistake[] | null;
+  regional_variations: RegionalVariation[] | null;
+  make_ahead: string | null;
+  occasions: string[] | null;
+  cost_estimate: CostEstimate | null;
+  seo_title: string | null;
+  seo_description: string | null;
+  source_urls: string[] | null;
+  author: string | null;
+  published: boolean;
+  published_at: string | null;
+  verification_status: 'draft' | 'reviewed' | 'verified' | null;
+  verified_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+/** Lightweight recipe type for list/card views (matches CARD_FIELDS query) */
+export type RecipeSummary = Pick<
+  Recipe,
+  | 'id'
+  | 'slug'
+  | 'title'
+  | 'description'
+  | 'image_url'
+  | 'image_alt'
+  | 'prep_time_minutes'
+  | 'cook_time_minutes'
+  | 'servings'
+  | 'difficulty'
+  | 'category'
+  | 'category_slug'
+  | 'cuisine'
+  | 'cuisine_slug'
+  | 'calories_per_serving'
+  | 'published_at'
+>;
+
+
+=== src\types\order.ts ===
+export interface MenuItem {
+  id: string
+  cook_id: string
+  name: string
+  description: string
+  price: number
+  image_url: string | null
+  category: 'appetizer' | 'main' | 'dessert' | 'drink' | 'side'
+  prep_time_minutes: number
+  serves: number
+  available: boolean
+}
+
+export interface Order {
+  id: string
+  customer_id: string
+  cook_id: string
+  items: OrderItem[]
+  status: 'pending' | 'confirmed' | 'preparing' | 'ready' | 'delivered' | 'cancelled'
+  total: number
+  delivery_address: string
+  notes: string
+  created_at: string
+}
+
+export interface OrderItem {
+  menu_item_id: string
+  quantity: number
+  price: number
+}
+
+

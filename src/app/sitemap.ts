@@ -24,7 +24,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const recipes = allRecipes;
 
   const now = new Date().toISOString();
-  const lastMod = recipes?.[0]?.updated_at || now;
+  const lastMod = recipes?.reduce((max, r) => r.updated_at > max ? r.updated_at : max, recipes[0]?.updated_at || now) || now;
 
   // Exclude slugs that redirect to a canonical (they should not be in sitemap).
   const redirectedSlugs = new Set(Object.keys(recipeRedirects as Record<string, string>));

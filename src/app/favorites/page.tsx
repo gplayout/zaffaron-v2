@@ -1,9 +1,8 @@
 import { Suspense } from "react";
-import { cookies } from "next/headers";
-import { createServerClient } from "@supabase/ssr";
 import Link from "next/link";
 import { Heart } from "lucide-react";
 import RecipeCard from "@/components/RecipeCard";
+import { createServerSupabase } from "@/lib/supabase-server-auth";
 import type { Recipe } from "@/types";
 
 export const metadata = {
@@ -11,22 +10,8 @@ export const metadata = {
   description: "Your saved recipes on Zaffaron",
 };
 
-async function getSupabase() {
-  const cookieStore = await cookies();
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll: () => cookieStore.getAll(),
-        setAll: () => {},
-      },
-    }
-  );
-}
-
 async function getFavoriteRecipes(userId: string): Promise<Recipe[]> {
-  const supabase = await getSupabase();
+  const supabase = await createServerSupabase();
 
   // Get favorite recipe_ids for this user
   const { data: favRows, error: favError } = await supabase
@@ -47,7 +32,11 @@ async function getFavoriteRecipes(userId: string): Promise<Recipe[]> {
     .eq("published", true);
 
   if (recipeError || !recipes) return [];
-  return recipes as Recipe[];
+
+  // Re-sort to match favorites order (most recently favorited first)
+  const idOrder = new Map(recipeIds.map((id, i) => [id, i]));
+  const sorted = [...recipes].sort((a, b) => (idOrder.get(a.id) ?? 0) - (idOrder.get(b.id) ?? 0));
+  return sorted as Recipe[];
 }
 
 function FavoritesGrid({ recipes }: { recipes: Recipe[] }) {
@@ -105,7 +94,7 @@ function LoadingGrid() {
 }
 
 async function FavoritesContent() {
-  const supabase = await getSupabase();
+  const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {

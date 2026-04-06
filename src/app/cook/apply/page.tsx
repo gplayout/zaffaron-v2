@@ -121,12 +121,12 @@ export default function CookApplyPage() {
               </Link>
             )}
             {user && (
-              <button
-                onClick={() => setIsSubmitted(false)}
+              <Link
+                href="/cook/dashboard"
                 className="inline-flex w-full items-center justify-center rounded-lg border border-stone-300 bg-white px-6 py-3 font-medium text-stone-700 transition hover:bg-stone-50"
               >
-                Submit Another Application
-              </button>
+                View Dashboard
+              </Link>
             )}
           </div>
         </div>

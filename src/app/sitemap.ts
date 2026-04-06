@@ -1,5 +1,6 @@
 import { supabaseServer } from "@/lib/supabase-server";
 import { getAllIngredientSlugs } from "@/lib/ingredients";
+import recipeRedirects from "@/lib/seo/recipe-redirects.json";
 import type { MetadataRoute } from "next";
 
 export const revalidate = 3600;
@@ -25,11 +26,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date().toISOString();
   const lastMod = recipes?.[0]?.updated_at || now;
 
-  const recipeUrls = (recipes || []).map((r) => ({
-    url: `https://zaffaron.com/recipe/${r.slug}`,
-    lastModified: r.updated_at,
-    changeFrequency: "weekly" as const,
-  }));
+  // Exclude slugs that redirect to a canonical (they should not be in sitemap).
+  const redirectedSlugs = new Set(Object.keys(recipeRedirects as Record<string, string>));
+
+  const recipeUrls = (recipes || [])
+    .filter((r) => !redirectedSlugs.has(r.slug))
+    .map((r) => ({
+      url: `https://zaffaron.com/recipe/${r.slug}`,
+      lastModified: r.updated_at,
+      changeFrequency: "weekly" as const,
+    }));
 
   // Unique cuisine and category slugs
   const cuisines = [...new Set((recipes || []).map((r) => r.cuisine_slug).filter(Boolean))];

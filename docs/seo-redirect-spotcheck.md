@@ -1,10 +1,10 @@
 # Redirect Spot-Check (Sample 20)
 
-Generated: 2026-04-06T03:06:44.665Z
+Generated: 2026-04-06T03:39:46.784Z
 
 Checked: 308 redirect correctness + destination canonical self-reference.
 
-- Redirect map size: **80**
+- Redirect map size: **93**
 - Sample size: **20**
 - Problems: **0**
 

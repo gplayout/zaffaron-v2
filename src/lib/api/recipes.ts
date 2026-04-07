@@ -26,19 +26,38 @@ export async function getLatestRecipes(limit: number): Promise<RecipeSummary[]> 
  * Get popular/editor's pick recipes (oldest first for variety)
  */
 export async function getPopularRecipes(limit: number): Promise<RecipeSummary[]> {
-  const { data, error } = await supabaseServer
-    .from("recipes_v2")
-    .select(CARD_FIELDS)
-    .eq("published", true)
-    .order("published_at", { ascending: true })
-    .limit(limit);
+  // Pick a diverse set: one from each major cuisine, ordered by most recently updated
+  // This ensures Editor's Picks feel curated and representative
+  const cuisines = ['persian', 'turkish', 'lebanese', 'indian', 'moroccan', 'greek', 'afghan', 'azerbaijani'];
+  const picks: RecipeSummary[] = [];
 
-  if (error) {
-    console.error("Failed to fetch popular recipes:", error);
-    throw new Error("Failed to load recipes. Please try again later.");
+  // Fetch 2 per cuisine in parallel, then take 1 from each until we hit limit
+  const results = await Promise.all(
+    cuisines.map(c =>
+      supabaseServer
+        .from("recipes_v2")
+        .select(CARD_FIELDS)
+        .eq("published", true)
+        .eq("cuisine_slug", c)
+        .order("updated_at", { ascending: false })
+        .limit(2)
+        .then(r => r.data as RecipeSummary[] || [])
+    )
+  );
+
+  // Round-robin pick from each cuisine
+  for (let round = 0; picks.length < limit; round++) {
+    let added = false;
+    for (const cuisineRecipes of results) {
+      if (round < cuisineRecipes.length && picks.length < limit) {
+        picks.push(cuisineRecipes[round]);
+        added = true;
+      }
+    }
+    if (!added) break;
   }
 
-  return (data as RecipeSummary[]) || [];
+  return picks;
 }
 
 /**

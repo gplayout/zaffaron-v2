@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Search Recipes",
-  description: "Search our collection of 1,500+ authentic recipes from Persian, Turkish, Indian, Moroccan, Greek, and world cuisines.",
+  description: "Search our collection of 1,700+ authentic recipes from Persian, Turkish, Indian, Moroccan, Greek, and world cuisines.",
   alternates: { canonical: "https://zaffaron.com/search" },
   robots: { index: false, follow: true },
 };

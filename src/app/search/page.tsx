@@ -80,7 +80,7 @@ export default function SearchPage() {
               </button>
             ))}
           </div>
-          <p className="mt-6 text-sm text-stone-400">Search across 1,500+ recipes from Persian, Turkish, Afghan, Lebanese, Azerbaijani, Indian, Moroccan, and Greek cuisines</p>
+          <p className="mt-6 text-sm text-stone-400">Search across 1,700+ recipes from Persian, Turkish, Afghan, Lebanese, Azerbaijani, Indian, Moroccan, and Greek cuisines</p>
         </div>
       )}
 

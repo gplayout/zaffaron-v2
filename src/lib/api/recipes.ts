@@ -159,12 +159,21 @@ export async function searchRecipes(query: string, limit: number): Promise<Recip
   const clean = query.replace(/[%_\\(),."':;]/g, "").replace(/\s+/g, " ").trim().slice(0, 100);
   if (!clean || clean.length < 2) return [];
 
+  // Try FTS first (ranked, fast, uses GIN index)
+  const { data: ftsData, error: ftsError } = await supabaseServer
+    .rpc("search_recipes_fts", { search_query: clean, result_limit: limit });
+
+  if (!ftsError && ftsData && ftsData.length > 0) {
+    return ftsData as RecipeSummary[];
+  }
+
+  // Fallback to ilike for partial matches (single words, typos)
   const { data, error } = await supabaseServer
     .from("recipes_v2")
     .select(CARD_FIELDS)
     .eq("published", true)
     .or(
-      `title.ilike.%${clean}%,description.ilike.%${clean}%,cuisine.ilike.%${clean}%,category.ilike.%${clean}%`
+      `title.ilike.%${clean}%,description.ilike.%${clean}%,cuisine_slug.ilike.%${clean}%,category_slug.ilike.%${clean}%`
     )
     .order("published_at", { ascending: false })
     .limit(limit);

@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!categoryDescriptions[slug]) {
     // Check if any recipes exist for this slug
     const count = await getCategoryRecipeCount(slug);
-    if (count === 0) return { title: "Not Found", robots: { index: false } };
+    if (count === 0) notFound();
   }
   const info = categoryDescriptions[slug] || defaultDesc(slug);
   const url = `https://zaffaron.com/category/${slug}`;

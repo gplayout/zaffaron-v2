@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     google: "6ulA9oxsqC_SdVSnIQEoZxuW0zD03ZeicET7ZEyT2ro",
   },
   other: {
-    "p:domain_verify": "4aa10e92db81230196525ed841c3d9f5",
+    "p:domain_verify": "4aa10e92db8123019b525ed841c3d9f5",
   },
   title: {
     default: "Zaffaron — Authentic Recipes from Every Kitchen",

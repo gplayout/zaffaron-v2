@@ -2,6 +2,7 @@
 
 import { createServerSupabase } from '@/lib/supabase-server-auth';
 import { supabaseServer } from '@/lib/supabase-server';
+import { revalidatePath } from 'next/cache';
 
 export interface Review {
   id: string;
@@ -134,6 +135,9 @@ export async function submitRecipeReview(
       authorName: row.author_name || authorName,
       createdAt: row.created_at,
     };
+
+    // Invalidate cache so the review appears immediately
+    revalidatePath(`/recipe/${recipeId}`);
 
     return { ok: true, review };
   } catch (error) {

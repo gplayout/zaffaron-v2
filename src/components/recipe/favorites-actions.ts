@@ -1,6 +1,7 @@
 'use server';
 
 import { createServerSupabase } from '@/lib/supabase-server-auth';
+import { revalidatePath } from 'next/cache';
 
 export async function getIsFavorited(
   recipeId: string
@@ -69,6 +70,7 @@ export async function toggleFavorite(
         return { ok: false, error: 'Failed to update favorite. Please try again.' };
       }
 
+      revalidatePath('/favorites');
       return { ok: true, isFavorited: false };
     } else {
       const { error: upsertError } = await supabase
@@ -87,6 +89,8 @@ export async function toggleFavorite(
         console.error('Failed to add favorite:', upsertError);
         return { ok: false, error: 'Failed to update favorite. Please try again.' };
       }
+
+      revalidatePath('/favorites');
 
       return { ok: true, isFavorited: true };
     }

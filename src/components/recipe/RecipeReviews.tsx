@@ -81,6 +81,7 @@ export function RecipeReviews({ reviews: initialReviews, recipeId }: RecipeRevie
 
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString("en-US", {
+      timeZone: "UTC",
       year: "numeric",
       month: "long",
       day: "numeric",

@@ -23,7 +23,7 @@ export async function getIsFavorited(
 
     if (error) {
       console.error('Failed to check favorite status:', error);
-      return { ok: false, error: error.message };
+      return { ok: false, error: 'Failed to check favorite status.' };
     }
 
     return { ok: true, isFavorited: !!data };
@@ -54,7 +54,7 @@ export async function toggleFavorite(
 
     if (checkError) {
       console.error('Failed to check favorite status:', checkError);
-      return { ok: false, error: checkError.message };
+      return { ok: false, error: 'Something went wrong. Please try again.' };
     }
 
     if (existing) {
@@ -66,7 +66,7 @@ export async function toggleFavorite(
 
       if (deleteError) {
         console.error('Failed to remove favorite:', deleteError);
-        return { ok: false, error: deleteError.message };
+        return { ok: false, error: 'Failed to update favorite. Please try again.' };
       }
 
       return { ok: true, isFavorited: false };
@@ -85,7 +85,7 @@ export async function toggleFavorite(
 
       if (upsertError) {
         console.error('Failed to add favorite:', upsertError);
-        return { ok: false, error: upsertError.message };
+        return { ok: false, error: 'Failed to update favorite. Please try again.' };
       }
 
       return { ok: true, isFavorited: true };

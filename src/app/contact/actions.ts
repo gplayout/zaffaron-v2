@@ -1,23 +1,7 @@
 'use server';
 
 import { createServerSupabase } from '@/lib/supabase-server-auth';
-import { headers } from 'next/headers';
-
-// Simple in-memory rate limiter (defense-in-depth; Supabase RLS is primary)
-const contactRateMap = new Map<string, { count: number; resetAt: number }>();
-const MAX_CONTACT_PER_HOUR = 5;
-
-function checkContactRate(ip: string): boolean {
-  const now = Date.now();
-  const entry = contactRateMap.get(ip);
-  if (!entry || now > entry.resetAt) {
-    contactRateMap.set(ip, { count: 1, resetAt: now + 3600_000 });
-    return true;
-  }
-  if (entry.count >= MAX_CONTACT_PER_HOUR) return false;
-  entry.count++;
-  return true;
-}
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 
 export async function submitContactForm(formData: FormData) {
   // Honeypot check — bots fill this hidden field
@@ -27,10 +11,10 @@ export async function submitContactForm(formData: FormData) {
     return { ok: true };
   }
 
-  // Rate limit
-  const headersList = await headers();
-  const ip = headersList.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-  if (!checkContactRate(ip)) {
+  // Rate limit (distributed, works on serverless)
+  const ip = await getClientIp();
+  const rl = await checkRateLimit(`contact:${ip}`, 5, 3600_000);
+  if (!rl.allowed) {
     return { ok: false, error: 'Too many messages. Please try again later.' };
   }
 

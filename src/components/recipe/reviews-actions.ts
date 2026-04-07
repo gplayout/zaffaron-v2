@@ -30,11 +30,12 @@ export async function getRecipeReviews(
       .from('recipe_reviews')
       .select('id, rating, body, author_name, created_at')
       .eq('recipe_id', recipeId)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
+      .limit(50);
 
     if (error) {
       console.error('Failed to fetch reviews:', error);
-      return { ok: false, error: error.message };
+      return { ok: false, error: 'Failed to load reviews. Please try again.' };
     }
 
     const reviews: Review[] = (data as ReviewRow[] || []).map((item) => ({
@@ -122,7 +123,7 @@ export async function submitRecipeReview(
 
     if (error) {
       console.error('Failed to submit review:', error);
-      return { ok: false, error: error.message };
+      return { ok: false, error: 'Failed to submit review. Please try again.' };
     }
 
     const row = data as ReviewRow;

@@ -27,30 +27,34 @@ export async function getLatestRecipes(limit: number): Promise<RecipeSummary[]> 
  */
 export async function getPopularRecipes(limit: number): Promise<RecipeSummary[]> {
   // Pick a diverse set: one from each major cuisine, ordered by most recently updated
-  // This ensures Editor's Picks feel curated and representative
+  // Single query + client-side grouping (avoids N+1)
   const cuisines = ['persian', 'turkish', 'lebanese', 'indian', 'moroccan', 'greek', 'afghan', 'azerbaijani'];
+
+  const { data, error } = await supabaseServer
+    .from("recipes_v2")
+    .select(CARD_FIELDS)
+    .eq("published", true)
+    .in("cuisine_slug", cuisines)
+    .order("updated_at", { ascending: false })
+    .limit(cuisines.length * 3);
+
+  if (error || !data) return [];
+
+  // Group by cuisine, then round-robin pick
+  const byCuisine = new Map<string, RecipeSummary[]>();
+  for (const r of data as RecipeSummary[]) {
+    const arr = byCuisine.get(r.cuisine_slug!) || [];
+    arr.push(r);
+    byCuisine.set(r.cuisine_slug!, arr);
+  }
+
   const picks: RecipeSummary[] = [];
-
-  // Fetch 2 per cuisine in parallel, then take 1 from each until we hit limit
-  const results = await Promise.all(
-    cuisines.map(c =>
-      supabaseServer
-        .from("recipes_v2")
-        .select(CARD_FIELDS)
-        .eq("published", true)
-        .eq("cuisine_slug", c)
-        .order("updated_at", { ascending: false })
-        .limit(2)
-        .then(r => r.data as RecipeSummary[] || [])
-    )
-  );
-
-  // Round-robin pick from each cuisine
   for (let round = 0; picks.length < limit; round++) {
     let added = false;
-    for (const cuisineRecipes of results) {
-      if (round < cuisineRecipes.length && picks.length < limit) {
-        picks.push(cuisineRecipes[round]);
+    for (const slug of cuisines) {
+      const recipes = byCuisine.get(slug) || [];
+      if (round < recipes.length && picks.length < limit) {
+        picks.push(recipes[round]);
         added = true;
       }
     }

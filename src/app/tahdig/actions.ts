@@ -4,40 +4,17 @@ import { GoogleGenAI } from '@google/genai';
 import { computeOverall, getBadge, CRITERIA_NAMES, type TahdigResult, type TahdigScores } from './lib/scoring';
 import { TAHDIG_ANALYSIS_PROMPT } from './lib/prompts';
 
-// Simple in-memory rate limiter (resets on deploy)
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-const RATE_LIMIT = 10;
-const RATE_WINDOW_MS = 60 * 60 * 1000; // 1 hour
-
-function checkRateLimit(ip: string): { ok: boolean; waitMinutes?: number } {
-  const now = Date.now();
-  const entry = rateLimitMap.get(ip);
-  
-  if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_WINDOW_MS });
-    return { ok: true };
-  }
-
-  if (entry.count >= RATE_LIMIT) {
-    const waitMs = entry.resetAt - now;
-    return { ok: false, waitMinutes: Math.ceil(waitMs / 60000) };
-  }
-
-  entry.count++;
-  return { ok: true };
-}
+import { checkRateLimit as checkRL, getClientIp } from '@/lib/rate-limit';
 
 export async function rateTahdig(
   formData: FormData
 ): Promise<{ ok: true; result: TahdigResult } | { ok: false; error: string }> {
   try {
-    // Rate limit check
-    const { headers } = await import('next/headers');
-    const headersList = await headers();
-    const ip = headersList.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-    const rl = checkRateLimit(ip);
-    if (!rl.ok) {
-      return { ok: false, error: `Too many requests! Try again in ${rl.waitMinutes} minutes. ⏳` };
+    // Rate limit check (distributed, works on serverless)
+    const ip = await getClientIp();
+    const rl = await checkRL(`tahdig:${ip}`, 10, 3600_000);
+    if (!rl.allowed) {
+      return { ok: false, error: `Too many requests! Try again in ${rl.waitMinutes ?? 60} minutes. ⏳` };
     }
 
     // Get the uploaded image
@@ -47,8 +24,8 @@ export async function rateTahdig(
     }
 
     // Validate file
-    if (file.size > 10 * 1024 * 1024) {
-      return { ok: false, error: 'Image too large (max 10MB). Try a smaller photo. 📏' };
+    if (file.size > 4 * 1024 * 1024) {
+      return { ok: false, error: 'Image too large (max 4MB). Try a smaller photo. 📏' };
     }
     if (!file.type.startsWith('image/')) {
       return { ok: false, error: 'Please upload an image file. 🖼️' };

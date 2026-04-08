@@ -4,22 +4,28 @@ import type { Recipe, RecipeSummary } from "@/types";
 const CARD_FIELDS = `id,slug,title,description,image_url,image_alt,prep_time_minutes,cook_time_minutes,servings,difficulty,category,category_slug,cuisine,cuisine_slug,calories_per_serving,published_at`;
 
 /**
- * Get the latest published recipes
+ * Get the latest published recipes, optionally excluding IDs already shown
  */
-export async function getLatestRecipes(limit: number): Promise<RecipeSummary[]> {
-  const { data, error } = await supabaseServer
+export async function getLatestRecipes(limit: number, excludeIds: string[] = []): Promise<RecipeSummary[]> {
+  let query = supabaseServer
     .from("recipes_v2")
     .select(CARD_FIELDS)
     .eq("published", true)
-    .order("published_at", { ascending: false })
-    .limit(limit);
+    .order("published_at", { ascending: false });
+
+  // Over-fetch to compensate for excluded items, then filter client-side
+  const fetchLimit = limit + excludeIds.length;
+  query = query.limit(fetchLimit);
+
+  const { data, error } = await query;
 
   if (error) {
     console.error("Failed to fetch latest recipes:", error);
     throw new Error("Failed to load recipes. Please try again later.");
   }
 
-  return (data as RecipeSummary[]) || [];
+  const excludeSet = new Set(excludeIds);
+  return ((data as RecipeSummary[]) || []).filter(r => !excludeSet.has(r.id)).slice(0, limit);
 }
 
 /**
@@ -70,33 +76,36 @@ export async function getPopularRecipes(limit: number): Promise<RecipeSummary[]>
  */
 export async function getFeaturedByCuisine(
   cuisineSlugs: string[],
-  perCuisine: number = 3
+  perCuisine: number = 3,
+  excludeIds: string[] = []
 ): Promise<Record<string, RecipeSummary[]>> {
   if (cuisineSlugs.length === 0) return {};
 
   // Single query: fetch top recipes across all requested cuisines
-  // Over-fetch to ensure we get enough per cuisine after grouping
+  // Over-fetch to ensure we get enough per cuisine after grouping + exclusions
   const { data, error } = await supabaseServer
     .from("recipes_v2")
     .select(CARD_FIELDS)
     .eq("published", true)
     .in("cuisine_slug", cuisineSlugs)
     .order("published_at", { ascending: false })
-    .limit(cuisineSlugs.length * perCuisine * 2);
+    .limit(cuisineSlugs.length * perCuisine * 3);
 
   if (error) {
     console.error("Failed to fetch featured recipes:", error);
     return {};
   }
 
-  // Group by cuisine_slug and take top perCuisine from each
+  const excludeSet = new Set(excludeIds);
+
+  // Group by cuisine_slug and take top perCuisine from each, skipping excluded
   const result: Record<string, RecipeSummary[]> = {};
   for (const slug of cuisineSlugs) {
     result[slug] = [];
   }
   for (const row of (data || []) as RecipeSummary[]) {
     const slug = row.cuisine_slug;
-    if (slug && result[slug] && result[slug].length < perCuisine) {
+    if (slug && result[slug] && result[slug].length < perCuisine && !excludeSet.has(row.id)) {
       result[slug].push(row);
     }
   }

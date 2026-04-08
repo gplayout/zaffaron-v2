@@ -66,12 +66,20 @@ export default async function Home() {
   const activeCuisines = getActiveCuisines();
   const cuisineSlugs = activeCuisines.map((c) => c.slug);
 
-  const [latestItems, popularItems, totalCount, featuredByCuisine] = await Promise.all([
-    getLatestRecipes(12),
+  // Step 1: Fetch editor's picks and total count (independent)
+  const [popularItems, totalCount] = await Promise.all([
     getPopularRecipes(6),
     getRecipeCount(),
-    getFeaturedByCuisine(cuisineSlugs, 3),
   ]);
+
+  // Step 2: Fetch cuisine showcases, excluding editor's picks
+  const picksIds = popularItems.map(r => r.id);
+  const featuredByCuisine = await getFeaturedByCuisine(cuisineSlugs, 3, picksIds);
+
+  // Step 3: Fetch latest recipes, excluding both picks and cuisine showcases
+  const showcaseIds = Object.values(featuredByCuisine).flat().map(r => r.id);
+  const allExcludeIds = [...picksIds, ...showcaseIds];
+  const latestItems = await getLatestRecipes(12, allExcludeIds);
 
   return (
     <>

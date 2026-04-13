@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Analytics } from "@vercel/analytics/next";
 import { AuthProvider } from "@/components/AuthProvider";
 import Navigation from "@/components/Navigation";
+import NewsletterForm from "@/components/NewsletterForm";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -149,6 +150,11 @@ export default function RootLayout({
                     </li>
                   </ul>
                 </div>
+              </div>
+
+              {/* Newsletter */}
+              <div className="mt-8 flex justify-center">
+                <NewsletterForm />
               </div>
 
               {/* Social Media & Copyright */}

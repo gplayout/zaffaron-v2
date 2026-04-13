@@ -29,14 +29,10 @@ export function RecipeIngredients({ ingredients, substitutions }: RecipeIngredie
           return (
             <li
               key={i}
-              role="checkbox"
-              aria-checked={isChecked}
-              tabIndex={0}
               className={`flex gap-2 text-sm cursor-pointer transition-opacity ${
                 isChecked ? "opacity-50" : "opacity-100"
               }`}
               onClick={() => toggleItem(i)}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleItem(i); } }}
             >
               <input
                 type="checkbox"

@@ -105,7 +105,7 @@ export default async function Home() {
           Authentic Recipes from <span className="text-amber-600">Every Kitchen</span>
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-lg text-stone-500">
-          Every recipe tested. Every measurement exact. Every step clear.
+          Crafted with care. Rooted in tradition. Made for your kitchen.
           From Persian saffron rice to Turkish kebabs and Lebanese mezze.
         </p>
         {/* Hero Search CTA */}

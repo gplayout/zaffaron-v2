@@ -16,7 +16,7 @@ const categoryDescriptions: Record<string, { title: string; emoji: string; descr
   dessert: { title: "Desserts & Sweets", emoji: "🍮", description: "Sweet endings from every kitchen — Persian Sholeh Zard, Turkish Baklava, Indian Gulab Jamun, Moroccan Chebakia, and Greek Galaktoboureko." },
   drink: { title: "Drinks & Beverages", emoji: "🥛", description: "Traditional beverages — Persian Doogh, Indian Lassi, Moroccan Mint Tea, and Afghan Qaimaq Chai. The perfect complement to any meal." },
   breakfast: { title: "Breakfast Recipes", emoji: "🍳", description: "Morning traditions from around the world — Turkish Menemen, Indian Upma, Lebanese Manoushe, and Greek Bougatsa." },
-  main: { title: "Main Courses", emoji: "🍽️", description: "Complete main dishes from 8 cuisines — curries, tagines, roasts, and braises. Every recipe tested and verified." },
+  main: { title: "Main Courses", emoji: "🍽️", description: "Complete main dishes from 8 cuisines — curries, tagines, roasts, and braises. Crafted with cultural authenticity." },
   salad: { title: "Salad Recipes", emoji: "🥗", description: "Fresh, vibrant salads — Turkish Çoban, Greek Horiatiki, Lebanese Fattoush, Moroccan Taktouka, and more." },
   side: { title: "Side Dishes", emoji: "🫒", description: "Perfect accompaniments from every cuisine to complete your meal." },
   pickle: { title: "Pickles & Preserves", emoji: "🫙", description: "Pickles and preserves from Persian Torshi to Moroccan Preserved Lemons, Indian Mango Pickle, and Lebanese Makdous." },

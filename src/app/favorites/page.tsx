@@ -3,14 +3,16 @@ import Link from "next/link";
 import { Heart } from "lucide-react";
 import RecipeCard from "@/components/RecipeCard";
 import { createServerSupabase } from "@/lib/supabase-server-auth";
-import type { Recipe } from "@/types";
+import type { RecipeSummary } from "@/types";
+
+const CARD_FIELDS = `id,slug,title,description,image_url,image_alt,prep_time_minutes,cook_time_minutes,servings,difficulty,category,category_slug,cuisine,cuisine_slug,calories_per_serving,published_at`;
 
 export const metadata = {
   title: "Your Favorites",
   description: "Your saved recipes on Zaffaron",
 };
 
-async function getFavoriteRecipes(userId: string): Promise<Recipe[]> {
+async function getFavoriteRecipes(userId: string): Promise<RecipeSummary[]> {
   const supabase = await createServerSupabase();
 
   // Get favorite recipe_ids for this user
@@ -24,10 +26,10 @@ async function getFavoriteRecipes(userId: string): Promise<Recipe[]> {
 
   const recipeIds = favRows.map((r) => r.recipe_id);
 
-  // Fetch the actual recipes
+  // Fetch the actual recipes (using CARD_FIELDS to avoid over-fetching)
   const { data: recipes, error: recipeError } = await supabase
     .from("recipes_v2")
-    .select("*")
+    .select(CARD_FIELDS)
     .in("id", recipeIds)
     .eq("published", true);
 
@@ -36,10 +38,10 @@ async function getFavoriteRecipes(userId: string): Promise<Recipe[]> {
   // Re-sort to match favorites order (most recently favorited first)
   const idOrder = new Map(recipeIds.map((id, i) => [id, i]));
   const sorted = [...recipes].sort((a, b) => (idOrder.get(a.id) ?? 0) - (idOrder.get(b.id) ?? 0));
-  return sorted as Recipe[];
+  return sorted as RecipeSummary[];
 }
 
-function FavoritesGrid({ recipes }: { recipes: Recipe[] }) {
+function FavoritesGrid({ recipes }: { recipes: RecipeSummary[] }) {
   if (recipes.length === 0) {
     return (
       <div className="rounded-xl border border-stone-200 bg-white p-12 text-center">

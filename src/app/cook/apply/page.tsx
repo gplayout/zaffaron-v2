@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { ChefHat, Upload, Loader2, CheckCircle, ArrowLeft } from 'lucide-react';
 import { submitCookApplication } from './actions';
 import { useAuth } from '@/hooks/useAuth';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 const SPECIALTIES = [
   'Persian Cuisine',
@@ -37,10 +39,30 @@ const AVAILABILITY_OPTIONS = [
 ];
 
 export default function CookApplyPage() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  // Redirect unauthenticated users immediately
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/auth/login?redirect=/cook/apply');
+    }
+  }, [user, loading, router]);
+
+  // Show loading state while checking auth
+  if (loading || !user) {
+    return (
+      <div className="flex min-h-[calc(100vh-200px)] items-center justify-center px-4">
+        <div className="w-full max-w-md text-center">
+          <Loader2 className="mx-auto h-12 w-12 animate-spin text-amber-600" />
+          <p className="mt-4 text-stone-600">Checking authentication...</p>
+        </div>
+      </div>
+    );
+  }
   
   const [formData, setFormData] = useState({
     name: '',

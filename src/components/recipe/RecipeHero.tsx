@@ -7,31 +7,7 @@ import type { Recipe } from "@/types";
 import { DietaryBadges } from "./DietaryBadges";
 import { AllergenWarning } from "./AllergenWarning";
 import { FavoriteButton } from "./FavoriteButton";
-
-const labelMap: Record<string, string> = {
-  persian: "Persian",
-  indian: "Indian",
-  "middle-eastern": "Middle Eastern",
-  stew: "Stews",
-  rice: "Rice Dishes",
-  kebab: "Kebabs",
-  appetizer: "Appetizers",
-  soup: "Soups",
-  dessert: "Desserts",
-  drink: "Drinks",
-  breakfast: "Breakfast",
-  main: "Main Courses",
-  salad: "Salads",
-  side: "Side Dishes",
-  pickle: "Pickles",
-  sweet: "Sweets",
-  bread: "Breads",
-};
-
-function capitalize(s: string) {
-  if (!s) return s;
-  return labelMap[s.toLowerCase()] || s.charAt(0).toUpperCase() + s.slice(1).replace(/-/g, " ");
-}
+import { humanize } from "@/lib/formatting";
 
 function formatDate(dateStr: string | null) {
   if (!dateStr) return null;
@@ -63,7 +39,7 @@ export function RecipeHero({ recipe }: RecipeHeroProps) {
           </li>
           <li>
             <Link href={`/cuisine/${cuisineSlug}`} className="hover:text-amber-600">
-              {capitalize(recipe.cuisine)}
+              {humanize(recipe.cuisine)}
             </Link>
           </li>
           <li aria-hidden="true" className="text-stone-300">
@@ -71,7 +47,7 @@ export function RecipeHero({ recipe }: RecipeHeroProps) {
           </li>
           <li>
             <Link href={`/category/${categorySlug}`} className="hover:text-amber-600">
-              {capitalize(recipe.category)}
+              {humanize(recipe.category)}
             </Link>
           </li>
           <li aria-hidden="true" className="text-stone-300">

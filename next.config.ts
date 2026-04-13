@@ -6,13 +6,12 @@ const securityHeaders = [
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
   { key: 'Permissions-Policy', value: 'camera=(self), microphone=(), geolocation=()' },
-  // CSP is now set dynamically in middleware.ts with per-request nonce
-  // Static fallback for paths not matched by middleware:
+  // Static CSP fallback - stricter than unsafe-inline but allows Vercel scripts
   {
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com",
+      "script-src 'self' https://va.vercel-scripts.com",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
       "img-src 'self' data: https://givukaorkjkksslrzuum.supabase.co",

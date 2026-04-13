@@ -88,23 +88,24 @@ export async function RecipeInternalLinks({ recipe }: { recipe: Recipe }) {
   // Build a small, guaranteed-real set of internal links.
   // IMPORTANT: We only link to recipes we actually found in the DB.
 
+  const curated = CURATED_LINKS_BY_SLUG[recipe.slug];
+  const isKebab = (recipe.category_slug || recipe.category.toLowerCase()) === 'kebab';
+
+  // Run all queries in parallel for better performance
+  const [foundCurated, cheloResults, sameCuisineResults] = await Promise.all([
+    curated?.length ? fetchSlugs(curated) : Promise.resolve([]),
+    isKebab ? findByTitleKeyword('Chelo', 2) : Promise.resolve([]),
+    findSameCuisine(recipe, 4),
+  ]);
+
   const picks: { slug: string; title: string }[] = [];
 
   // 1) Curated links for high-priority pages (verified via DB)
-  const curated = CURATED_LINKS_BY_SLUG[recipe.slug];
-  if (curated && curated.length > 0) {
-    const found = await fetchSlugs(curated);
-    for (const r of found) picks.push({ slug: r.slug, title: r.title });
-  }
+  for (const r of foundCurated) picks.push({ slug: r.slug, title: r.title });
 
   // 2) Heuristics (fallback)
-  if ((recipe.category_slug || recipe.category.toLowerCase()) === 'kebab') {
-    const chelo = await findByTitleKeyword('Chelo', 2);
-    for (const r of chelo) picks.push({ slug: r.slug, title: r.title });
-  }
-
-  const sameCuisine = await findSameCuisine(recipe, 4);
-  for (const r of sameCuisine) picks.push({ slug: r.slug, title: r.title });
+  for (const r of cheloResults) picks.push({ slug: r.slug, title: r.title });
+  for (const r of sameCuisineResults) picks.push({ slug: r.slug, title: r.title });
 
   // De-dupe + cap
   const uniq = new Map<string, { slug: string; title: string }>();

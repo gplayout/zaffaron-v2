@@ -9,7 +9,6 @@ import { HeaderAuthWithFavorites } from "./HeaderAuthWithFavorites";
 const navLinks = [
   { href: "/recipes", label: "Recipes", icon: UtensilsCrossed },
   { href: "/search", label: "Search", icon: Search },
-  { href: "/cooks", label: "Cooks", icon: Users },
 ];
 
 const becomeCookLink = { href: "/cook/apply", label: "Become a Cook", icon: UserPlus };

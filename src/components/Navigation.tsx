@@ -48,26 +48,7 @@ export default function Navigation() {
               {link.label}
             </Link>
           ))}
-          <Link
-            href={orderFoodLink.href}
-            className={`rounded-md px-3 py-2 text-sm font-medium transition ${
-              isActive(orderFoodLink.href)
-                ? "bg-amber-600 text-white"
-                : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
-            }`}
-          >
-            {orderFoodLink.label}
-          </Link>
-          <Link
-            href={becomeCookLink.href}
-            className={`ml-2 rounded-md px-3 py-2 text-sm font-medium transition ${
-              isActive(becomeCookLink.href)
-                ? "bg-amber-600 text-white"
-                : "bg-amber-100 text-amber-700 hover:bg-amber-200"
-            }`}
-          >
-            {becomeCookLink.label}
-          </Link>
+          {/* Marketplace links hidden until live */}
         </nav>
 
         {/* Desktop Right Section */}
@@ -131,30 +112,7 @@ export default function Navigation() {
               );
             })}
             <div className="my-3 border-t border-stone-100" />
-            <Link
-              href={orderFoodLink.href}
-              onClick={() => setMobileMenuOpen(false)}
-              className={`flex items-center gap-3 rounded-md px-3 py-3 text-sm font-medium transition ${
-                isActive(orderFoodLink.href)
-                  ? "bg-amber-600 text-white"
-                  : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
-              }`}
-            >
-              <ShoppingBag className="h-4 w-4" />
-              {orderFoodLink.label}
-            </Link>
-            <Link
-              href={becomeCookLink.href}
-              onClick={() => setMobileMenuOpen(false)}
-              className={`flex items-center gap-3 rounded-md px-3 py-3 text-sm font-medium transition ${
-                isActive(becomeCookLink.href)
-                  ? "bg-amber-600 text-white"
-                  : "bg-amber-100 text-amber-700"
-              }`}
-            >
-              <UserPlus className="h-4 w-4" />
-              {becomeCookLink.label}
-            </Link>
+            {/* Marketplace links hidden until live */}
             <div className="my-3 border-t border-stone-100" />
             <div className="px-3 py-2">
               <HeaderAuthWithFavorites />

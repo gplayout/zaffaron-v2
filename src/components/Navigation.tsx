@@ -3,16 +3,18 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChefHat, Menu, X, Search, UtensilsCrossed, Users, UserPlus, ShoppingBag } from "lucide-react";
+import { ChefHat, Menu, X, Search, UtensilsCrossed, Calendar } from "lucide-react";
 import { HeaderAuthWithFavorites } from "./HeaderAuthWithFavorites";
 
 const navLinks = [
   { href: "/recipes", label: "Recipes", icon: UtensilsCrossed },
+  { href: "/calendar", label: "Calendar", icon: Calendar },
   { href: "/search", label: "Search", icon: Search },
 ];
 
-const becomeCookLink = { href: "/cook/apply", label: "Become a Cook", icon: UserPlus };
-const orderFoodLink = { href: "/cooks", label: "Order Food" };
+// Marketplace links — hidden until live
+// const becomeCookLink = { href: "/cook/apply", label: "Become a Cook" };
+// const orderFoodLink = { href: "/cooks", label: "Order Food" };
 
 export default function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

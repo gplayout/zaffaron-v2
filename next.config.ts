@@ -36,7 +36,24 @@ const nextConfig: NextConfig = {
       {
         source: '/recipe/:id(\\d+)',
         destination: '/',
-        permanent: true, // 301
+        permanent: true,
+      },
+      // Old site: language-prefixed URLs → strip language prefix
+      {
+        source: '/:lang(en|fa|ar|tr|de|fr|es|it|pt|ru|zh|ja|ko|hi)/recipe/:slug*',
+        destination: '/recipe/:slug*',
+        permanent: true,
+      },
+      {
+        source: '/:lang(en|fa|ar|tr|de|fr|es|it|pt|ru|zh|ja|ko|hi)/:path*',
+        destination: '/:path*',
+        permanent: true,
+      },
+      // Old site: /recipes/<numeric> → homepage
+      {
+        source: '/recipes/:id(\\d+)',
+        destination: '/recipes',
+        permanent: true,
       },
       // Old site: www → non-www (Vercel handles this, but explicit for clarity)
       // Common old slugs → new slugs (most impactful 404s from GSC)

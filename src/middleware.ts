@@ -31,7 +31,7 @@ export async function middleware(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
   const csp = [
     "default-src 'self'",
-    `script-src 'self' 'nonce-${nonce}' https://va.vercel-scripts.com`,
+    `script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com`,  // unsafe-inline required: Next.js SSG injects inline scripts without nonce on Vercel
     // style-src still needs unsafe-inline for Next.js/Tailwind inline styles
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",

@@ -7,19 +7,8 @@ const securityHeaders = [
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
   { key: 'Permissions-Policy', value: 'camera=(self), microphone=(), geolocation=()' },
-  // Static CSP fallback - stricter than unsafe-inline but allows Vercel scripts
-  {
-    key: 'Content-Security-Policy',
-    value: [
-      "default-src 'self'",
-      "script-src 'self' https://va.vercel-scripts.com",
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "font-src 'self' https://fonts.gstatic.com",
-      "img-src 'self' data: https://givukaorkjkksslrzuum.supabase.co",
-      "connect-src 'self' https://givukaorkjkksslrzuum.supabase.co https://vitals.vercel-insights.com https://va.vercel-scripts.com",
-      "frame-ancestors 'none'",
-    ].join('; '),
-  },
+  // CSP is handled by middleware with per-request nonce — do NOT set static CSP here
+  // (static CSP without nonce blocks Next.js inline scripts)
 ];
 
 const nextConfig: NextConfig = {

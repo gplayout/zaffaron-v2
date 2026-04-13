@@ -32,6 +32,8 @@ export default function NewsletterForm() {
         Get seasonal recipes & cultural food stories.
       </p>
       <form action={handleSubmit} className="flex gap-2">
+        {/* Honeypot: hidden from humans, bots fill it */}
+        <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" aria-hidden="true" />
         <input
           type="email"
           name="email"

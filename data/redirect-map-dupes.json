@@ -1,0 +1,458 @@
+[
+  {
+    "from": "/recipe/dami-yarmeh-bulgur-pilaf",
+    "to": "/recipe/dami-yarmeh-yarma-pilaf"
+  },
+  {
+    "from": "/recipe/omelet-e-bademjan-persian-eggplant-omelette",
+    "to": "/recipe/omelet-e-bademjan"
+  },
+  {
+    "from": "/recipe/persian-saffron-ostrich-schnitzel",
+    "to": "/recipe/saffron-ostrich-schnitzel"
+  },
+  {
+    "from": "/recipe/polow-loobia-ghermez",
+    "to": "/recipe/polow-e-loobia-ghermez"
+  },
+  {
+    "from": "/recipe/polow-e-loobia-ghermez-red-bean-rice",
+    "to": "/recipe/polow-e-loobia-ghermez"
+  },
+  {
+    "from": "/recipe/makaroni-sosiso-persian-style-sausage-black-eyed-pea-pasta",
+    "to": "/recipe/makaroni-sosiso-black-eyed-pea"
+  },
+  {
+    "from": "/recipe/khoresht-bademjan-persian-eggplant-lamb-stew",
+    "to": "/recipe/khoresht-bademjan-eggplant-lamb-stew"
+  },
+  {
+    "from": "/recipe/classic-persian-zucchini-kuku",
+    "to": "/recipe/persian-zucchini-kuku"
+  },
+  {
+    "from": "/recipe/halzooni-kabab-persian-spiral-bakhtiari-kebab",
+    "to": "/recipe/halzooni-kabab-spiral-bakhtiari-kebab"
+  },
+  {
+    "from": "/recipe/khoresh-bamieh-classic-persian-okra-and-lamb-stew",
+    "to": "/recipe/khoresh-bamieh-lamb-okra-stew"
+  },
+  {
+    "from": "/recipe/kukuye-khanom-jaan",
+    "to": "/recipe/kuku-ye-khanom-jaan"
+  },
+  {
+    "from": "/recipe/ardour-panir-persian-herbed-cheese-truffles",
+    "to": "/recipe/ardour-panir-herbed-cheese-truffles"
+  },
+  {
+    "from": "/recipe/paye-broccoli-cream-broccoli-almond-pie",
+    "to": "/recipe/paye-broccoli-almond-pie"
+  },
+  {
+    "from": "/recipe/dolmeh-kebab-persian-stuffed-cabbage-rolls",
+    "to": "/recipe/dolmeh-kebab-stuffed-cabbage-rolls"
+  },
+  {
+    "from": "/recipe/dolmeh-kebab-cabbage-rolls",
+    "to": "/recipe/dolmeh-kebab-stuffed-cabbage-rolls"
+  },
+  {
+    "from": "/recipe/kotlet-sosis-persian-sausage-stuffed-potato-croquettes",
+    "to": "/recipe/kotlet-sosis-stuffed-potato-croquettes"
+  },
+  {
+    "from": "/recipe/kabab-koobideh-morgh",
+    "to": "/recipe/kabab-koobideh-morgh-ground-chicken-kebabs"
+  },
+  {
+    "from": "/recipe/persian-lentil-broccoli-kuku",
+    "to": "/recipe/lentil-broccoli-kuku-caramelized-onions"
+  },
+  {
+    "from": "/recipe/kuku-rangi-persian-vegetable-cheese-frittata",
+    "to": "/recipe/kuku-rangi-vegetable-cheese-frittata"
+  },
+  {
+    "from": "/recipe/chelow-e-sadeh-persian-steamed-rice",
+    "to": "/recipe/chelow-e-sadeh-golden-persian-steamed-rice"
+  },
+  {
+    "from": "/recipe/persian-corn-kuku",
+    "to": "/recipe/kuku-ye-zorrat-persian-corn-frittata"
+  },
+  {
+    "from": "/recipe/shorbat-adas-lentil-soup-with-meat",
+    "to": "/recipe/shorbat-adas-meat-lentil-soup"
+  },
+  {
+    "from": "/recipe/dolmeh-barg-e-mo-chicken",
+    "to": "/recipe/persian-chicken-stuffed-grape-leaves"
+  },
+  {
+    "from": "/recipe/persian-stuffed-grape-leaves-with-chicken",
+    "to": "/recipe/persian-chicken-stuffed-grape-leaves"
+  },
+  {
+    "from": "/recipe/khoresht-tone-mahi-tuna-potato-stew",
+    "to": "/recipe/khoresht-e-tone-mahi-tuna-potato-stew"
+  },
+  {
+    "from": "/recipe/khoresht-e-tuna-and-potato-stew",
+    "to": "/recipe/khoresht-e-tone-mahi-tuna-potato-stew"
+  },
+  {
+    "from": "/recipe/persian-noodles-soy-peppers",
+    "to": "/recipe/noodle-soy-pepper-persian-style"
+  },
+  {
+    "from": "/recipe/persian-noodles-with-soy-and-peppers",
+    "to": "/recipe/noodle-soy-pepper-persian-style"
+  },
+  {
+    "from": "/recipe/rolet-esfenaj-panir-spinach-cheese-roll",
+    "to": "/recipe/rolet-esfenaj-va-panir-spinach-cheese-roll"
+  },
+  {
+    "from": "/recipe/persian-creamy-corn-orange-salad",
+    "to": "/recipe/salad-e-zorrat-corn-orange-salad"
+  },
+  {
+    "from": "/recipe/persian-peanut-glazed-crispy-chicken-wings",
+    "to": "/recipe/persian-peanut-glazed-chicken-wings"
+  },
+  {
+    "from": "/recipe/polow-gharch-morgh-persian-mushroom-chicken-pilaf",
+    "to": "/recipe/polow-e-gharch-va-morgh"
+  },
+  {
+    "from": "/recipe/dolma-mahshi-macaroni-stuffed-vine-leaves",
+    "to": "/recipe/dolma-mahshi-macaroni-vine-leaves"
+  },
+  {
+    "from": "/recipe/kabab-shotormorgh-ostrich-kebabs-tomato-olive-salsa",
+    "to": "/recipe/kabab-e-shotormorgh-ostrich-kebabs-tomato-olive-salsa"
+  },
+  {
+    "from": "/recipe/khoresh-gheymeh-ground-beef-split-pea-stew",
+    "to": "/recipe/khoresh-gheymeh-ground-beef-stew"
+  },
+  {
+    "from": "/recipe/dolmeh-ye-felfel-e-giahi-stuffed-peppers",
+    "to": "/recipe/dolmeh-ye-felfel-vegetarian-stuffed-peppers"
+  },
+  {
+    "from": "/recipe/dolmeh-vegetarian-stuffed-peppers",
+    "to": "/recipe/dolmeh-ye-felfel-vegetarian-stuffed-peppers"
+  },
+  {
+    "from": "/recipe/kabab-e-gharch-crispy-persian-mushroom-kebabs",
+    "to": "/recipe/kabab-e-gharch-crispy-mushroom-kebabs"
+  },
+  {
+    "from": "/recipe/noon-e-khorma-date-cheese-flatbread",
+    "to": "/recipe/noon-e-khorma-style-date-cheese-flatbread"
+  },
+  {
+    "from": "/recipe/chelow-saffron-tahdig-persian-steamed-rice",
+    "to": "/recipe/chelow-saffron-tahdig"
+  },
+  {
+    "from": "/recipe/fileh-mahi-kababi-lemon-basil-fish-fillet",
+    "to": "/recipe/fileh-mahi-kababi-lemon-basil-fish"
+  },
+  {
+    "from": "/recipe/koofteh-ye-sooya-tomato-broth",
+    "to": "/recipe/koofteh-ye-sooya-soy-vegetable-koofteh"
+  },
+  {
+    "from": "/recipe/kukuye-loobia-sabz",
+    "to": "/recipe/kuku-ye-loobia-sabz-frittata"
+  },
+  {
+    "from": "/recipe/felfel-polo-ba-tokhm-e-morgh",
+    "to": "/recipe/felfel-polo-fried-eggs"
+  },
+  {
+    "from": "/recipe/tahchin-e-goosht-saffron-rice-cake",
+    "to": "/recipe/tahchin-e-goosht-saffron-rice-cake-lamb"
+  },
+  {
+    "from": "/recipe/dolmeh-kuku-sabzi-platter",
+    "to": "/recipe/persian-dolmeh-kuku-sabzi-platter"
+  },
+  {
+    "from": "/recipe/kabuli-pilaf-afghan-meat-chickpea-rice",
+    "to": "/recipe/kabuli-pilaf-meat-chickpea-rice"
+  },
+  {
+    "from": "/recipe/kabab-e-chenjeh-saffron-yogurt-shish-kebab",
+    "to": "/recipe/persian-saffron-yogurt-shish-kebab"
+  },
+  {
+    "from": "/recipe/saffron-yogurt-shish-kebab-chenjeh",
+    "to": "/recipe/persian-saffron-yogurt-shish-kebab"
+  },
+  {
+    "from": "/recipe/keshmesh-polow-persian-raisin-rice-lamb",
+    "to": "/recipe/keshmesh-polow-lamb-raisin-rice"
+  },
+  {
+    "from": "/recipe/keshmesh-polow-raisin-rice-lamb",
+    "to": "/recipe/keshmesh-polow-lamb-raisin-rice"
+  },
+  {
+    "from": "/recipe/khorak-e-chips-o-panir-bake",
+    "to": "/recipe/khorak-e-chips-o-panir"
+  },
+  {
+    "from": "/recipe/persian-pizza-chips-bake",
+    "to": "/recipe/khorak-e-chips-o-panir"
+  },
+  {
+    "from": "/recipe/soupe-zorrat-persian-sweet-corn-soup",
+    "to": "/recipe/soup-e-zorrat-persian-sweet-corn-soup"
+  },
+  {
+    "from": "/recipe/persian-sweet-corn-soup-e-zorrat",
+    "to": "/recipe/soup-e-zorrat-persian-sweet-corn-soup"
+  },
+  {
+    "from": "/recipe/bolgar-kabab-rolled-saffron-fillets",
+    "to": "/recipe/bolgar-kabab-saffron-rolled-fillets"
+  },
+  {
+    "from": "/recipe/khoresht-morgh-o-bademjan",
+    "to": "/recipe/khoresht-morgh-bademjan-sour-grapes"
+  },
+  {
+    "from": "/recipe/khoresht-e-gharch-chicken-mushroom-stew",
+    "to": "/recipe/khoresht-e-gharch-mushroom-chicken-stew"
+  },
+  {
+    "from": "/recipe/khoreshte-meygoo-persian-shrimp-stew-with-crispy-potatoes",
+    "to": "/recipe/khoresht-e-meygoo-crispy-potatoes"
+  },
+  {
+    "from": "/recipe/kataf-konjed-dar-crispy-sesame-crusted-chicken-wings",
+    "to": "/recipe/kataf-konjed-dar-sesame-crusted-chicken-wings"
+  },
+  {
+    "from": "/recipe/khoresh-gheymeh-persian-split-pea-stew",
+    "to": "/recipe/khoresh-gheymeh-split-pea-lamb-stew"
+  },
+  {
+    "from": "/recipe/estek-booghalamoon-lemon-garlic-turkey-steaks",
+    "to": "/recipe/estek-booghalamoon-turkey-steaks"
+  },
+  {
+    "from": "/recipe/khoresht-karafs-persian-celery-saffron-stew",
+    "to": "/recipe/khoresht-karafs-celery-saffron-stew"
+  },
+  {
+    "from": "/recipe/smoky-eggplant-muttabal-with-kashk",
+    "to": "/recipe/smoky-muttabal-eggplant-kashk"
+  },
+  {
+    "from": "/recipe/sib-zamini-ba-siah-daneh-buttered-potatoes",
+    "to": "/recipe/sib-zamini-ba-siah-daneh"
+  },
+  {
+    "from": "/recipe/khorak-nanaa-va-jafari-persian-mint-parsley-meatball-stew",
+    "to": "/recipe/khorak-nanaa-va-jafari-meatball-stew"
+  },
+  {
+    "from": "/recipe/polo-portugali-persian-portuguese-style-rice",
+    "to": "/recipe/polo-portugali-persian-portuguese-rice"
+  },
+  {
+    "from": "/recipe/khoresh-karafs-miniature-celery-herb-stew",
+    "to": "/recipe/khoresh-karafs-miniature-persian-celery-herb-stew"
+  },
+  {
+    "from": "/recipe/kaalbaas-morgh-persian-chicken-mortadella",
+    "to": "/recipe/kaalbaas-morgh-chicken-mortadella"
+  },
+  {
+    "from": "/recipe/astaray-i-tareh-caspian-herb-and-feta-flatbread",
+    "to": "/recipe/astarayi-tareh-herb-feta-flatbread"
+  },
+  {
+    "from": "/recipe/marinit-gharch-persian-style-marinated-mushrooms",
+    "to": "/recipe/marinit-gharch-persian-marinated-mushrooms"
+  },
+  {
+    "from": "/recipe/manoushe-style-sausage-egg-flatbread",
+    "to": "/recipe/manoushe-style-sausage-egg-flatbread-pizza"
+  },
+  {
+    "from": "/recipe/khoresht-e-meygoo-persian-shrimp-stew",
+    "to": "/recipe/khoresht-e-meygoo-shrimp-stew"
+  },
+  {
+    "from": "/recipe/kuku-ye-gojeh-farangi-tomato-frittata",
+    "to": "/recipe/persian-tomato-kuku"
+  },
+  {
+    "from": "/recipe/authentic-kabab-koobideh-lamb-skewers",
+    "to": "/recipe/kabab-koobideh-minced-lamb-skewers"
+  },
+  {
+    "from": "/recipe/kabab-barg-lamb-tenderloin-skewers",
+    "to": "/recipe/persian-kabab-barg-lamb-tenderloin-skewers"
+  },
+  {
+    "from": "/recipe/kabab-e-kabk-e-dorosteh-whole-quail-kebab",
+    "to": "/recipe/saffron-marinated-whole-quail-kebab"
+  },
+  {
+    "from": "/recipe/classic-jujeh-kebab-lemon-spice",
+    "to": "/recipe/classic-persian-jujeh-kebab-lemon-spices"
+  },
+  {
+    "from": "/recipe/morgh-zoghali-persian-smoky-herb-infused-chicken",
+    "to": "/recipe/morgh-zoghali-smoky-herb-chicken"
+  },
+  {
+    "from": "/recipe/kufteh-sabzi-shiraz-herb-meatballs",
+    "to": "/recipe/kufteh-sabzi-persian-herb-meatballs"
+  },
+  {
+    "from": "/recipe/kuku-ye-morgh-chicken-herb-frittata",
+    "to": "/recipe/kuku-ye-morgh-persian-chicken-kuku"
+  },
+  {
+    "from": "/recipe/kuku-ye-morgh-persian-chicken-frittata",
+    "to": "/recipe/kuku-ye-morgh-persian-chicken-kuku"
+  },
+  {
+    "from": "/recipe/potage-morgh-broccoli",
+    "to": "/recipe/potage-chicken-broccoli"
+  },
+  {
+    "from": "/recipe/authentic-russian-borscht-beef-beet-soup",
+    "to": "/recipe/russian-borscht-beet-beef-soup"
+  },
+  {
+    "from": "/recipe/authentic-russian-borscht-beet-beef-soup",
+    "to": "/recipe/russian-borscht-beet-beef-soup"
+  },
+  {
+    "from": "/recipe/fatayer-sabanekh-spinach-hand-pies-sumac",
+    "to": "/recipe/fatayer-sabanekh-spinach-hand-pies"
+  },
+  {
+    "from": "/recipe/koofteh-rusi-persian-potato-herb-kofta",
+    "to": "/recipe/koofteh-rusi-potato-herb-kofta"
+  },
+  {
+    "from": "/recipe/tahchin-e-zereshk-va-gerdoo",
+    "to": "/recipe/tahchin-zereshk-walnut-lamb"
+  },
+  {
+    "from": "/recipe/khorak-morgh-mushroom-saute",
+    "to": "/recipe/khorak-morgh-va-gharch"
+  },
+  {
+    "from": "/recipe/khorak-kadu-halvai-pumpkin-shell-pasta-stew",
+    "to": "/recipe/khorak-kadu-halvai-creamy-pumpkin-shell-pasta-stew"
+  },
+  {
+    "from": "/recipe/khoresht-karafs-miniature-celery-herb-stew",
+    "to": "/recipe/khoresht-karafs-miniature-persian-celery-stew"
+  },
+  {
+    "from": "/recipe/dolmeh-bademjan-baghchei-eggplant-pouches",
+    "to": "/recipe/dolmeh-bademjan-baqchehi-eggplant-pouches"
+  },
+  {
+    "from": "/recipe/dolmeh-bademjan-baghchei",
+    "to": "/recipe/dolmeh-bademjan-baqchehi-eggplant-pouches"
+  },
+  {
+    "from": "/recipe/kuku-jowaneh-mash-frittata",
+    "to": "/recipe/kuku-jowaneh-mash"
+  },
+  {
+    "from": "/recipe/khoresh-goosht-ba-sabzijat-stew",
+    "to": "/recipe/khoresh-goosht-ba-sabzijat"
+  },
+  {
+    "from": "/recipe/pataj-e-adas-persian-lentil-veloute",
+    "to": "/recipe/pataj-e-adas-silky-lentil-veloute"
+  },
+  {
+    "from": "/recipe/khoresht-e-rangarang-colorful-vegetable-meat-stew",
+    "to": "/recipe/khoresht-e-rangarang-stew"
+  },
+  {
+    "from": "/recipe/khoresht-e-rangarng-vegetable-meat-stew",
+    "to": "/recipe/khoresht-e-rangarang-stew"
+  },
+  {
+    "from": "/recipe/kabab-tabei-koobideh-platter-saffron-rice",
+    "to": "/recipe/kabab-tabei-koobideh-saffron-rice-platter"
+  },
+  {
+    "from": "/recipe/kookoo-ye-piaz-va-sib-zamini-skillet-cakes",
+    "to": "/recipe/kookoo-piaz-sib-zamini-skillet-cakes"
+  },
+  {
+    "from": "/recipe/kookoo-ye-piaz-sib-zamini-skillet-cakes",
+    "to": "/recipe/kookoo-piaz-sib-zamini-skillet-cakes"
+  },
+  {
+    "from": "/recipe/tahchin-sabzijat-corn-crust-bake",
+    "to": "/recipe/tahchin-e-sabzijat-corn-crust-vegetable-bake"
+  },
+  {
+    "from": "/recipe/kookoo-whitefish-caviar-kuku",
+    "to": "/recipe/kookoo-khaviar-mahi-sefid"
+  },
+  {
+    "from": "/recipe/adas-polo-makhsoos-special-lentil-rice",
+    "to": "/recipe/adas-polo-makhsoos-lentil-rice"
+  },
+  {
+    "from": "/recipe/khoresht-tone-mahi-stew",
+    "to": "/recipe/persian-tuna-potato-stew-khoresht-tone-mahi"
+  },
+  {
+    "from": "/recipe/khoresht-e-tone-mahi-stew",
+    "to": "/recipe/persian-tuna-potato-stew-khoresht-tone-mahi"
+  },
+  {
+    "from": "/recipe/persian-moutabal-eggplant-dip-with-kashk",
+    "to": "/recipe/moutabal-e-bademjan-with-kashk"
+  },
+  {
+    "from": "/recipe/saardi-polo-persian-carrot-raisin-rice",
+    "to": "/recipe/saardi-polo-carrot-raisin-rice"
+  },
+  {
+    "from": "/recipe/saardi-polo-persian-spiced-carrot-and-raisin-rice",
+    "to": "/recipe/saardi-polo-carrot-raisin-rice"
+  },
+  {
+    "from": "/recipe/persian-potato-puree-pure-e-sib-zamini",
+    "to": "/recipe/puree-sib-zamini-persian-potato-puree"
+  },
+  {
+    "from": "/recipe/classic-chicken-kyiv-kotleta-po-kyivsky",
+    "to": "/recipe/kotleta-po-kyivsky-classic-chicken-kyiv"
+  },
+  {
+    "from": "/recipe/tahchin-tahdig-saffron-yogurt-crust",
+    "to": "/recipe/tahchin-tahdig-saffron-crust"
+  },
+  {
+    "from": "/recipe/tahchin-tahdig-saffron-yogurt-rice-crust",
+    "to": "/recipe/tahchin-tahdig-saffron-crust"
+  },
+  {
+    "from": "/recipe/kashmish-polow-persian-raisin-rice-lamb",
+    "to": "/recipe/kashmish-polow-raisin-rice-lamb"
+  }
+]

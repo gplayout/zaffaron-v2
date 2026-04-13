@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import dupeRedirects from './data/redirect-map-dupes.json' with { type: 'json' };
 
 const securityHeaders = [
   { key: 'X-Frame-Options', value: 'DENY' },
@@ -80,6 +81,12 @@ const nextConfig: NextConfig = {
         destination: '/recipe/luqmeh-goushti-persian-meat-morsels',
         permanent: true,
       },
+      // Auto-generated duplicate redirects
+      ...dupeRedirects.map((r: { from: string; to: string }) => ({
+        source: r.from,
+        destination: r.to,
+        permanent: true as const,
+      })),
     ];
   },
 };

@@ -42,7 +42,7 @@ export default async function SeasonalSpotlight() {
     .eq("published", true)
     .limit(4);
 
-  if (!recipes || recipes.length === 0) return null;
+  if (!recipes || recipes.length < 2) return null; // Need at least 2 recipes for a good visual grid
 
   return (
     <section className="my-12 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 p-6 md:p-8 border border-amber-200">

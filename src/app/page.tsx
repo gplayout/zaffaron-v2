@@ -75,7 +75,8 @@ export default async function Home() {
 
   // Step 2: Fetch cuisine showcases, excluding editor's picks
   const picksIds = popularItems.map(r => r.id);
-  const featuredByCuisine = await getFeaturedByCuisine(cuisineSlugs, 3, picksIds);
+  // Fetch 6 per cuisine to have enough after excluding editor's picks (which may overlap)
+  const featuredByCuisine = await getFeaturedByCuisine(cuisineSlugs, 6, picksIds);
 
   // Step 3: Fetch latest recipes, excluding both picks and cuisine showcases
   const showcaseIds = Object.values(featuredByCuisine).flat().map(r => r.id);
@@ -158,8 +159,9 @@ export default async function Home() {
 
       {/* Cuisine Showcases */}
       {activeCuisines.map((cuisine) => {
-        const recipes = featuredByCuisine[cuisine.slug] || [];
-        if (recipes.length === 0) return null;
+        const allRecipes = featuredByCuisine[cuisine.slug] || [];
+        const recipes = allRecipes.slice(0, 3); // Show max 3, but we fetched 6 to ensure enough after exclusions
+        if (recipes.length < 2) return null; // Hide section if fewer than 2 recipes (avoids lonely cards in grid)
         return (
           <section key={cuisine.slug} className="mb-12" aria-labelledby={`cuisine-${cuisine.slug}`}>
             <div className="mb-4 flex items-center justify-between">

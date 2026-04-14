@@ -73,7 +73,8 @@ export async function getPopularRecipes(limit: number): Promise<RecipeSummary[]>
 
 /**
  * Get featured recipes per cuisine (for homepage showcase)
- * Single query + group in memory (fixes N+1)
+ * Queries each cuisine separately to guarantee perCuisine results regardless of data distribution.
+ * 8 parallel queries is fine for SSG with 60s revalidation.
  */
 export async function getFeaturedByCuisine(
   cuisineSlugs: string[],
@@ -82,35 +83,31 @@ export async function getFeaturedByCuisine(
 ): Promise<Record<string, RecipeSummary[]>> {
   if (cuisineSlugs.length === 0) return {};
 
-  // Single query: fetch top recipes across all requested cuisines
-  // Over-fetch to ensure we get enough per cuisine after grouping + exclusions
-  const { data, error } = await supabaseServer
-    .from("recipes_v2")
-    .select(CARD_FIELDS)
-    .eq("published", true)
-    .in("cuisine_slug", cuisineSlugs)
-    .order("published_at", { ascending: false })
-    .limit(cuisineSlugs.length * perCuisine * 3);
-
-  if (error) {
-    console.error("Failed to fetch featured recipes:", error);
-    return {};
-  }
-
   const excludeSet = new Set(excludeIds);
 
-  // Group by cuisine_slug and take top perCuisine from each, skipping excluded
-  const result: Record<string, RecipeSummary[]> = {};
-  for (const slug of cuisineSlugs) {
-    result[slug] = [];
-  }
-  for (const row of (data || []) as RecipeSummary[]) {
-    const slug = row.cuisine_slug;
-    if (slug && result[slug] && result[slug].length < perCuisine && !excludeSet.has(row.id)) {
-      result[slug].push(row);
-    }
-  }
-  return result;
+  // Parallel query per cuisine — guarantees enough results for each
+  const entries = await Promise.all(
+    cuisineSlugs.map(async (slug) => {
+      // Over-fetch to compensate for excluded items
+      const { data, error } = await supabaseServer
+        .from("recipes_v2")
+        .select(CARD_FIELDS)
+        .eq("published", true)
+        .eq("cuisine_slug", slug)
+        .order("updated_at", { ascending: false })
+        .limit(perCuisine + excludeIds.length + 3);
+
+      if (error || !data) return [slug, []] as const;
+
+      const filtered = (data as RecipeSummary[])
+        .filter((r) => !excludeSet.has(r.id))
+        .slice(0, perCuisine);
+
+      return [slug, filtered] as const;
+    })
+  );
+
+  return Object.fromEntries(entries);
 }
 
 /**

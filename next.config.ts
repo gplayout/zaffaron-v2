@@ -20,6 +20,11 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  experimental: {
+    sri: {
+      algorithm: 'sha256',
+    },
+  },
   images: {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [320, 480, 640, 750, 828, 1080, 1200, 1920],

@@ -33,10 +33,13 @@ export async function middleware(request: NextRequest) {
 
   // 2) Generate CSP nonce for this request
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
+  const isDev = process.env.NODE_ENV === 'development';
   const csp = [
     "default-src 'self'",
-    `script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com`,  // unsafe-inline required: Next.js SSG injects inline scripts without nonce on Vercel
-    // style-src still needs unsafe-inline for Next.js/Tailwind inline styles
+    // SRI (experimental) provides hash-based integrity for SSG scripts — no unsafe-inline needed!
+    // unsafe-eval only in dev for React debugging
+    `script-src 'self' https://va.vercel-scripts.com${isDev ? " 'unsafe-eval'" : ''}`,
+    // style-src: unsafe-inline still needed for Tailwind/Next.js inline styles
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
     `img-src 'self' data: https://${SUPABASE_HOST}`,

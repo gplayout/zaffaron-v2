@@ -1,16 +1,10 @@
 {
-  "tahchin-e-goosht-saffron-rice-cake-lamb": "tahchin-e-goosht-saffron-rice-cake",
-  "khoresht-e-tone-mahi-tuna-potato-stew": "khoresht-tone-mahi-tuna-potato-stew",
   "khoresht-e-gharch-chicken-mushroom-stew": "khoresht-e-gharch-mushroom-chicken-stew",
   "soup-e-jo-persian-creamy-barley-soup": "soup-e-jo-creamy-persian-barley-soup",
-  "kabab-e-shotormorgh-ostrich-kebabs-tomato-olive-salsa": "kabab-shotormorgh-ostrich-kebabs-tomato-olive-salsa",
   "kabab-vijeh-persian-royal-mixed-grill": "kabab-vijeh-royal-persian-mixed-grill",
   "kabab-tabei-koobideh-platter-golden-saffron-rice": "kabab-tabei-koobideh-saffron-rice-platter",
   "kabab-tabei-koobideh-platter-saffron-rice": "kabab-tabei-koobideh-saffron-rice-platter",
   "kabab-e-gharch-crispy-persian-mushroom-kebabs": "kabab-e-gharch-crispy-mushroom-kebabs",
-  "khorak-kadu-halvai-creamy-pumpkin-shell-pasta-stew": "khorak-kadu-halvai-pumpkin-shell-pasta-stew",
-  "khoresh-karafs-miniature-persian-celery-herb-stew": "khoresh-karafs-miniature-celery-herb-stew",
-  "rolet-esfenaj-va-panir-spinach-cheese-roll": "rolet-esfenaj-panir-spinach-cheese-roll",
   "authentic-russian-borscht-beet-beef-soup": "authentic-russian-borscht-beef-beet-soup",
   "adas-polo-makhsoos-special-persian-lentil-rice": "adas-polo-makhsoos-special-lentil-rice",
   "kookoo-ye-piaz-sib-zamini-skillet-cakes": "kookoo-piaz-sib-zamini-skillet-cakes",
@@ -19,17 +13,14 @@
   "sir-torshi-aged-garlic-pickle-gilan": "sir-torshi-gilan-aged-garlic-pickle",
   "keshmesh-polow-raisin-rice-lamb": "keshmesh-polow-lamb-raisin-rice",
   "puree-kam-churi-chilled-persian-potato-egg-puree": "puree-kam-churi-chilled-potato-egg-puree",
-  "noon-e-khorma-style-date-cheese-flatbread": "noon-e-khorma-date-cheese-flatbread",
   "bolgar-kabab-rolled-saffron-fillets": "bolgar-kabab-saffron-rolled-fillets",
   "tahchin-tahdig-saffron-yogurt-crust": "tahchin-tahdig-saffron-crust",
-  "manoushe-style-sausage-egg-flatbread-pizza": "manoushe-style-sausage-egg-flatbread",
   "kuku-ye-morgh-persian-chicken-frittata": "kuku-ye-morgh-persian-chicken-kuku",
   "fatayer-sabanekh-spinach-hand-pies-sumac": "fatayer-sabanekh-spinach-hand-pies",
   "dolma-mahshi-macaroni-stuffed-vine-leaves": "dolma-mahshi-macaroni-vine-leaves",
   "kashmish-polow-persian-raisin-rice-lamb": "kashmish-polow-raisin-rice-lamb",
   "adas-polo-makhsoos-special-lentil-rice": "adas-polo-makhsoos-lentil-rice",
   "kabuli-pilaf-afghan-meat-chickpea-rice": "kabuli-pilaf-meat-chickpea-rice",
-  "persian-dolmeh-kuku-sabzi-platter": "dolmeh-kuku-sabzi-platter",
   "kuku-rangi-persian-vegetable-cheese-frittata": "kuku-rangi-vegetable-cheese-frittata",
   "paye-broccoli-cream-broccoli-almond-pie": "paye-broccoli-almond-pie",
   "khoresht-e-tone-mahi-stew": "khoresht-tone-mahi-stew",
@@ -43,85 +34,42 @@
   "halzooni-kabab-persian-spiral-bakhtiari-kebab": "halzooni-kabab-spiral-bakhtiari-kebab",
   "shorbat-adas-lentil-soup-with-meat": "shorbat-adas-meat-lentil-soup",
   "sabzi-khordan-mezze-herbed-feta-eggs": "sabzi-khordan-herbed-feta-eggs",
-  "soup-e-zorrat-persian-sweet-corn-soup": "persian-sweet-corn-soup-e-zorrat",
   "persian-peanut-glazed-crispy-chicken-wings": "persian-peanut-glazed-chicken-wings",
   "khoresht-bademjan-persian-eggplant-lamb-stew": "khoresht-bademjan-eggplant-lamb-stew",
   "smoky-eggplant-muttabal-with-kashk": "smoky-muttabal-eggplant-kashk",
-  "persian-kabab-barg-lamb-tenderloin-skewers": "kabab-barg-lamb-tenderloin-skewers",
   "classic-chicken-kyiv-kotleta-po-kyivsky": "kotleta-po-kyivsky-classic-chicken-kyiv",
-  "chelow-e-sadeh-golden-persian-steamed-rice": "chelow-e-sadeh-persian-steamed-rice",
-  "dolmeh-kebab-stuffed-cabbage-rolls": "dolmeh-kebab-cabbage-rolls",
   "koofteh-rusi-persian-potato-herb-kofta": "koofteh-rusi-potato-herb-kofta",
   "khorak-e-chips-o-panir-bake": "khorak-e-chips-o-panir",
-
-  "russian-borscht-beet-beef-soup": "authentic-russian-borscht-beef-beet-soup",
   "authentic-russian-borscht": "authentic-russian-borscht-beef-beet-soup",
-  "authentic-russian-borscht-beet-beef-soup": "authentic-russian-borscht-beef-beet-soup",
-
   "tahchin-tahdig-saffron-yogurt-rice-crust": "tahchin-tahdig-saffron-crust",
-
   "kuku-ye-morgh-chicken-herb-frittata": "kuku-ye-morgh-persian-chicken-kuku",
-
-  "dolmeh-ye-felfel-vegetarian-stuffed-peppers": "dolmeh-ye-felfel-e-giahi-stuffed-peppers",
   "dolmeh-vegetarian-stuffed-peppers": "dolmeh-ye-felfel-e-giahi-stuffed-peppers",
-
-  "noodle-soy-pepper-persian-style": "persian-noodles-with-soy-and-peppers",
   "persian-noodles-soy-peppers": "persian-noodles-with-soy-and-peppers",
-
   "khoresht-e-rangarng-vegetable-meat-stew": "khoresht-e-rangarang-stew",
   "khoresht-e-rangarang-colorful-vegetable-meat-stew": "khoresht-e-rangarang-stew",
-
   "persian-stuffed-grape-leaves-with-chicken": "dolmeh-barg-e-mo-chicken",
-  "persian-chicken-stuffed-grape-leaves": "dolmeh-barg-e-mo-chicken",
-
   "khoresh-e-tuna-and-potato-stew": "khoresht-tone-mahi-tuna-potato-stew",
-
   "soupe-zorrat-persian-sweet-corn-soup": "soup-e-zorrat-persian-sweet-corn-soup",
-
-  "dolmeh-bademjan-baqchehi-eggplant-pouches": "dolmeh-bademjan-baghchei-eggplant-pouches",
   "dolmeh-bademjan-baghchei": "dolmeh-bademjan-baghchei-eggplant-pouches",
-
   "polow-loobia-ghermez": "polow-e-loobia-ghermez",
   "polow-e-loobia-ghermez-red-bean-rice": "polow-e-loobia-ghermez",
-
   "dolmeh-kebab-persian-stuffed-cabbage-rolls": "dolmeh-kebab-cabbage-rolls",
-
   "saffron-yogurt-shish-kebab-chenjeh": "kabab-e-chenjeh-saffron-yogurt-shish-kebab",
-  "persian-saffron-yogurt-shish-kebab": "kabab-e-chenjeh-saffron-yogurt-shish-kebab",
-
   "persian-beef-mushroom-pepper-skewers": "kabab-e-gharch-va-felfel",
-
   "chelow-saffron-tahdig-persian-steamed-rice": "chelow-saffron-tahdig",
-
   "kukuye-khanom-jaan": "kuku-ye-khanom-jaan",
-
-  "persian-tomato-kuku": "kuku-ye-gojeh-farangi-tomato-frittata",
-
   "authentic-kabab-koobideh-lamb-skewers": "kabab-koobideh-minced-lamb-skewers",
-
   "sir-torshi-aged-gilan-garlic-pickle": "sir-torshi-gilan-aged-garlic-pickle",
-
   "persian-fusion-veal-sprout-macaroni-stir-fry": "persian-veal-sprout-macaroni-stir-fry",
-
   "persian-saffron-yogurt-lamb-shishlik-kebabs": "persian-lamb-shishlik-saffron-yogurt-kebabs",
-
   "tahchin-morgh-o-bareh-saffron-rice-cake": "tahchin-morgh-bareh-saffron-rice-cake",
-
   "khoresht-e-bamieh-persian-okra-lamb-stew": "khoresht-bamieh-persian-okra-lamb-stew",
-
   "soup-piazcheh-oat-spring-onion": "soup-piazcheh-spring-onion-oat-soup",
-
   "dolmeh-kalam-barg-persian-stuffed-cabbage-rolls": "dolmeh-kalam-persian-stuffed-cabbage-rolls",
-
   "fatayer-sabanekh-spinach-sumac-pies": "fatayer-sabanekh-spinach-pies-sumac",
-
   "polow-topi-saffron-herb-rice-balls": "polow-topi-saffron-herb-stuffed-rice-balls",
-
   "dami-e-bademjan-one-pot-eggplant-rice": "dami-bademjan-one-pot-eggplant-rice",
-
   "rolat-morgh-va-goosht-roulade": "rolat-goosht-va-morgh-roulade",
-
   "gheimeh-piazaq-onion-almond-stew": "gheimeh-piazaq-almond-onion-stew",
-
   "sop-e-zhuleyn-persian-julienne-vegetable-soup": "sop-e-zhuleyn-julienne-vegetable-soup"
 }

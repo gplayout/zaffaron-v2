@@ -16,11 +16,14 @@ const SYNONYM_GROUPS: string[][] = [
   ["tahchin", "tachin", "tah chin"],
   ["biryani", "biriyani", "beriani"],
   ["chelow", "chelo", "chelou"],
+  // Meatballs
+  ["kofte", "kufte", "kofteh", "koofteh", "kofta", "koftah", "kufteh"],
   // Stews
-  ["khoresht", "khoresh", "khoreshe", "khorest"],
-  ["ghormeh", "gormeh", "qormeh"],
+  ["khoresht", "khoresh", "khoreshe", "khorest", "khoreshte"],
+  ["ghormeh", "gormeh", "qormeh", "ghorme", "qorme"],
+  ["fesenjan", "fesenjaan", "fesenjon", "fesenjoon"],
   // Soups
-  ["ash", "aash"],
+  ["ash", "aash", "ashe"],
   // Bread
   ["naan", "nan", "noon"],
   ["lavash", "lavosh", "lavas"],

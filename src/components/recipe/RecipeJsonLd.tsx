@@ -8,9 +8,14 @@ interface RecipeJsonLdProps {
 }
 
 export function RecipeJsonLd({ recipe, ratingValue, ratingCount }: RecipeJsonLdProps) {
-  const totalMinutes = recipe.prep_time_minutes + recipe.cook_time_minutes;
   const url = `https://zaffaron.com/recipe/${recipe.slug}`;
   const nutrition = recipe.nutrition_per_serving;
+
+  // Cap prep time for JSON-LD: Google expects "active hands-on time", not soaking/marinating.
+  // Recipes with 8-13h "prep" are really 20-45min active + overnight soak.
+  // Cap at 120 min (2 hours) — no recipe requires more active prep than that.
+  const activePrepMinutes = Math.min(recipe.prep_time_minutes, 120);
+  const totalMinutes = activePrepMinutes + recipe.cook_time_minutes;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -31,7 +36,7 @@ export function RecipeJsonLd({ recipe, ratingValue, ratingCount }: RecipeJsonLdP
           caption: recipe.image_alt || recipe.title,
         }
       : undefined,
-    prepTime: `PT${recipe.prep_time_minutes}M`,
+    prepTime: `PT${activePrepMinutes}M`,
     cookTime: `PT${recipe.cook_time_minutes}M`,
     totalTime: `PT${totalMinutes}M`,
     recipeYield: `${recipe.servings} servings`,

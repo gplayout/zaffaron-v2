@@ -53,6 +53,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: "weekly" as const,
   }));
 
+  // Fetch calendar events for sitemap
+  const { data: calendarEvents } = await supabaseServer
+    .from("calendar_events")
+    .select("slug")
+    .eq("published", true);
+
+  const calendarUrls = (calendarEvents || []).map((ev) => ({
+    url: `https://zaffaron.com/calendar/${ev.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+  }));
+
+  // Fetch blog posts for sitemap
+  const { data: blogPosts } = await supabaseServer
+    .from("blog_posts")
+    .select("slug, published_at")
+    .eq("published", true);
+
+  const blogUrls = (blogPosts || []).map((post) => ({
+    url: `https://zaffaron.com/blog/${post.slug}`,
+    lastModified: post.published_at || now,
+    changeFrequency: "monthly" as const,
+  }));
+
   return [
     { url: "https://zaffaron.com", lastModified: lastMod, changeFrequency: "daily" as const },
     { url: "https://zaffaron.com/recipes", lastModified: lastMod, changeFrequency: "weekly" as const },
@@ -61,6 +85,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: "https://zaffaron.com/editorial-policy", lastModified: now, changeFrequency: "monthly" as const },
     { url: "https://zaffaron.com/privacy", lastModified: now, changeFrequency: "monthly" as const },
     { url: "https://zaffaron.com/terms", lastModified: now, changeFrequency: "monthly" as const },
+    // Calendar
+    { url: "https://zaffaron.com/calendar", lastModified: now, changeFrequency: "weekly" as const },
+    ...calendarUrls,
+    // Blog
+    ...(blogUrls.length > 0 ? [{ url: "https://zaffaron.com/blog", lastModified: now, changeFrequency: "weekly" as const }] : []),
+    ...blogUrls,
     // Auth pages excluded from sitemap (no SEO value)
     ...cuisineUrls,
     ...categoryUrls,

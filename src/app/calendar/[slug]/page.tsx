@@ -34,10 +34,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!data) return { title: "Event Not Found" };
 
+  const pageTitle = `${data.name} — Food Traditions & Recipes`;
+  const pageDescription = data.cultural_context?.slice(0, 160) || `Discover the food traditions of ${data.name}.`;
+
   return {
-    title: `${data.name} — Food Traditions & Recipes | Zaffaron`,
-    description: data.cultural_context?.slice(0, 160) || `Discover the food traditions of ${data.name}.`,
+    title: pageTitle,
+    description: pageDescription,
     alternates: { canonical: `/calendar/${slug}` },
+    openGraph: {
+      title: `${pageTitle} | Zaffaron`,
+      description: pageDescription,
+      type: "article",
+      url: `https://zaffaron.com/calendar/${slug}`,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${pageTitle} | Zaffaron`,
+      description: pageDescription,
+    },
   };
 }
 
@@ -55,17 +69,46 @@ export default async function CalendarEventPage({ params }: PageProps) {
 
   const ev = event as CalendarEvent;
 
-  // Find related recipes by matching cuisine
-  const mainCuisine = ev.cuisines?.[0];
+  // Find related recipes: first try matching signature dish names, then fall back to cuisine
   let relatedRecipes: { slug: string; title: string; cuisine_slug: string }[] = [];
-  if (mainCuisine) {
-    const { data } = await supabaseServer
-      .from("recipes_v2")
-      .select("slug, title, cuisine_slug")
-      .eq("published", true)
-      .eq("cuisine_slug", mainCuisine.toLowerCase())
-      .limit(6);
-    relatedRecipes = data || [];
+  const dishNames = ev.signature_dishes?.map((d) => d.name) || [];
+  if (dishNames.length > 0) {
+    // Search for recipes whose title contains any signature dish name (case-insensitive)
+    for (const dish of dishNames.slice(0, 6)) {
+      if (relatedRecipes.length >= 6) break;
+      const { data } = await supabaseServer
+        .from("recipes_v2")
+        .select("slug, title, cuisine_slug")
+        .eq("published", true)
+        .ilike("title", `%${dish.replace(/[%_]/g, '')}%`)
+        .limit(2);
+      if (data) {
+        for (const r of data) {
+          if (!relatedRecipes.some((x) => x.slug === r.slug)) {
+            relatedRecipes.push(r);
+          }
+        }
+      }
+    }
+  }
+  // If fewer than 6, pad with cuisine-based matches
+  if (relatedRecipes.length < 6) {
+    const mainCuisine = ev.cuisines?.[0];
+    if (mainCuisine) {
+      const existingSlugs = new Set(relatedRecipes.map((r) => r.slug));
+      const { data } = await supabaseServer
+        .from("recipes_v2")
+        .select("slug, title, cuisine_slug")
+        .eq("published", true)
+        .eq("cuisine_slug", mainCuisine.toLowerCase())
+        .limit(6);
+      if (data) {
+        for (const r of data) {
+          if (relatedRecipes.length >= 6) break;
+          if (!existingSlugs.has(r.slug)) relatedRecipes.push(r);
+        }
+      }
+    }
   }
 
   return (
@@ -123,9 +166,28 @@ export default async function CalendarEventPage({ params }: PageProps) {
           <section>
             <h2 className="text-sm font-semibold uppercase tracking-wider text-stone-500 mb-2">Regions</h2>
             <div className="flex flex-wrap gap-1">
-              {ev.regions.map((r) => (
-                <span key={r} className="rounded-full bg-stone-100 px-2 py-0.5 text-sm text-stone-600">{r}</span>
-              ))}
+              {(() => {
+                // Rejoin regions that were incorrectly split on commas inside parentheses
+                const fixed: string[] = [];
+                let buffer = '';
+                for (const r of ev.regions) {
+                  if (buffer) {
+                    buffer += ', ' + r;
+                    if (r.includes(')')) {
+                      fixed.push(buffer);
+                      buffer = '';
+                    }
+                  } else if (r.includes('(') && !r.includes(')')) {
+                    buffer = r;
+                  } else {
+                    fixed.push(r);
+                  }
+                }
+                if (buffer) fixed.push(buffer);
+                return fixed.map((region) => (
+                  <span key={region} className="rounded-full bg-stone-100 px-2 py-0.5 text-sm text-stone-600">{region}</span>
+                ));
+              })()}
             </div>
           </section>
         )}

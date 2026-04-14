@@ -113,10 +113,10 @@ export function RecipeTips({ recipe }: RecipeTipsProps) {
           <h2 className="mb-3 text-lg font-bold text-red-800">⚠️ Common Mistakes</h2>
           <ul className="space-y-3">
             {mistakes.map((m: CommonMistake, i: number) => (
-              <li key={i} className="text-sm">
-                <p className="font-medium text-red-700">{m.mistake}</p>
-                <p className="text-red-600">Why: {m.why}</p>
-                <p className="text-emerald-700">Fix: {m.fix}</p>
+              <li key={i} className="text-sm space-y-1">
+                <p className="font-medium text-red-700">❌ {m.mistake}</p>
+                {m.why && <p className="text-red-600">💡 Why: {m.why}</p>}
+                {m.fix && <p className="text-emerald-700">✅ Fix: {m.fix}</p>}
               </li>
             ))}
           </ul>
@@ -158,14 +158,29 @@ export function RecipeTips({ recipe }: RecipeTipsProps) {
             <MapPin className="h-5 w-5 text-stone-400" /> Regional Variations
           </h2>
           <ul className="space-y-2">
-            {variations.map((v: RegionalVariation, i: number) => (
-              <li key={i} className="rounded-lg border border-stone-200 p-3 text-sm">
-                <span className="font-medium text-stone-800">{v.region}</span>
-                <span className="block mt-0.5 text-stone-600">
-                  {v.description || v.difference}
-                </span>
-              </li>
-            ))}
+            {variations.map((v: RegionalVariation | string, i: number) => {
+              // Handle both string arrays (legacy data) and object arrays
+              if (typeof v === "string") {
+                if (!v.trim()) return null;
+                return (
+                  <li key={i} className="rounded-lg border border-stone-200 p-3 text-sm text-stone-600">
+                    {v}
+                  </li>
+                );
+              }
+              const text = v.description || v.difference;
+              if (!v.region && !text) return null;
+              return (
+                <li key={i} className="rounded-lg border border-stone-200 p-3 text-sm">
+                  {v.region && <span className="font-medium text-stone-800">{v.region}</span>}
+                  {text && (
+                    <span className={v.region ? "block mt-0.5 text-stone-600" : "text-stone-600"}>
+                      {v.region ? text : text}
+                    </span>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </section>
       )}

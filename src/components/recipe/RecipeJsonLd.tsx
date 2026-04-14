@@ -1,5 +1,6 @@
 import type { Recipe, Ingredient, Instruction } from "@/types";
 import { safeJsonLd } from "@/lib/seo/safe-json-ld";
+import { humanize } from "@/lib/formatting";
 
 interface RecipeJsonLdProps {
   recipe: Recipe;
@@ -43,12 +44,12 @@ export function RecipeJsonLd({ recipe, ratingValue, ratingCount }: RecipeJsonLdP
     recipeCategory: recipe.category,
     recipeCuisine: recipe.cuisine,
     keywords: recipe.tags?.join(", ") || undefined,
-    ...(ratingCount && ratingCount > 0
+    ...(ratingCount && ratingCount > 0 && ratingValue && ratingValue > 0
       ? {
           aggregateRating: {
             "@type": "AggregateRating",
-            ratingValue: ratingValue ?? 0,
-            ratingCount: ratingCount,
+            ratingValue,
+            ratingCount,
           },
         }
       : {}),
@@ -74,16 +75,16 @@ export function RecipeJsonLd({ recipe, ratingValue, ratingCount }: RecipeJsonLdP
       url: "https://zaffaron.com",
       logo: { "@type": "ImageObject", url: "https://zaffaron.com/icon-512.png" },
     },
-    ...(recipe.dietary_info
-      ? {
-          suitableForDiet: [
-            ...(recipe.dietary_info.vegetarian ? ["https://schema.org/VegetarianDiet"] : []),
-            ...(recipe.dietary_info.vegan ? ["https://schema.org/VeganDiet"] : []),
-            ...(recipe.dietary_info.gluten_free ? ["https://schema.org/GlutenFreeDiet"] : []),
-            ...(recipe.dietary_info.dairy_free ? ["https://schema.org/DairyFreeDiet"] : []),
-          ].filter(Boolean),
-        }
-      : {}),
+    ...(() => {
+      if (!recipe.dietary_info) return {};
+      const diets = [
+        ...(recipe.dietary_info.vegetarian ? ["https://schema.org/VegetarianDiet"] : []),
+        ...(recipe.dietary_info.vegan ? ["https://schema.org/VeganDiet"] : []),
+        ...(recipe.dietary_info.gluten_free ? ["https://schema.org/GlutenFreeDiet"] : []),
+        ...(recipe.dietary_info.dairy_free ? ["https://schema.org/DairyFreeDiet"] : []),
+      ].filter(Boolean);
+      return diets.length > 0 ? { suitableForDiet: diets } : {};
+    })(),
     ...(nutrition
       ? {
           nutrition: {
@@ -116,30 +117,7 @@ export function RecipeJsonLd({ recipe, ratingValue, ratingCount }: RecipeJsonLdP
   );
 }
 
-const labelMap: Record<string, string> = {
-  persian: "Persian",
-  indian: "Indian",
-  "middle-eastern": "Middle Eastern",
-  stew: "Stews",
-  rice: "Rice Dishes",
-  kebab: "Kebabs",
-  appetizer: "Appetizers",
-  soup: "Soups",
-  dessert: "Desserts",
-  drink: "Drinks",
-  breakfast: "Breakfast",
-  main: "Main Courses",
-  salad: "Salads",
-  side: "Side Dishes",
-  pickle: "Pickles",
-  sweet: "Sweets",
-  bread: "Breads",
-};
-
-function capitalize(s: string) {
-  if (!s) return s;
-  return labelMap[s.toLowerCase()] || s.charAt(0).toUpperCase() + s.slice(1).replace(/-/g, " ");
-}
+// Use shared humanize() from formatting.ts — single source of truth for label mapping
 
 interface BreadcrumbJsonLdProps {
   recipe: Recipe;
@@ -154,14 +132,14 @@ export function BreadcrumbJsonLd({ recipe }: BreadcrumbJsonLdProps) {
       {
         "@type": "ListItem",
         position: 2,
-        name: capitalize(recipe.cuisine),
-        item: `https://zaffaron.com/cuisine/${recipe.cuisine_slug || recipe.cuisine.toLowerCase()}`,
+        name: humanize(recipe.cuisine),
+        item: `https://zaffaron.com/cuisine/${recipe.cuisine_slug || recipe.cuisine?.toLowerCase().replace(/\s+/g, '-')}`,
       },
       {
         "@type": "ListItem",
         position: 3,
-        name: capitalize(recipe.category),
-        item: `https://zaffaron.com/category/${recipe.category_slug || recipe.category.toLowerCase()}`,
+        name: humanize(recipe.category),
+        item: `https://zaffaron.com/category/${recipe.category_slug || recipe.category?.toLowerCase().replace(/\s+/g, '-')}`,
       },
       { "@type": "ListItem", position: 4, name: recipe.title },
     ],

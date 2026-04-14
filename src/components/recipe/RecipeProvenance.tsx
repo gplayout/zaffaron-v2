@@ -3,7 +3,7 @@ import { humanize } from "@/lib/formatting";
 interface RecipeProvenanceProps {
   cuisineSlug: string | null;
   culturalSignificance: string | null;
-  regionalVariations: Array<{ region: string; description?: string; difference?: string }> | null;
+  regionalVariations: Array<{ region: string; description?: string; difference?: string } | string> | null;
   author: string | null;
   publishedAt: string | null;
 }
@@ -63,12 +63,21 @@ export function RecipeProvenance({
         <div>
           <h3 className="text-sm font-semibold text-stone-700 mb-2">Regional Variations</h3>
           <div className="space-y-2">
-            {regionalVariations.map((v, i) => (
-              <div key={i} className="text-sm text-stone-600">
-                <span className="font-medium text-stone-700">{v.region}:</span>{" "}
-                {v.description || v.difference}
-              </div>
-            ))}
+            {regionalVariations.map((v, i) => {
+              // Handle both string arrays (legacy data) and object arrays
+              if (typeof v === "string") {
+                if (!(v as string).trim()) return null;
+                return <div key={i} className="text-sm text-stone-600">{v as string}</div>;
+              }
+              const text = v.description || v.difference;
+              if (!v.region && !text) return null;
+              return (
+                <div key={i} className="text-sm text-stone-600">
+                  {v.region && <span className="font-medium text-stone-700">{v.region}: </span>}
+                  {text}
+                </div>
+              );
+            })}
           </div>
         </div>
       )}

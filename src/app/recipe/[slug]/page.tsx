@@ -22,6 +22,7 @@ import {
 import type { Metadata } from "next";
 import { getRecipeFaq } from "@/lib/seo/recipe-faq";
 import { getRecipeVariations } from "@/lib/seo/recipe-variations";
+import { SITE_URL } from '@/lib/config';
 
 export const revalidate = 3600;
 
@@ -48,8 +49,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const recipe = await getRecipeBySlug(slug);
   if (!recipe) return { title: "Recipe not found" };
 
-  const url = `https://zaffaron.com/recipe/${recipe.slug}`;
-  const ogImage = recipe.image_url || "https://zaffaron.com/og-default.jpg";
+  const url = `${SITE_URL}/recipe/${recipe.slug}`;
+  const ogImage = recipe.image_url || `${SITE_URL}/og-default.jpg`;
   const seoTitle = recipe.seo_title || recipe.title;
   const seoDesc = recipe.seo_description || recipe.description?.substring(0, 160);
 
@@ -123,7 +124,7 @@ export default async function RecipePage({ params }: Props) {
 
         <ShareButtons
           title={recipe.title}
-          url={`https://zaffaron.com/recipe/${recipe.slug}`}
+          url={`${SITE_URL}/recipe/${recipe.slug}`}
         />
 
         <RecipeNutrition

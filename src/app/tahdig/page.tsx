@@ -4,6 +4,7 @@ import { useState, useRef, useCallback } from "react";
 import { Camera, Upload, Loader2, RotateCcw, Share2, Star } from "lucide-react";
 import { rateTahdig } from "./actions";
 import type { TahdigResult } from "./lib/scoring";
+import { SITE_URL } from '@/lib/config';
 
 type Phase = "upload" | "analyzing" | "result";
 
@@ -73,10 +74,10 @@ export default function TahdigPage() {
       : "";
     if (navigator.share) {
       try {
-        await navigator.share({ title: "Tahdig Rater", text, url: "https://zaffaron.com/tahdig" });
+        await navigator.share({ title: "Tahdig Rater", text, url: `${SITE_URL}/tahdig` });
       } catch {}
     } else {
-      await navigator.clipboard.writeText(text + "\nhttps://zaffaron.com/tahdig");
+      await navigator.clipboard.writeText(text + `\n${SITE_URL}/tahdig`);
       alert("Copied to clipboard! 📋");
     }
   };

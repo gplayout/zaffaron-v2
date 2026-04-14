@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { supabaseServer } from "@/lib/supabase-server";
+import { SITE_URL } from '@/lib/config';
 
 interface CalendarEvent {
   slug: string;
@@ -47,7 +48,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: `${pageTitle} | Zaffaron`,
       description: pageDescription,
       type: "article",
-      url: `https://zaffaron.com/calendar/${slug}`,
+      url: `${SITE_URL}/calendar/${slug}`,
     },
     twitter: {
       card: "summary_large_image",

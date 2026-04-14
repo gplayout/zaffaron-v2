@@ -6,6 +6,7 @@ import { getCuisine, getAllCuisineSlugs } from "@/lib/cuisines";
 import { safeJsonLd } from "@/lib/seo/safe-json-ld";
 import { humanize } from "@/lib/formatting";
 import type { Metadata } from "next";
+import { SITE_URL } from '@/lib/config';
 
 export const revalidate = 3600;
 export const dynamicParams = true;
@@ -33,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       // Avoid repeating the brand name here.
       title: `${humanize(slug)} Recipes`,
       description: `Browse our collection of authentic ${humanize(slug).toLowerCase()} recipes.`,
-      alternates: { canonical: `https://zaffaron.com/cuisine/${slug}` },
+      alternates: { canonical: `${SITE_URL}/cuisine/${slug}` },
     };
   }
 
@@ -42,11 +43,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // Avoid repeating the brand name here.
     title: `${cuisine.name} Recipes`,
     description: cuisine.description,
-    alternates: { canonical: `https://zaffaron.com/cuisine/${slug}` },
+    alternates: { canonical: `${SITE_URL}/cuisine/${slug}` },
     openGraph: {
       title: `${cuisine.name} Recipes — Zaffaron`,
       description: cuisine.description,
-      url: `https://zaffaron.com/cuisine/${slug}`,
+      url: `${SITE_URL}/cuisine/${slug}`,
     },
   };
 }
@@ -77,7 +78,7 @@ export default async function CuisinePage({ params, searchParams }: Props) {
     itemListElement: items.map((r, i) => ({
       '@type': 'ListItem',
       position: (page - 1) * PAGE_SIZE + i + 1,
-      url: `https://zaffaron.com/recipe/${r.slug}`,
+      url: `${SITE_URL}/recipe/${r.slug}`,
       name: r.title,
     })),
   } : null;

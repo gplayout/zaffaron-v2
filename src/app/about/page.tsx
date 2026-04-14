@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { ChefHat, Heart, Shield, Globe } from "lucide-react";
+import { SITE_URL } from '@/lib/config';
 
 export const metadata: Metadata = {
   title: "About",
   description: "Zaffaron brings you authentic, tested recipes from Persian, Turkish, Indian, Moroccan, Greek, and world cuisines. Every recipe verified.",
-  alternates: { canonical: "https://zaffaron.com/about" },
+  alternates: { canonical: `${SITE_URL}/about` },
 };
 
 export default function AboutPage() {

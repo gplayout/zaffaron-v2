@@ -1,3 +1,4 @@
+import { SITE_URL } from '@/lib/config';
 import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
@@ -20,6 +21,6 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: "ImagesiftBot", disallow: "/" },
       { userAgent: "cohere-ai", disallow: "/" },
     ],
-    sitemap: "https://zaffaron.com/sitemap.xml",
+    sitemap: `${SITE_URL}/sitemap.xml`,
   };
 }

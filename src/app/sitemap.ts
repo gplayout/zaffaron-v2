@@ -1,3 +1,4 @@
+import { SITE_URL } from '@/lib/config';
 import { supabaseServer } from "@/lib/supabase-server";
 import { getAllIngredientSlugs } from "@/lib/ingredients";
 import recipeRedirects from "@/lib/seo/recipe-redirects.json";
@@ -32,7 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const recipeUrls = (recipes || [])
     .filter((r) => !redirectedSlugs.has(r.slug))
     .map((r) => ({
-      url: `https://zaffaron.com/recipe/${r.slug}`,
+      url: `${SITE_URL}/recipe/${r.slug}`,
       lastModified: r.updated_at,
       changeFrequency: "weekly" as const,
     }));
@@ -42,13 +43,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const categories = [...new Set((recipes || []).map((r) => r.category_slug).filter(Boolean))];
 
   const cuisineUrls = cuisines.map((slug) => ({
-    url: `https://zaffaron.com/cuisine/${slug}`,
+    url: `${SITE_URL}/cuisine/${slug}`,
     lastModified: lastMod,
     changeFrequency: "weekly" as const,
   }));
 
   const categoryUrls = categories.map((slug) => ({
-    url: `https://zaffaron.com/category/${slug}`,
+    url: `${SITE_URL}/category/${slug}`,
     lastModified: lastMod,
     changeFrequency: "weekly" as const,
   }));
@@ -60,7 +61,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .eq("published", true);
 
   const calendarUrls = (calendarEvents || []).map((ev) => ({
-    url: `https://zaffaron.com/calendar/${ev.slug}`,
+    url: `${SITE_URL}/calendar/${ev.slug}`,
     lastModified: now,
     changeFrequency: "monthly" as const,
   }));
@@ -72,33 +73,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .eq("published", true);
 
   const blogUrls = (blogPosts || []).map((post) => ({
-    url: `https://zaffaron.com/blog/${post.slug}`,
+    url: `${SITE_URL}/blog/${post.slug}`,
     lastModified: post.published_at || now,
     changeFrequency: "monthly" as const,
   }));
 
   return [
-    { url: "https://zaffaron.com", lastModified: lastMod, changeFrequency: "daily" as const },
-    { url: "https://zaffaron.com/recipes", lastModified: lastMod, changeFrequency: "weekly" as const },
-    { url: "https://zaffaron.com/about", lastModified: now, changeFrequency: "monthly" as const },
-    { url: "https://zaffaron.com/contact", lastModified: now, changeFrequency: "monthly" as const },
-    { url: "https://zaffaron.com/editorial-policy", lastModified: now, changeFrequency: "monthly" as const },
-    { url: "https://zaffaron.com/privacy", lastModified: now, changeFrequency: "monthly" as const },
-    { url: "https://zaffaron.com/terms", lastModified: now, changeFrequency: "monthly" as const },
+    { url: SITE_URL, lastModified: lastMod, changeFrequency: "daily" as const },
+    { url: `${SITE_URL}/recipes`, lastModified: lastMod, changeFrequency: "weekly" as const },
+    { url: `${SITE_URL}/about`, lastModified: now, changeFrequency: "monthly" as const },
+    { url: `${SITE_URL}/contact`, lastModified: now, changeFrequency: "monthly" as const },
+    { url: `${SITE_URL}/editorial-policy`, lastModified: now, changeFrequency: "monthly" as const },
+    { url: `${SITE_URL}/privacy`, lastModified: now, changeFrequency: "monthly" as const },
+    { url: `${SITE_URL}/terms`, lastModified: now, changeFrequency: "monthly" as const },
     // Calendar
-    { url: "https://zaffaron.com/calendar", lastModified: now, changeFrequency: "weekly" as const },
+    { url: `${SITE_URL}/calendar`, lastModified: now, changeFrequency: "weekly" as const },
     ...calendarUrls,
     // Blog
-    ...(blogUrls.length > 0 ? [{ url: "https://zaffaron.com/blog", lastModified: now, changeFrequency: "weekly" as const }] : []),
+    ...(blogUrls.length > 0 ? [{ url: `${SITE_URL}/blog`, lastModified: now, changeFrequency: "weekly" as const }] : []),
     ...blogUrls,
     // Auth pages excluded from sitemap (no SEO value)
     ...cuisineUrls,
     ...categoryUrls,
     ...recipeUrls,
     // Ingredient encyclopedia
-    { url: "https://zaffaron.com/ingredients", lastModified: now, changeFrequency: "weekly" as const },
+    { url: `${SITE_URL}/ingredients`, lastModified: now, changeFrequency: "weekly" as const },
     ...getAllIngredientSlugs().map((slug) => ({
-      url: `https://zaffaron.com/ingredients/${slug}`,
+      url: `${SITE_URL}/ingredients/${slug}`,
       lastModified: now,
       changeFrequency: "monthly" as const,
     })),

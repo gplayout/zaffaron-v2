@@ -1,3 +1,4 @@
+import { SITE_URL } from '@/lib/config';
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Link from "next/link";
@@ -10,7 +11,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://zaffaron.com"),
+  metadataBase: new URL(SITE_URL),
   verification: {
     google: process.env.GOOGLE_SITE_VERIFICATION || "6ulA9oxsqC_SdVSnIQEoZxuW0zD03ZeicET7ZEyT2ro",
   },
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Zaffaron",
     locale: "en_US",
-    images: [{ url: "https://zaffaron.com/og-default.jpg", width: 1200, height: 630, alt: "Zaffaron — Authentic Recipes from Every Kitchen" }],
+    images: [{ url: `${SITE_URL}/og-default.jpg`, width: 1200, height: 630, alt: "Zaffaron — Authentic Recipes from Every Kitchen" }],
   },
   twitter: {
     card: "summary_large_image",

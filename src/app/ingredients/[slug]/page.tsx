@@ -4,6 +4,7 @@ import { getIngredient, getAllIngredientSlugs } from "@/lib/ingredients";
 import { supabaseServer } from "@/lib/supabase-server";
 import { humanize } from "@/lib/formatting";
 import type { Metadata } from "next";
+import { SITE_URL } from '@/lib/config';
 
 export const revalidate = 3600;
 export const dynamicParams = false;
@@ -32,11 +33,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
-    alternates: { canonical: `https://zaffaron.com/ingredients/${slug}` },
+    alternates: { canonical: `${SITE_URL}/ingredients/${slug}` },
     openGraph: {
       title: `${ingredient.name} — Complete Guide`,
       description,
-      url: `https://zaffaron.com/ingredients/${slug}`,
+      url: `${SITE_URL}/ingredients/${slug}`,
     },
   };
 }
@@ -166,7 +167,7 @@ export default async function IngredientPage({ params }: Props) {
             "@type": "Article",
             headline: `${ingredient.name}${allLocalNames[0] ? ` (${allLocalNames[0]})` : ''} — Complete Guide`,
             description: ingredient.description,
-            url: `https://zaffaron.com/ingredients/${ingredient.slug}`,
+            url: `${SITE_URL}/ingredients/${ingredient.slug}`,
             publisher: { "@type": "Organization", name: "Zaffaron" },
           }),
         }}

@@ -3,6 +3,7 @@ import RecipeCard from "@/components/RecipeCard";
 import Link from "next/link";
 import { getRecipesByCategory, getCategorySlugs, getCategoryRecipeCount } from "@/lib/api/recipes";
 import type { Metadata } from "next";
+import { SITE_URL } from '@/lib/config';
 
 export const revalidate = 3600;
 export const dynamicParams = true;
@@ -46,7 +47,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     if (count === 0) notFound();
   }
   const info = categoryDescriptions[slug] || defaultDesc(slug);
-  const url = `https://zaffaron.com/category/${slug}`;
+  const url = `${SITE_URL}/category/${slug}`;
   return {
     title: info.title,
     description: info.description,

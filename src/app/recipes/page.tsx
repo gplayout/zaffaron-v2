@@ -1,3 +1,4 @@
+import { SITE_URL } from '@/lib/config';
 import RecipeCard from "@/components/RecipeCard";
 import Link from "next/link";
 import { getRecipes } from "@/lib/api/recipes";
@@ -14,7 +15,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const params = await searchParams;
   const page = Math.max(1, parseInt(params.page || "1", 10));
-  const canonical = page > 1 ? `https://zaffaron.com/recipes?page=${page}` : "https://zaffaron.com/recipes";
+  const canonical = page > 1 ? `${SITE_URL}/recipes?page=${page}` : `${SITE_URL}/recipes`;
 
   return {
     title: "All Recipes",

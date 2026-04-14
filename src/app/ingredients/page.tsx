@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { getAllIngredients } from "@/lib/ingredients";
 import type { Metadata } from "next";
+import { SITE_URL } from '@/lib/config';
 
 export const metadata: Metadata = {
   title: "Ingredient Encyclopedia",
   description: "Your complete guide to specialty ingredients from Persian, Turkish, Indian, Moroccan, Lebanese, and world cuisines. Learn what to buy, how to store, and what to substitute.",
-  alternates: { canonical: "https://zaffaron.com/ingredients" },
+  alternates: { canonical: `${SITE_URL}/ingredients` },
 };
 
 export default function IngredientsPage() {

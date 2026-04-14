@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SITE_URL } from '@/lib/config';
 
 export const metadata: Metadata = {
   title: "Terms of Use",
   description: "Terms of use, copyright policy, and content licensing for Zaffaron.com recipes and images.",
-  alternates: { canonical: "https://zaffaron.com/terms" },
+  alternates: { canonical: `${SITE_URL}/terms` },
 };
 
 export default function TermsPage() {

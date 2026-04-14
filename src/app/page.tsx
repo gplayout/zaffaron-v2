@@ -1,4 +1,5 @@
 import RecipeCard from "@/components/RecipeCard";
+import SeasonalSpotlight from "@/components/SeasonalSpotlight";
 import Link from "next/link";
 import { getLatestRecipes, getPopularRecipes, getRecipeCount, getFeaturedByCuisine } from "@/lib/api/recipes";
 import { getActiveCuisines } from "@/lib/cuisines";
@@ -117,6 +118,9 @@ export default async function Home() {
           What do you want to cook today?
         </Link>
       </section>
+
+      {/* Seasonal Spotlight — powered by Calendar Brain */}
+      <SeasonalSpotlight />
 
       {/* Cuisine Navigation */}
       <div className="mb-10 flex flex-wrap justify-center gap-2">

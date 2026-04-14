@@ -1,4 +1,5 @@
 import { supabaseServer } from "@/lib/supabase-server";
+import { getSynonyms } from "@/lib/search-synonyms";
 import type { Recipe, RecipeSummary } from "@/types";
 
 const CARD_FIELDS = `id,slug,title,description,image_url,image_alt,prep_time_minutes,cook_time_minutes,servings,difficulty,category,category_slug,cuisine,cuisine_slug,calories_per_serving,published_at`;
@@ -191,22 +192,42 @@ export async function searchRecipes(query: string, limit: number): Promise<Recip
   const clean = query.replace(/[%_\\(),."':;]/g, "").replace(/\s+/g, " ").trim().slice(0, 100);
   if (!clean || clean.length < 2) return [];
 
-  // Try FTS first (ranked, fast, uses GIN index)
-  const { data: ftsData, error: ftsError } = await supabaseServer
-    .rpc("search_recipes_fts", { search_query: clean, result_limit: limit });
+  // Expand synonyms: "kabob" -> also search kabab, kebab, kebob, kabeb
+  const words = clean.toLowerCase().split(/\s+/).filter(Boolean);
+  const synonymVariants = new Set<string>();
+  for (const word of words) {
+    for (const syn of getSynonyms(word)) synonymVariants.add(syn);
+  }
+  const searchTerms = [clean, ...[...synonymVariants].filter((v) => v !== clean.toLowerCase())];
 
-  if (!ftsError && ftsData && ftsData.length > 0) {
-    return ftsData as RecipeSummary[];
+  // Try FTS with original + each synonym variant, merge deduplicated results
+  const resultMap = new Map<string, RecipeSummary>();
+  for (const term of searchTerms.slice(0, 6)) {
+    if (resultMap.size >= limit) break;
+    const { data: ftsData } = await supabaseServer
+      .rpc("search_recipes_fts", { search_query: term, result_limit: limit });
+    if (ftsData) {
+      for (const r of ftsData as RecipeSummary[]) {
+        if (!resultMap.has(r.id)) resultMap.set(r.id, r);
+      }
+    }
   }
 
-  // Fallback to ilike for partial matches (single words, typos)
+  if (resultMap.size > 0) {
+    return [...resultMap.values()].slice(0, limit);
+  }
+
+  // Fallback to ilike — also use synonym variants
+  const ilikeTerms = searchTerms.slice(0, 5);
+  const orClauses = ilikeTerms
+    .flatMap((t) => [`title.ilike.%${t}%`, `description.ilike.%${t}%`])
+    .join(",");
+
   const { data, error } = await supabaseServer
     .from("recipes_v2")
     .select(CARD_FIELDS)
     .eq("published", true)
-    .or(
-      `title.ilike.%${clean}%,description.ilike.%${clean}%,cuisine_slug.ilike.%${clean}%,category_slug.ilike.%${clean}%`
-    )
+    .or(orClauses)
     .order("published_at", { ascending: false })
     .limit(limit);
 

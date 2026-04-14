@@ -34,11 +34,14 @@ export default function NewsletterForm() {
       <form action={handleSubmit} className="flex gap-2">
         {/* Honeypot: hidden from humans, bots fill it */}
         <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" aria-hidden="true" />
+        <label htmlFor="newsletter-email" className="sr-only">Email address</label>
         <input
+          id="newsletter-email"
           type="email"
           name="email"
           placeholder="your@email.com"
           required
+          aria-label="Email address for newsletter"
           className="flex-1 rounded-md border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 placeholder:text-stone-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
         />
         <button

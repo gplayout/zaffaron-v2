@@ -1,6 +1,7 @@
 import type { Recipe, Ingredient, Instruction } from "@/types";
 import { safeJsonLd } from "@/lib/seo/safe-json-ld";
 import { humanize } from "@/lib/formatting";
+import { SITE_URL, SITE_NAME } from "@/lib/config";
 
 interface RecipeJsonLdProps {
   recipe: Recipe;
@@ -9,7 +10,7 @@ interface RecipeJsonLdProps {
 }
 
 export function RecipeJsonLd({ recipe, ratingValue, ratingCount }: RecipeJsonLdProps) {
-  const url = `https://zaffaron.com/recipe/${recipe.slug}`;
+  const url = `${SITE_URL}/recipe/${recipe.slug}`;
   const nutrition = recipe.nutrition_per_serving;
 
   // Cap prep time for JSON-LD: Google expects "active hands-on time", not soaking/marinating.
@@ -66,14 +67,14 @@ export function RecipeJsonLd({ recipe, ratingValue, ratingCount }: RecipeJsonLdP
     author: {
       "@type": "Organization",
       name: "Zaffaron Kitchen",
-      url: "https://zaffaron.com",
-      logo: { "@type": "ImageObject", url: "https://zaffaron.com/icon-512.png" },
+      url: "${SITE_URL}",
+      logo: { "@type": "ImageObject", url: "${SITE_URL}/icon-512.png" },
     },
     publisher: {
       "@type": "Organization",
       name: "Zaffaron",
-      url: "https://zaffaron.com",
-      logo: { "@type": "ImageObject", url: "https://zaffaron.com/icon-512.png" },
+      url: "${SITE_URL}",
+      logo: { "@type": "ImageObject", url: "${SITE_URL}/icon-512.png" },
     },
     ...(() => {
       if (!recipe.dietary_info) return {};
@@ -128,18 +129,18 @@ export function BreadcrumbJsonLd({ recipe }: BreadcrumbJsonLdProps) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://zaffaron.com" },
+      { "@type": "ListItem", position: 1, name: "Home", item: "${SITE_URL}" },
       {
         "@type": "ListItem",
         position: 2,
         name: humanize(recipe.cuisine),
-        item: `https://zaffaron.com/cuisine/${recipe.cuisine_slug || recipe.cuisine?.toLowerCase().replace(/\s+/g, '-')}`,
+        item: `${SITE_URL}/cuisine/${recipe.cuisine_slug || recipe.cuisine?.toLowerCase().replace(/\s+/g, '-')}`,
       },
       {
         "@type": "ListItem",
         position: 3,
         name: humanize(recipe.category),
-        item: `https://zaffaron.com/category/${recipe.category_slug || recipe.category?.toLowerCase().replace(/\s+/g, '-')}`,
+        item: `${SITE_URL}/category/${recipe.category_slug || recipe.category?.toLowerCase().replace(/\s+/g, '-')}`,
       },
       { "@type": "ListItem", position: 4, name: recipe.title },
     ],

@@ -2,6 +2,10 @@ import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import recipeRedirects from '@/lib/seo/recipe-redirects.json';
 
+const SUPABASE_HOST = process.env.NEXT_PUBLIC_SUPABASE_URL
+  ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname
+  : 'givukaorkjkksslrzuum.supabase.co';
+
 const PROTECTED_PATHS = ['/cook/dashboard', '/cook/apply', '/favorites'];
 
 function maybeRedirectRecipe(request: NextRequest) {
@@ -35,8 +39,8 @@ export async function middleware(request: NextRequest) {
     // style-src still needs unsafe-inline for Next.js/Tailwind inline styles
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
-    "img-src 'self' data: https://givukaorkjkksslrzuum.supabase.co",
-    "connect-src 'self' https://givukaorkjkksslrzuum.supabase.co wss://givukaorkjkksslrzuum.supabase.co https://vitals.vercel-insights.com https://va.vercel-scripts.com",
+    `img-src 'self' data: https://${SUPABASE_HOST}`,
+    `connect-src 'self' https://${SUPABASE_HOST} wss://${SUPABASE_HOST} https://vitals.vercel-insights.com https://va.vercel-scripts.com`,
     "frame-ancestors 'none'",
   ].join('; ');
 

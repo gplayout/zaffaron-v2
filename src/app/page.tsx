@@ -1,3 +1,4 @@
+import { SITE_URL, SITE_NAME } from '@/lib/config';
 import RecipeCard from "@/components/RecipeCard";
 import SeasonalSpotlight from "@/components/SeasonalSpotlight";
 import Link from "next/link";
@@ -14,13 +15,13 @@ function buildWebSiteSchema() {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'Zaffaron',
-    url: 'https://zaffaron.com',
+    url: SITE_URL,
     description: 'Authentic, verified recipes from Persian, Turkish, Lebanese, Afghan, Azerbaijani, and world cuisines.',
     potentialAction: {
       '@type': 'SearchAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: 'https://zaffaron.com/search?q={search_term_string}',
+        urlTemplate: `${SITE_URL}/search?q={search_term_string}`,
       },
       'query-input': 'required name=search_term_string',
     },
@@ -32,8 +33,8 @@ function buildOrganizationSchema() {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'Zaffaron',
-    url: 'https://zaffaron.com',
-    logo: 'https://zaffaron.com/icon.svg',
+    url: SITE_URL,
+    logo: `${SITE_URL}/icon.svg`,
     sameAs: [],
   };
 }
@@ -47,7 +48,7 @@ function buildItemListSchema(recipes: RecipeSummary[], listName: string) {
     itemListElement: recipes.map((r, i) => ({
       '@type': 'ListItem',
       position: i + 1,
-      url: `https://zaffaron.com/recipe/${r.slug}`,
+      url: `${SITE_URL}/recipe/${r.slug}`,
       name: r.title,
     })),
   };
@@ -55,10 +56,10 @@ function buildItemListSchema(recipes: RecipeSummary[], listName: string) {
 
 export const metadata: Metadata = {
   alternates: {
-    canonical: "https://zaffaron.com",
+    canonical: SITE_URL,
   },
   openGraph: {
-    url: "https://zaffaron.com",
+    url: SITE_URL,
     type: "website",
   },
 };

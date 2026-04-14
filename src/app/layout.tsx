@@ -12,7 +12,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   metadataBase: new URL("https://zaffaron.com"),
   verification: {
-    google: "6ulA9oxsqC_SdVSnIQEoZxuW0zD03ZeicET7ZEyT2ro",
+    google: process.env.GOOGLE_SITE_VERIFICATION || "6ulA9oxsqC_SdVSnIQEoZxuW0zD03ZeicET7ZEyT2ro",
   },
   other: {
     "p:domain_verify": "4aa10e92db8123019b525ed841c3d9f5",

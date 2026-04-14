@@ -35,7 +35,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!data) return { title: "Event Not Found" };
 
   const pageTitle = `${data.name} — Food Traditions & Recipes`;
-  const pageDescription = data.cultural_context?.slice(0, 160) || `Discover the food traditions of ${data.name}.`;
+  // Truncate at word boundary to avoid mid-word cuts in OG/meta
+  const rawDesc = data.cultural_context || `Discover the food traditions of ${data.name}.`;
+  const pageDescription = rawDesc.length <= 155 ? rawDesc : rawDesc.slice(0, 155).replace(/\s+\S*$/, '') + '…';
 
   return {
     title: pageTitle,
@@ -60,7 +62,7 @@ export default async function CalendarEventPage({ params }: PageProps) {
 
   const { data: event } = await supabaseServer
     .from("calendar_events")
-    .select("*")
+    .select("slug, name, name_local, event_type, tier, date_type, date_rule, start_month, start_day, regions, cuisines, signature_dishes, cultural_context, search_keywords, description")
     .eq("slug", slug)
     .eq("published", true)
     .single();
@@ -69,44 +71,36 @@ export default async function CalendarEventPage({ params }: PageProps) {
 
   const ev = event as CalendarEvent;
 
-  // Find related recipes: first try matching signature dish names, then fall back to cuisine
+  // Find related recipes: single query with OR for all dish names (avoids N+1)
   let relatedRecipes: { slug: string; title: string; cuisine_slug: string }[] = [];
-  const dishNames = ev.signature_dishes?.map((d) => d.name) || [];
+  const dishNames = ev.signature_dishes?.map((d) => d.name.replace(/[%_]/g, '')) || [];
+  const mainCuisine = ev.cuisines?.[0]?.toLowerCase();
+
   if (dishNames.length > 0) {
-    // Search for recipes whose title contains any signature dish name (case-insensitive)
-    for (const dish of dishNames.slice(0, 6)) {
-      if (relatedRecipes.length >= 6) break;
-      const { data } = await supabaseServer
-        .from("recipes_v2")
-        .select("slug, title, cuisine_slug")
-        .eq("published", true)
-        .ilike("title", `%${dish.replace(/[%_]/g, '')}%`)
-        .limit(2);
-      if (data) {
-        for (const r of data) {
-          if (!relatedRecipes.some((x) => x.slug === r.slug)) {
-            relatedRecipes.push(r);
-          }
-        }
-      }
-    }
+    // Build single OR query for all dish names
+    const orClauses = dishNames.slice(0, 6).map((d) => `title.ilike.%${d}%`).join(',');
+    const { data } = await supabaseServer
+      .from("recipes_v2")
+      .select("slug, title, cuisine_slug")
+      .eq("published", true)
+      .or(orClauses)
+      .limit(6);
+    if (data) relatedRecipes = data;
   }
-  // If fewer than 6, pad with cuisine-based matches
-  if (relatedRecipes.length < 6) {
-    const mainCuisine = ev.cuisines?.[0];
-    if (mainCuisine) {
-      const existingSlugs = new Set(relatedRecipes.map((r) => r.slug));
-      const { data } = await supabaseServer
-        .from("recipes_v2")
-        .select("slug, title, cuisine_slug")
-        .eq("published", true)
-        .eq("cuisine_slug", mainCuisine.toLowerCase())
-        .limit(6);
-      if (data) {
-        for (const r of data) {
-          if (relatedRecipes.length >= 6) break;
-          if (!existingSlugs.has(r.slug)) relatedRecipes.push(r);
-        }
+
+  // If fewer than 6, pad with cuisine-based matches (single query)
+  if (relatedRecipes.length < 6 && mainCuisine) {
+    const existingSlugs = new Set(relatedRecipes.map((r) => r.slug));
+    const { data } = await supabaseServer
+      .from("recipes_v2")
+      .select("slug, title, cuisine_slug")
+      .eq("published", true)
+      .eq("cuisine_slug", mainCuisine)
+      .limit(6);
+    if (data) {
+      for (const r of data) {
+        if (relatedRecipes.length >= 6) break;
+        if (!existingSlugs.has(r.slug)) relatedRecipes.push(r);
       }
     }
   }

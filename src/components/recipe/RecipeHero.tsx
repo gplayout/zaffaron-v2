@@ -132,7 +132,7 @@ export function RecipeHero({ recipe }: RecipeHeroProps) {
             fill
             className="object-cover"
             priority
-            sizes="(max-width: 768px) 100vw, 768px"
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 100vw, 1024px"
           />
         </div>
       )}

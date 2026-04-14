@@ -1,8 +1,18 @@
 import { supabaseServer } from "@/lib/supabase-server";
 import { getSynonyms } from "@/lib/search-synonyms";
+import { getActiveCuisines } from "@/lib/cuisines";
 import type { Recipe, RecipeSummary } from "@/types";
 
 const CARD_FIELDS = `id,slug,title,description,image_url,image_alt,prep_time_minutes,cook_time_minutes,servings,difficulty,category,category_slug,cuisine,cuisine_slug,calories_per_serving,published_at`;
+
+/** Clamp pagination params to safe ranges */
+function safePagination(page: number, pageSize: number) {
+  const safePage = Math.max(1, Math.floor(page) || 1);
+  const safeSize = Math.min(Math.max(1, Math.floor(pageSize) || 24), 100);
+  const from = (safePage - 1) * safeSize;
+  const to = from + safeSize - 1;
+  return { from, to, safePage, safeSize };
+}
 
 /**
  * Get the latest published recipes, optionally excluding IDs already shown
@@ -35,7 +45,8 @@ export async function getLatestRecipes(limit: number, excludeIds: string[] = [])
 export async function getPopularRecipes(limit: number): Promise<RecipeSummary[]> {
   // Pick a diverse set: one from each major cuisine, ordered by most recently updated
   // Single query + client-side grouping (avoids N+1)
-  const cuisines = ['persian', 'turkish', 'lebanese', 'indian', 'moroccan', 'greek', 'afghan', 'azerbaijani'];
+  // Derive from single source of truth to prevent drift
+  const cuisines = getActiveCuisines().map(c => c.slug);
 
   const { data, error } = await supabaseServer
     .from("recipes_v2")
@@ -45,7 +56,11 @@ export async function getPopularRecipes(limit: number): Promise<RecipeSummary[]>
     .order("updated_at", { ascending: false })
     .limit(cuisines.length * 3);
 
-  if (error || !data) return [];
+  if (error) {
+    console.error('getPopularRecipes: DB query failed:', error.message);
+    return [];
+  }
+  if (!data) return [];
 
   // Group by cuisine, then round-robin pick
   const byCuisine = new Map<string, RecipeSummary[]>();
@@ -118,8 +133,7 @@ export async function getRecipesByCategory(
   page: number,
   pageSize: number
 ): Promise<{ recipes: RecipeSummary[]; count: number }> {
-  const from = (page - 1) * pageSize;
-  const to = from + pageSize - 1;
+  const { from, to } = safePagination(page, pageSize);
 
   const { data, count, error } = await supabaseServer
     .from("recipes_v2")
@@ -145,8 +159,7 @@ export async function getRecipesByCuisine(
   page: number,
   pageSize: number
 ): Promise<{ recipes: RecipeSummary[]; count: number }> {
-  const from = (page - 1) * pageSize;
-  const to = from + pageSize - 1;
+  const { from, to } = safePagination(page, pageSize);
 
   const { data, count, error } = await supabaseServer
     .from("recipes_v2")
@@ -243,8 +256,7 @@ export async function getRecipes(
   page: number,
   pageSize: number
 ): Promise<{ recipes: RecipeSummary[]; count: number }> {
-  const from = (page - 1) * pageSize;
-  const to = from + pageSize - 1;
+  const { from, to } = safePagination(page, pageSize);
 
   const { data, count, error } = await supabaseServer
     .from("recipes_v2")

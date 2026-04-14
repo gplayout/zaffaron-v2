@@ -1,24 +1,32 @@
 import type { NextConfig } from "next";
 import dupeRedirects from './data/redirect-map-dupes.json' with { type: 'json' };
 
+const supabaseHostname = process.env.NEXT_PUBLIC_SUPABASE_URL
+  ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname
+  : 'givukaorkjkksslrzuum.supabase.co';
+
 const securityHeaders = [
   { key: 'X-Frame-Options', value: 'DENY' },
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
   { key: 'Permissions-Policy', value: 'camera=(self), microphone=(), geolocation=()' },
+  { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
+  { key: 'Cross-Origin-Resource-Policy', value: 'same-origin' },
+  { key: 'X-DNS-Prefetch-Control', value: 'off' },
   // CSP is handled by middleware with per-request nonce — do NOT set static CSP here
   // (static CSP without nonce blocks Next.js inline scripts)
 ];
 
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
   images: {
     formats: ['image/avif', 'image/webp'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    deviceSizes: [320, 480, 640, 750, 828, 1080, 1200, 1920],
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "givukaorkjkksslrzuum.supabase.co",
+        hostname: supabaseHostname,
       },
     ],
   },

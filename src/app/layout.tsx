@@ -65,37 +65,37 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('zaffaron-theme');if(t==='dark'||(t!=='light'&&matchMedia('(prefers-color-scheme:dark)').matches))document.documentElement.classList.add('dark')}catch(e){}})()` }} />
       </head>
-      <body className={`${inter.className} bg-stone-50 text-stone-900 antialiased`}>
+      <body className={`${inter.className} bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-stone-100 antialiased`}>
         <AuthProvider>
           <a
             href="#main-content"
-            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-white focus:px-4 focus:py-2 focus:text-stone-900 focus:shadow-md"
+            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-white dark:focus:bg-stone-800 focus:px-4 focus:py-2 focus:text-stone-900 dark:focus:text-stone-100 focus:shadow-md"
           >
             Skip to content
           </a>
           <Navigation />
           <main id="main-content" className="mx-auto max-w-5xl px-4 py-8">{children}</main>
-          <footer className="border-t border-stone-200 bg-white py-12">
+          <footer className="border-t border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 py-12">
             <div className="mx-auto max-w-5xl px-4">
               <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
                 {/* About Section */}
                 <div>
-                  <p className="mb-4 text-sm font-semibold uppercase tracking-wider text-stone-900">
+                  <p className="mb-4 text-sm font-semibold uppercase tracking-wider text-stone-900 dark:text-stone-100">
                     About
                   </p>
                   <ul className="space-y-3">
                     <li>
-                      <Link href="/about" className="text-sm text-stone-600 hover:text-amber-600 transition">
+                      <Link href="/about" className="text-sm text-stone-600 dark:text-stone-400 hover:text-amber-600 transition">
                         About Zaffaron
                       </Link>
                     </li>
                     <li>
-                      <Link href="/contact" className="text-sm text-stone-600 hover:text-amber-600 transition">
+                      <Link href="/contact" className="text-sm text-stone-600 dark:text-stone-400 hover:text-amber-600 transition">
                         Contact Us
                       </Link>
                     </li>
                     <li>
-                      <Link href="/editorial-policy" className="text-sm text-stone-600 hover:text-amber-600 transition">
+                      <Link href="/editorial-policy" className="text-sm text-stone-600 dark:text-stone-400 hover:text-amber-600 transition">
                         Editorial Policy
                       </Link>
                     </li>
@@ -104,17 +104,17 @@ export default function RootLayout({
 
                 {/* For Cooks Section — Marketplace Coming Soon */}
                 <div>
-                  <p className="mb-4 text-sm font-semibold uppercase tracking-wider text-stone-900">
+                  <p className="mb-4 text-sm font-semibold uppercase tracking-wider text-stone-900 dark:text-stone-100">
                     For Cooks
                   </p>
                   <ul className="space-y-3">
                     <li>
-                      <Link href="/cook/apply" className="text-sm text-stone-600 hover:text-amber-600 transition">
+                      <Link href="/cook/apply" className="text-sm text-stone-600 dark:text-stone-400 hover:text-amber-600 transition">
                         Apply to Cook
                       </Link>
                     </li>
                     <li>
-                      <span className="text-sm text-stone-400">
+                      <span className="text-sm text-stone-400 dark:text-stone-500">
                         Marketplace — Coming Soon
                       </span>
                     </li>
@@ -123,22 +123,22 @@ export default function RootLayout({
 
                 {/* Support Section */}
                 <div>
-                  <p className="mb-4 text-sm font-semibold uppercase tracking-wider text-stone-900">
+                  <p className="mb-4 text-sm font-semibold uppercase tracking-wider text-stone-900 dark:text-stone-100">
                     Support
                   </p>
                   <ul className="space-y-3">
                     <li>
-                      <Link href="/contact" className="text-sm text-stone-600 hover:text-amber-600 transition">
+                      <Link href="/contact" className="text-sm text-stone-600 dark:text-stone-400 hover:text-amber-600 transition">
                         Help Center
                       </Link>
                     </li>
                     <li>
-                      <Link href="/contact" className="text-sm text-stone-600 hover:text-amber-600 transition">
+                      <Link href="/contact" className="text-sm text-stone-600 dark:text-stone-400 hover:text-amber-600 transition">
                         Support
                       </Link>
                     </li>
                     <li>
-                      <Link href="/contact" className="text-sm text-stone-600 hover:text-amber-600 transition">
+                      <Link href="/contact" className="text-sm text-stone-600 dark:text-stone-400 hover:text-amber-600 transition">
                         Feedback
                       </Link>
                     </li>
@@ -147,22 +147,22 @@ export default function RootLayout({
 
                 {/* Legal Section */}
                 <div>
-                  <p className="mb-4 text-sm font-semibold uppercase tracking-wider text-stone-900">
+                  <p className="mb-4 text-sm font-semibold uppercase tracking-wider text-stone-900 dark:text-stone-100">
                     Legal
                   </p>
                   <ul className="space-y-3">
                     <li>
-                      <Link href="/privacy" className="text-sm text-stone-600 hover:text-amber-600 transition">
+                      <Link href="/privacy" className="text-sm text-stone-600 dark:text-stone-400 hover:text-amber-600 transition">
                         Privacy Policy
                       </Link>
                     </li>
                     <li>
-                      <Link href="/terms" className="text-sm text-stone-600 hover:text-amber-600 transition">
+                      <Link href="/terms" className="text-sm text-stone-600 dark:text-stone-400 hover:text-amber-600 transition">
                         Terms of Service
                       </Link>
                     </li>
                     <li>
-                      <Link href="/editorial-policy" className="text-sm text-stone-600 hover:text-amber-600 transition">
+                      <Link href="/editorial-policy" className="text-sm text-stone-600 dark:text-stone-400 hover:text-amber-600 transition">
                         Editorial Policy
                       </Link>
                     </li>
@@ -176,17 +176,17 @@ export default function RootLayout({
               </div>
 
               {/* Social Media & Copyright */}
-              <div className="mt-10 border-t border-stone-200 pt-8">
+              <div className="mt-10 border-t border-stone-200 dark:border-stone-700 pt-8">
                 <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
                   {/* Social Links */}
                   <div className="flex items-center gap-4">
-                    <span className="text-sm text-stone-500">Follow us:</span>
+                    <span className="text-sm text-stone-500 dark:text-stone-400">Follow us:</span>
                     <div className="flex gap-3">
                       <a
                         href="https://instagram.com/zaffaron"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="rounded-full bg-stone-100 p-2 text-stone-600 transition hover:bg-amber-100 hover:text-amber-600"
+                        className="rounded-full bg-stone-100 dark:bg-stone-700 p-2 text-stone-600 dark:text-stone-400 transition hover:bg-amber-100 hover:text-amber-600"
                         aria-label="Instagram"
                       >
                         <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -197,7 +197,7 @@ export default function RootLayout({
                         href="https://twitter.com/zaffaron"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="rounded-full bg-stone-100 p-2 text-stone-600 transition hover:bg-amber-100 hover:text-amber-600"
+                        className="rounded-full bg-stone-100 dark:bg-stone-700 p-2 text-stone-600 dark:text-stone-400 transition hover:bg-amber-100 hover:text-amber-600"
                         aria-label="Twitter"
                       >
                         <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -208,7 +208,7 @@ export default function RootLayout({
                         href="https://facebook.com/zaffaron"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="rounded-full bg-stone-100 p-2 text-stone-600 transition hover:bg-amber-100 hover:text-amber-600"
+                        className="rounded-full bg-stone-100 dark:bg-stone-700 p-2 text-stone-600 dark:text-stone-400 transition hover:bg-amber-100 hover:text-amber-600"
                         aria-label="Facebook"
                       >
                         <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -219,7 +219,7 @@ export default function RootLayout({
                         href="https://youtube.com/zaffaron"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="rounded-full bg-stone-100 p-2 text-stone-600 transition hover:bg-amber-100 hover:text-amber-600"
+                        className="rounded-full bg-stone-100 dark:bg-stone-700 p-2 text-stone-600 dark:text-stone-400 transition hover:bg-amber-100 hover:text-amber-600"
                         aria-label="YouTube"
                       >
                         <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -230,7 +230,7 @@ export default function RootLayout({
                         href="https://pinterest.com/mehdi6995/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="rounded-full bg-stone-100 p-2 text-stone-600 transition hover:bg-amber-100 hover:text-amber-600"
+                        className="rounded-full bg-stone-100 dark:bg-stone-700 p-2 text-stone-600 dark:text-stone-400 transition hover:bg-amber-100 hover:text-amber-600"
                         aria-label="Pinterest"
                       >
                         <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -241,11 +241,11 @@ export default function RootLayout({
                   </div>
 
                   {/* Copyright */}
-                  <p className="text-center text-sm text-stone-500 sm:text-right">
+                  <p className="text-center text-sm text-stone-500 dark:text-stone-400 sm:text-right">
                     © {new Date().getFullYear()} Zaffaron. All rights reserved.
                   </p>
                 </div>
-                <p className="mt-4 text-center text-xs text-stone-400">
+                <p className="mt-4 text-center text-xs text-stone-400 dark:text-stone-500">
                   Crafted with care. Rooted in tradition.
                 </p>
               </div>

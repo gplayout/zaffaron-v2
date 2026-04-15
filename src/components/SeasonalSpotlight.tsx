@@ -46,14 +46,14 @@ export default async function SeasonalSpotlight() {
   if (!recipes || recipes.length < 2) return null; // Need at least 2 recipes for a good visual grid
 
   return (
-    <section className="my-12 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 p-6 md:p-8 border border-amber-200">
+    <section className="my-12 rounded-2xl bg-gradient-to-br from-amber-50 dark:from-amber-950 to-orange-50 dark:to-orange-950 p-6 md:p-8 border border-amber-200 dark:border-amber-800">
       <div className="flex items-center gap-3 mb-4">
         <span className="text-2xl">🗓️</span>
         <div>
-          <h2 className="text-xl font-bold text-stone-900">
+          <h2 className="text-xl font-bold text-stone-900 dark:text-stone-100">
             {topCampaign.title}
           </h2>
-          <p className="text-sm text-stone-500">
+          <p className="text-sm text-stone-500 dark:text-stone-400">
             Seasonal spotlight — traditional recipes for this celebration
           </p>
         </div>
@@ -70,10 +70,10 @@ export default async function SeasonalSpotlight() {
           <Link
             key={recipe.slug}
             href={`/recipe/${recipe.slug}`}
-            className="group block overflow-hidden rounded-xl border border-stone-200 bg-white transition hover:border-amber-300 hover:shadow-md"
+            className="group block overflow-hidden rounded-xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 transition hover:border-amber-300 hover:shadow-md"
           >
             {recipe.image_url && (
-              <div className="relative aspect-[4/3] overflow-hidden bg-stone-100">
+              <div className="relative aspect-[4/3] overflow-hidden bg-stone-100 dark:bg-stone-700">
                 <Image
                   src={recipe.image_url}
                   alt={recipe.title}
@@ -84,7 +84,7 @@ export default async function SeasonalSpotlight() {
               </div>
             )}
             <div className="p-3">
-              <h3 className="text-sm font-medium text-stone-900 line-clamp-2 group-hover:text-amber-700">
+              <h3 className="text-sm font-medium text-stone-900 dark:text-stone-100 line-clamp-2 group-hover:text-amber-700">
                 {recipe.title}
               </h3>
             </div>

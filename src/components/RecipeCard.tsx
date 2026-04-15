@@ -17,9 +17,9 @@ export default function RecipeCard({ recipe, priority = false }: { recipe: Recip
   return (
     <Link
       href={`/recipe/${recipe.slug}`}
-      className="group block overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2"
+      className="group block overflow-hidden rounded-xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 shadow-sm transition hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2"
     >
-      <div className="relative aspect-[4/3] bg-stone-100">
+      <div className="relative aspect-[4/3] bg-stone-100 dark:bg-stone-700">
         {recipe.image_url ? (
           <Image
             src={recipe.image_url}
@@ -45,10 +45,10 @@ export default function RecipeCard({ recipe, priority = false }: { recipe: Recip
         <h3 className="text-lg font-semibold leading-tight group-hover:text-amber-700">
           {recipe.title}
         </h3>
-        <p className="mt-1 line-clamp-2 text-sm text-stone-500">
+        <p className="mt-1 line-clamp-2 text-sm text-stone-500 dark:text-stone-400">
           {recipe.description}
         </p>
-        <div className="mt-3 flex items-center gap-4 text-xs text-stone-500">
+        <div className="mt-3 flex items-center gap-4 text-xs text-stone-500 dark:text-stone-400">
           <span className="flex items-center gap-1">
             <Clock className="h-3.5 w-3.5" /> {totalTime} min
           </span>

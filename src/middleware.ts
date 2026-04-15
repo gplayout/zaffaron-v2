@@ -39,7 +39,7 @@ export async function middleware(request: NextRequest) {
     // style-src still needs unsafe-inline for Next.js/Tailwind inline styles
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
-    `img-src 'self' data: https://${SUPABASE_HOST}`,
+    `img-src 'self' data: https://${SUPABASE_HOST} https://*.pinimg.com`,
     `connect-src 'self' https://${SUPABASE_HOST} wss://${SUPABASE_HOST} https://vitals.vercel-insights.com https://va.vercel-scripts.com`,
     "frame-ancestors 'none'",
   ].join('; ');

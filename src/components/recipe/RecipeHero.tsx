@@ -28,13 +28,13 @@ export function RecipeHero({ recipe }: RecipeHeroProps) {
     <header className="mb-6">
       {/* Breadcrumbs */}
       <nav aria-label="Breadcrumb" className="mb-4">
-        <ol className="flex flex-wrap items-center gap-1.5 text-sm text-stone-500">
+        <ol className="flex flex-wrap items-center gap-1.5 text-sm text-stone-500 dark:text-stone-400">
           <li>
             <Link href="/" className="hover:text-amber-600">
               Home
             </Link>
           </li>
-          <li aria-hidden="true" className="text-stone-300">
+          <li aria-hidden="true" className="text-stone-300 dark:text-stone-600">
             ›
           </li>
           <li>
@@ -42,7 +42,7 @@ export function RecipeHero({ recipe }: RecipeHeroProps) {
               {humanize(recipe.cuisine)}
             </Link>
           </li>
-          <li aria-hidden="true" className="text-stone-300">
+          <li aria-hidden="true" className="text-stone-300 dark:text-stone-600">
             ›
           </li>
           <li>
@@ -50,10 +50,10 @@ export function RecipeHero({ recipe }: RecipeHeroProps) {
               {humanize(recipe.category)}
             </Link>
           </li>
-          <li aria-hidden="true" className="text-stone-300">
+          <li aria-hidden="true" className="text-stone-300 dark:text-stone-600">
             ›
           </li>
-          <li aria-current="page" className="text-stone-700 font-medium truncate max-w-[200px]">
+          <li aria-current="page" className="text-stone-700 dark:text-stone-300 font-medium truncate max-w-[200px]">
             {recipe.title}
           </li>
         </ol>
@@ -75,10 +75,10 @@ export function RecipeHero({ recipe }: RecipeHeroProps) {
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{recipe.title}</h1>
         <FavoriteButton recipeId={recipe.id} />
       </div>
-      <p className="mt-3 text-lg text-stone-600">{recipe.description}</p>
+      <p className="mt-3 text-lg text-stone-600 dark:text-stone-400">{recipe.description}</p>
 
       {/* Author & Date */}
-      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-stone-500">
+      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-stone-500 dark:text-stone-400">
         <span>By {recipe.author || "Zaffaron Kitchen"}</span>
         {recipe.published_at && <span>· Published {formatDate(recipe.published_at)}</span>}
         {recipe.verification_status === "verified" && (
@@ -96,22 +96,22 @@ export function RecipeHero({ recipe }: RecipeHeroProps) {
 
       {/* Stats */}
       <div className="mt-4 flex flex-wrap gap-3 text-sm text-stone-600">
-        <span className="flex items-center gap-1.5 rounded-full bg-stone-100 px-3 py-1">
+        <span className="flex items-center gap-1.5 rounded-full bg-stone-100 dark:bg-stone-700 px-3 py-1">
           <Clock className="h-4 w-4" /> {totalTime} min total
         </span>
-        <span className="flex items-center gap-1.5 rounded-full bg-stone-100 px-3 py-1">
+        <span className="flex items-center gap-1.5 rounded-full bg-stone-100 dark:bg-stone-700 px-3 py-1">
           <ChefHat className="h-4 w-4" /> Prep {recipe.prep_time_minutes}m · Cook {recipe.cook_time_minutes}m
         </span>
-        <span className="flex items-center gap-1.5 rounded-full bg-stone-100 px-3 py-1">
+        <span className="flex items-center gap-1.5 rounded-full bg-stone-100 dark:bg-stone-700 px-3 py-1">
           <Users className="h-4 w-4" /> {recipe.servings} servings
         </span>
         {recipe.calories_per_serving && (
-          <span className="flex items-center gap-1.5 rounded-full bg-stone-100 px-3 py-1">
+          <span className="flex items-center gap-1.5 rounded-full bg-stone-100 dark:bg-stone-700 px-3 py-1">
             <Flame className="h-4 w-4" /> {recipe.calories_per_serving} cal
           </span>
         )}
         {recipe.cost_estimate?.per_serving_usd && (
-          <span className="flex items-center gap-1.5 rounded-full bg-stone-100 px-3 py-1">
+          <span className="flex items-center gap-1.5 rounded-full bg-stone-100 dark:bg-stone-700 px-3 py-1">
             <DollarSign className="h-4 w-4" /> ~${recipe.cost_estimate.per_serving_usd}/serving
           </span>
         )}

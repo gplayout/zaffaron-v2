@@ -59,7 +59,7 @@ export default function Navigation() {
         <div className="hidden items-center gap-2 md:flex">
           <Link
             href="/search"
-            className="rounded-full p-2 text-stone-500 transition hover:bg-stone-100 hover:text-stone-900"
+            className="rounded-full p-2 text-stone-500 dark:text-stone-400 transition hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-stone-900 dark:hover:text-stone-100"
             aria-label="Search recipes"
           >
             <Search className="h-5 w-5" />
@@ -73,14 +73,14 @@ export default function Navigation() {
           <ThemeToggle />
           <Link
             href="/search"
-            className="rounded-full p-2 text-stone-500 transition hover:bg-stone-100 hover:text-stone-900"
+            className="rounded-full p-2 text-stone-500 dark:text-stone-400 transition hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-stone-900 dark:hover:text-stone-100"
             aria-label="Search recipes"
           >
             <Search className="h-5 w-5" />
           </Link>
           <button
             type="button"
-            className="rounded-full p-2 text-stone-500 transition hover:bg-stone-100 hover:text-stone-900"
+            className="rounded-full p-2 text-stone-500 dark:text-stone-400 transition hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-stone-900 dark:hover:text-stone-100"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileMenuOpen}

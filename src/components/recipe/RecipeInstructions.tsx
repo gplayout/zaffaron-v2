@@ -15,9 +15,9 @@ export function RecipeInstructions({ instructions }: RecipeInstructionsProps) {
               {step.step}
             </span>
             <div>
-              <p className="text-sm leading-relaxed text-stone-700">{step.text}</p>
+              <p className="text-sm leading-relaxed text-stone-700 dark:text-stone-300">{step.text}</p>
               {step.time_minutes && (
-                <p className="mt-1 text-xs text-stone-500">⏱ {step.time_minutes} minutes</p>
+                <p className="mt-1 text-xs text-stone-500 dark:text-stone-400">⏱ {step.time_minutes} minutes</p>
               )}
             </div>
           </li>

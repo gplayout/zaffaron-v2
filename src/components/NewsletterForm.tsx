@@ -25,10 +25,10 @@ export default function NewsletterForm() {
 
   return (
     <div className="w-full max-w-sm">
-      <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-stone-900">
+      <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-stone-900 dark:text-stone-100">
         Newsletter
       </p>
-      <p className="mb-3 text-sm text-stone-500">
+      <p className="mb-3 text-sm text-stone-500 dark:text-stone-400">
         Get seasonal recipes & cultural food stories.
       </p>
       <form action={handleSubmit} className="flex gap-2">
@@ -42,7 +42,7 @@ export default function NewsletterForm() {
           placeholder="your@email.com"
           required
           aria-label="Email address for newsletter"
-          className="flex-1 rounded-md border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 placeholder:text-stone-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+          className="flex-1 rounded-md border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-800 px-3 py-2 text-sm text-stone-900 dark:text-stone-100 placeholder:text-stone-400 dark:placeholder:text-stone-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
         />
         <button
           type="submit"

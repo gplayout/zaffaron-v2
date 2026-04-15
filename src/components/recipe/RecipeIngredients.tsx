@@ -38,15 +38,15 @@ export function RecipeIngredients({ ingredients, substitutions }: RecipeIngredie
                 type="checkbox"
                 checked={isChecked}
                 onChange={() => toggleItem(i)}
-                className="mt-0.5 h-4 w-4 rounded border-stone-300 text-amber-600 focus:ring-amber-600 cursor-pointer"
+                className="mt-0.5 h-4 w-4 rounded border-stone-300 dark:border-stone-600 text-amber-600 focus:ring-amber-600 cursor-pointer"
                 onClick={(e) => e.stopPropagation()}
               />
-              <span className={`font-medium text-stone-800 min-w-fit ${isChecked ? "line-through" : ""}`}>
+              <span className={`font-medium text-stone-800 dark:text-stone-200 min-w-fit ${isChecked ? "line-through" : ""}`}>
                 {ing.amount} {ing.unit}
               </span>
-              <span className={`text-stone-600 ${isChecked ? "line-through" : ""}`}>
+              <span className={`text-stone-600 dark:text-stone-400 ${isChecked ? "line-through" : ""}`}>
                 {ing.item}
-                {ing.note && <span className="text-stone-500"> ({ing.note})</span>}
+                {ing.note && <span className="text-stone-500 dark:text-stone-400"> ({ing.note})</span>}
               </span>
             </li>
           );
@@ -56,12 +56,12 @@ export function RecipeIngredients({ ingredients, substitutions }: RecipeIngredie
       {/* Substitutions */}
       {substitutions && Array.isArray(substitutions) && substitutions.length > 0 && (
         <div className="mt-6">
-          <h3 className="mb-2 text-sm font-bold text-stone-700">🔄 Substitutions</h3>
-          <ul className="space-y-2 text-sm text-stone-600">
+          <h3 className="mb-2 text-sm font-bold text-stone-700 dark:text-stone-300">🔄 Substitutions</h3>
+          <ul className="space-y-2 text-sm text-stone-600 dark:text-stone-400">
             {substitutions.map((sub, i) => (
-              <li key={i} className="rounded-lg bg-stone-50 p-2">
+              <li key={i} className="rounded-lg bg-stone-50 dark:bg-stone-800 p-2">
                 <span className="font-medium">{sub.original}</span>
-                <span className="block mt-0.5 text-stone-500">→ {sub.substitute}</span>
+                <span className="block mt-0.5 text-stone-500 dark:text-stone-400">→ {sub.substitute}</span>
               </li>
             ))}
           </ul>

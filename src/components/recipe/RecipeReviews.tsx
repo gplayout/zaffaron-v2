@@ -17,9 +17,10 @@ interface Review {
 interface RecipeReviewsProps {
   reviews: Review[];
   recipeId: string;
+  recipeSlug?: string;
 }
 
-export function RecipeReviews({ reviews: initialReviews, recipeId }: RecipeReviewsProps) {
+export function RecipeReviews({ reviews: initialReviews, recipeId, recipeSlug }: RecipeReviewsProps) {
   const { user } = useAuth();
   const [reviews, setReviews] = useState<Review[]>(initialReviews);
   const [userRating, setUserRating] = useState(0);
@@ -48,7 +49,7 @@ export function RecipeReviews({ reviews: initialReviews, recipeId }: RecipeRevie
 
     setIsSubmitting(true);
 
-    const result = await submitRecipeReview(recipeId, userRating, reviewText);
+    const result = await submitRecipeReview(recipeId, userRating, reviewText, recipeSlug);
 
     setIsSubmitting(false);
 

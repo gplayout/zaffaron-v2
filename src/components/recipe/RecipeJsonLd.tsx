@@ -133,14 +133,14 @@ export function BreadcrumbJsonLd({ recipe }: BreadcrumbJsonLdProps) {
       {
         "@type": "ListItem",
         position: 2,
-        name: humanize(recipe.cuisine),
-        item: `${SITE_URL}/cuisine/${recipe.cuisine_slug || recipe.cuisine?.toLowerCase().replace(/\s+/g, '-')}`,
+        name: humanize(recipe.cuisine || 'General'),
+        item: `${SITE_URL}/cuisine/${recipe.cuisine_slug || recipe.cuisine?.toLowerCase().replace(/\s+/g, '-') || 'general'}`,
       },
       {
         "@type": "ListItem",
         position: 3,
-        name: humanize(recipe.category),
-        item: `${SITE_URL}/category/${recipe.category_slug || recipe.category?.toLowerCase().replace(/\s+/g, '-')}`,
+        name: humanize(recipe.category || 'Recipes'),
+        item: `${SITE_URL}/category/${recipe.category_slug || recipe.category?.toLowerCase().replace(/\s+/g, '-') || 'recipes'}`,
       },
       { "@type": "ListItem", position: 4, name: recipe.title, item: `${SITE_URL}/recipe/${recipe.slug}` },
     ],

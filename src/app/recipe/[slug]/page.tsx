@@ -27,17 +27,27 @@ import { SITE_URL } from '@/lib/config';
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
-  const { data, error } = await supabaseServer
-    .from("recipes_v2")
-    .select("slug")
-    .eq("published", true)
-    .order("published_at", { ascending: false })
-    .limit(500);
-  if (error) {
-    console.error("generateStaticParams (recipe) failed:", error);
-    return [];
+  // Paginate to get ALL published recipes (Supabase default limit = 1000)
+  const allSlugs: { slug: string }[] = [];
+  let page = 0;
+  const PAGE_SIZE = 1000;
+  while (true) {
+    const { data, error } = await supabaseServer
+      .from("recipes_v2")
+      .select("slug")
+      .eq("published", true)
+      .order("published_at", { ascending: false })
+      .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
+    if (error) {
+      console.error("generateStaticParams (recipe) failed:", error);
+      break;
+    }
+    if (!data || data.length === 0) break;
+    allSlugs.push(...data);
+    if (data.length < PAGE_SIZE) break;
+    page++;
   }
-  return (data || []).map((r) => ({ slug: r.slug }));
+  return allSlugs.map((r) => ({ slug: r.slug }));
 }
 
 interface Props {
@@ -145,7 +155,7 @@ export default async function RecipePage({ params }: Props) {
             categorySlug={recipe.category_slug || recipe.category.toLowerCase()}
           />
 
-          <RecipeReviews reviews={reviews} recipeId={recipe.id} />
+          <RecipeReviews reviews={reviews} recipeId={recipe.id} recipeSlug={recipe.slug} />
         </div>
       </article>
     </>

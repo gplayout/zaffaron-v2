@@ -57,7 +57,8 @@ export async function getRecipeReviews(
 export async function submitRecipeReview(
   recipeId: string,
   rating: number,
-  body: string
+  body: string,
+  slug?: string
 ): Promise<{ ok: true; review: Review } | { ok: false; error: string }> {
   try {
     const supabase = await createServerSupabase();
@@ -137,7 +138,7 @@ export async function submitRecipeReview(
     };
 
     // Invalidate cache so the review appears immediately
-    revalidatePath(`/recipe/${recipeId}`);
+    revalidatePath(`/recipe/${slug || recipeId}`);
 
     return { ok: true, review };
   } catch (error) {

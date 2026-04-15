@@ -86,7 +86,7 @@ export function RecipeJsonLd({ recipe, ratingValue, ratingCount }: RecipeJsonLdP
       ].filter(Boolean);
       return diets.length > 0 ? { suitableForDiet: diets } : {};
     })(),
-    ...(nutrition
+    ...(nutrition && (nutrition.calories || nutrition.protein_g || nutrition.carbs_g || nutrition.fat_g)
       ? {
           nutrition: {
             "@type": "NutritionInformation",

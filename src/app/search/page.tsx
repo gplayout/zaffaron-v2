@@ -1,17 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import { searchRecipes } from "@/app/search/actions";
 import RecipeCard from "@/components/RecipeCard";
 import type { RecipeSummary } from "@/types";
 
-export default function SearchPage() {
-  const [query, setQuery] = useState("");
+function SearchPageInner() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const initialQuery = searchParams.get("q") || "";
+  const [query, setQuery] = useState(initialQuery);
   const [results, setResults] = useState<RecipeSummary[]>([]);
   const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Auto-search if URL has ?q= parameter
+  useEffect(() => {
+    if (initialQuery) doSearch(initialQuery);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialQuery]);
 
   async function doSearch(term: string) {
     if (!term.trim()) return;
@@ -32,6 +42,8 @@ export default function SearchPage() {
 
   async function handleSearch(e: React.FormEvent) {
     e.preventDefault();
+    // Update URL with search query
+    router.push(`/search?q=${encodeURIComponent(query)}`, { scroll: false });
     await doSearch(query);
   }
 
@@ -80,7 +92,7 @@ export default function SearchPage() {
               </button>
             ))}
           </div>
-          <p className="mt-6 text-sm text-stone-400">Search across 1,700+ recipes from Persian, Turkish, Afghan, Lebanese, Azerbaijani, Indian, Moroccan, and Greek cuisines</p>
+          <p className="mt-6 text-sm text-stone-400">Search across 1,800+ recipes from Persian, Turkish, Afghan, Lebanese, Azerbaijani, Indian, Moroccan, and Greek cuisines</p>
         </div>
       )}
 
@@ -92,5 +104,13 @@ export default function SearchPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div className="text-center py-8 text-stone-500">Loading search...</div>}>
+      <SearchPageInner />
+    </Suspense>
   );
 }

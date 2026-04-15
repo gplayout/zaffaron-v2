@@ -2,6 +2,16 @@
 -- Date: 2026-04-15
 -- Source: 4-model strategy (GPT 5.4 + Gemini + Kimi + Opus)
 
+-- Families FIRST (referenced by vault_recipes)
+CREATE TABLE IF NOT EXISTS vault_families (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  name TEXT NOT NULL,
+  slug TEXT UNIQUE,
+  created_by UUID REFERENCES auth.users,
+  invite_code TEXT UNIQUE DEFAULT encode(gen_random_bytes(6), 'hex'),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- Core vault recipes
 CREATE TABLE IF NOT EXISTS vault_recipes (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -26,16 +36,7 @@ CREATE TABLE IF NOT EXISTS vault_recipes (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Families (Phase 2, schema ready now)
-CREATE TABLE IF NOT EXISTS vault_families (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  name TEXT NOT NULL,
-  slug TEXT UNIQUE,
-  created_by UUID REFERENCES auth.users,
-  invite_code TEXT UNIQUE DEFAULT encode(gen_random_bytes(6), 'hex'),
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
+-- Family members
 CREATE TABLE IF NOT EXISTS vault_family_members (
   family_id UUID REFERENCES vault_families ON DELETE CASCADE,
   user_id UUID REFERENCES auth.users,

@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChefHat, Mail, Lock, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase-browser";
 
-export default function LoginPage() {
+function LoginPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirect') || '/';
@@ -180,5 +180,13 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center"><p className="text-stone-500">Loading...</p></div>}>
+      <LoginPageInner />
+    </Suspense>
   );
 }

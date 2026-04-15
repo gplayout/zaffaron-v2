@@ -3,12 +3,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChefHat, Menu, X, Search, UtensilsCrossed, Calendar, BookOpen } from "lucide-react";
+import { ChefHat, Menu, X, Search, UtensilsCrossed, Calendar, BookOpen, Heart } from "lucide-react";
 import { HeaderAuthWithFavorites } from "./HeaderAuthWithFavorites";
 import ThemeToggle from "./ThemeToggle";
 
 const navLinks = [
   { href: "/recipes", label: "Recipes", icon: UtensilsCrossed },
+  { href: "/vault", label: "Vault", icon: Heart },
   { href: "/calendar", label: "Calendar", icon: Calendar },
   { href: "/blog", label: "Blog", icon: BookOpen },
   { href: "/search", label: "Search", icon: Search },

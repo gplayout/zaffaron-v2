@@ -86,6 +86,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/editorial-policy`, lastModified: now, changeFrequency: "monthly" as const },
     { url: `${SITE_URL}/privacy`, lastModified: now, changeFrequency: "monthly" as const },
     { url: `${SITE_URL}/terms`, lastModified: now, changeFrequency: "monthly" as const },
+    // Vault
+    { url: `${SITE_URL}/vault`, lastModified: now, changeFrequency: "weekly" as const },
     // Calendar
     { url: `${SITE_URL}/calendar`, lastModified: now, changeFrequency: "weekly" as const },
     ...calendarUrls,

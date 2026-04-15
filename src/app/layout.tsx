@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     images: [
       {
-        url: `${SITE_URL}/og-default.jpg`,
+        url: "/og-default.jpg",
         width: 1200,
         height: 630,
         alt: "Zaffaron — Authentic Recipes from Every Kitchen",

@@ -142,7 +142,7 @@ export function BreadcrumbJsonLd({ recipe }: BreadcrumbJsonLdProps) {
         name: humanize(recipe.category),
         item: `${SITE_URL}/category/${recipe.category_slug || recipe.category?.toLowerCase().replace(/\s+/g, '-')}`,
       },
-      { "@type": "ListItem", position: 4, name: recipe.title },
+      { "@type": "ListItem", position: 4, name: recipe.title, item: `${SITE_URL}/recipe/${recipe.slug}` },
     ],
   };
 

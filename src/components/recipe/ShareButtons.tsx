@@ -57,15 +57,15 @@ export function ShareButtons({ title, url }: ShareButtonsProps) {
   }
 
   return (
-    <div className="flex items-center gap-3 mt-6 pt-4 border-t border-stone-200">
-      <span className="text-sm font-medium text-stone-500">Share:</span>
+    <div className="flex items-center gap-3 mt-6 pt-4 border-t border-stone-200 dark:border-stone-700">
+      <span className="text-sm font-medium text-stone-500 dark:text-stone-400">Share:</span>
       {shareLinks.map((link) => (
         <a
           key={link.name}
           href={link.href}
           target="_blank"
           rel="noopener noreferrer"
-          className={`text-stone-400 transition ${link.color}`}
+          className={`text-stone-400 dark:text-stone-500 transition ${link.color}`}
           aria-label={`Share on ${link.name}`}
         >
           {link.icon}
@@ -73,7 +73,7 @@ export function ShareButtons({ title, url }: ShareButtonsProps) {
       ))}
       <button
         onClick={copyLink}
-        className="text-stone-400 transition hover:text-amber-600"
+        className="text-stone-400 dark:text-stone-500 transition hover:text-amber-600"
         aria-label="Copy link"
       >
         {copied ? (

@@ -38,13 +38,13 @@ export default async function AllRecipesPage({
   return (
     <>
       <div className="mb-8">
-        <nav aria-label="Breadcrumb" className="mb-4 text-sm text-stone-500">
+        <nav aria-label="Breadcrumb" className="mb-4 text-sm text-stone-500 dark:text-stone-400">
           <Link href="/" className="hover:text-amber-600">Home</Link>
-          <span className="mx-1.5 text-stone-300">›</span>
-          <span className="text-stone-700 font-medium">All Recipes</span>
+          <span className="mx-1.5 text-stone-300 dark:text-stone-600">›</span>
+          <span className="text-stone-700 dark:text-stone-300 font-medium">All Recipes</span>
         </nav>
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">All Recipes</h1>
-        <p className="mt-2 text-stone-500">{totalCount} authentic recipes from our kitchen to yours.</p>
+        <p className="mt-2 text-stone-500 dark:text-stone-400">{totalCount} authentic recipes from our kitchen to yours.</p>
       </div>
       <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {items.map((recipe, i) => (
@@ -60,18 +60,18 @@ export default async function AllRecipesPage({
           {page > 1 && (
             <Link
               href={`/recipes?page=${page - 1}`}
-              className="rounded-lg border border-stone-300 px-4 py-2 text-sm text-stone-600 transition hover:bg-stone-100"
+              className="rounded-lg border border-stone-300 dark:border-stone-600 px-4 py-2 text-sm text-stone-600 dark:text-stone-400 transition hover:bg-stone-100 dark:hover:bg-stone-800"
             >
               ← Previous
             </Link>
           )}
-          <span className="px-4 py-2 text-sm text-stone-500">
+          <span className="px-4 py-2 text-sm text-stone-500 dark:text-stone-400">
             Page {page} of {totalPages}
           </span>
           {page < totalPages && (
             <Link
               href={`/recipes?page=${page + 1}`}
-              className="rounded-lg border border-stone-300 px-4 py-2 text-sm text-stone-600 transition hover:bg-stone-100"
+              className="rounded-lg border border-stone-300 dark:border-stone-600 px-4 py-2 text-sm text-stone-600 dark:text-stone-400 transition hover:bg-stone-100 dark:hover:bg-stone-800"
             >
               Next →
             </Link>

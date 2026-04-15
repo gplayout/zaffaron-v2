@@ -85,13 +85,13 @@ export default async function BlogPostPage({ params }: PageProps) {
       </Link>
 
       <header className="mb-10 text-center">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-stone-900 leading-tight mb-4">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-stone-900 dark:text-stone-100 leading-tight mb-4">
           {post.title}
         </h1>
-        <p className="text-xl text-stone-500 mb-6 italic">
+        <p className="text-xl text-stone-500 dark:text-stone-400 mb-6 italic">
           {post.excerpt}
         </p>
-        <div className="flex items-center justify-center gap-4 text-sm text-stone-400 font-medium uppercase tracking-wider">
+        <div className="flex items-center justify-center gap-4 text-sm text-stone-400 dark:text-stone-500 font-medium uppercase tracking-wider">
           <span>By {post.author_name || "Zaffaron Kitchen"}</span>
           <span>•</span>
           {post.published_at && (
@@ -107,7 +107,7 @@ export default async function BlogPostPage({ params }: PageProps) {
       </header>
 
       {post.featured_image && (
-        <div className="mb-12 w-full aspect-video md:aspect-[21/9] rounded-2xl bg-stone-100 overflow-hidden relative shadow-sm">
+        <div className="mb-12 w-full aspect-video md:aspect-[21/9] rounded-2xl bg-stone-100 dark:bg-stone-700 overflow-hidden relative shadow-sm">
           <img 
             src={post.featured_image} 
             alt={post.title} 
@@ -117,24 +117,25 @@ export default async function BlogPostPage({ params }: PageProps) {
       )}
 
       <div className="prose prose-stone prose-lg md:prose-xl mx-auto
-          prose-headings:font-bold prose-headings:text-stone-800
+          prose-headings:font-bold prose-headings:text-stone-800 dark:prose-headings:text-stone-200
           prose-a:text-amber-600 prose-a:font-medium prose-a:no-underline hover:prose-a:underline
-          prose-p:text-stone-700 prose-p:leading-relaxed
-          prose-li:text-stone-700
-          prose-strong:text-stone-900
-          prose-blockquote:border-amber-500 prose-blockquote:bg-amber-50/50 prose-blockquote:px-4 prose-blockquote:py-1 prose-blockquote:not-italic
-          prose-img:rounded-xl">
+          prose-p:text-stone-700 dark:prose-p:text-stone-300 prose-p:leading-relaxed
+          prose-li:text-stone-700 dark:prose-li:text-stone-300
+          prose-strong:text-stone-900 dark:prose-strong:text-stone-100
+          prose-blockquote:border-amber-500 prose-blockquote:bg-amber-50/50 dark:prose-blockquote:bg-amber-950/30 prose-blockquote:px-4 prose-blockquote:py-1 prose-blockquote:not-italic
+          prose-img:rounded-xl
+          dark:prose-invert">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>
           {post.content_markdown}
         </ReactMarkdown>
       </div>
 
       {post.tags && post.tags.length > 0 && (
-        <div className="mt-12 pt-8 border-t border-stone-200">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-stone-500 mb-3">Tags</h3>
+        <div className="mt-12 pt-8 border-t border-stone-200 dark:border-stone-700">
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-3">Tags</h3>
           <div className="flex flex-wrap gap-2">
             {post.tags.map((tag: string) => (
-              <span key={tag} className="bg-stone-100 text-stone-600 text-xs px-3 py-1 rounded-full font-medium">
+              <span key={tag} className="bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 text-xs px-3 py-1 rounded-full font-medium">
                 #{tag}
               </span>
             ))}

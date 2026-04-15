@@ -30,7 +30,7 @@ export default async function BlogIndexPage() {
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
       <h1 className="text-3xl font-bold mb-2">📝 The Zaffaron Blog</h1>
-      <p className="text-stone-500 mb-10 text-lg">
+      <p className="text-stone-500 dark:text-stone-400 mb-10 text-lg">
         Deep dives into global food traditions, seasonal guides, and the stories behind the recipes.
       </p>
 
@@ -39,10 +39,10 @@ export default async function BlogIndexPage() {
           <Link
             key={post.slug}
             href={`/blog/${post.slug}`}
-            className="group block flex-col justify-between rounded-2xl border border-stone-200 bg-white overflow-hidden shadow-sm transition hover:border-amber-300 hover:shadow-md"
+            className="group block flex-col justify-between rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 overflow-hidden shadow-sm transition hover:border-amber-300 hover:shadow-md"
           >
             {post.featured_image && (
-              <div className="relative aspect-video w-full bg-stone-100 overflow-hidden">
+              <div className="relative aspect-video w-full bg-stone-100 dark:bg-stone-700 overflow-hidden">
                 <Image
                   src={post.featured_image}
                   alt={post.title}
@@ -53,15 +53,15 @@ export default async function BlogIndexPage() {
               </div>
             )}
             <div className="p-6">
-              <h2 className="text-xl font-bold text-stone-900 group-hover:text-amber-700 transition">
+              <h2 className="text-xl font-bold text-stone-900 dark:text-stone-100 group-hover:text-amber-700 transition">
                 {post.title}
               </h2>
-              <p className="mt-3 text-stone-600 line-clamp-3">
+              <p className="mt-3 text-stone-600 dark:text-stone-400 line-clamp-3">
                 {post.excerpt}
               </p>
             </div>
-            <div className="mt-6 flex items-center justify-between text-sm text-stone-400">
-              <span className="font-medium text-stone-600">{post.author_name}</span>
+            <div className="mt-6 flex items-center justify-between text-sm text-stone-400 dark:text-stone-500">
+              <span className="font-medium text-stone-600 dark:text-stone-400">{post.author_name}</span>
               {post.published_at && (
                 <time dateTime={post.published_at}>
                   {new Date(post.published_at).toLocaleDateString("en-US", {

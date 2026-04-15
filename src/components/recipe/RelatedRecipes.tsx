@@ -43,17 +43,17 @@ export async function RelatedRecipes({ currentSlug, cuisineSlug, categorySlug }:
   if (related.length === 0) return null;
 
   return (
-    <section className="mt-10 border-t border-stone-200 pt-8">
-      <h2 className="text-xl font-bold text-stone-800 mb-4">You Might Also Like</h2>
+    <section className="mt-10 border-t border-stone-200 dark:border-stone-700 pt-8">
+      <h2 className="text-xl font-bold text-stone-800 dark:text-stone-200 mb-4">You Might Also Like</h2>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {related.map((r) => (
           <Link
             key={r.slug}
             href={`/recipe/${r.slug}`}
-            className="group rounded-lg border border-stone-200 overflow-hidden hover:shadow-md transition-shadow"
+            className="group rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 overflow-hidden hover:shadow-md transition-shadow"
           >
             {r.image_url && (
-              <div className="relative aspect-[4/3] overflow-hidden bg-stone-100">
+              <div className="relative aspect-[4/3] overflow-hidden bg-stone-100 dark:bg-stone-700">
                 <Image
                   src={r.image_url}
                   alt={r.image_alt || r.title}
@@ -64,8 +64,8 @@ export async function RelatedRecipes({ currentSlug, cuisineSlug, categorySlug }:
               </div>
             )}
             <div className="p-3">
-              <h3 className="text-sm font-semibold text-stone-800 line-clamp-2">{r.title}</h3>
-              <p className="mt-1 text-xs text-stone-500">
+              <h3 className="text-sm font-semibold text-stone-800 dark:text-stone-200 line-clamp-2">{r.title}</h3>
+              <p className="mt-1 text-xs text-stone-500 dark:text-stone-400">
                 {humanize(r.cuisine)} · {humanize(r.category)} · {(r.prep_time_minutes ?? 0) + (r.cook_time_minutes ?? 0)} min
               </p>
             </div>

@@ -118,9 +118,9 @@ export async function RecipeInternalLinks({ recipe }: { recipe: Recipe }) {
   if (final.length === 0) return null;
 
   return (
-    <section className="mt-10 rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
-      <h2 className="text-xl font-bold text-stone-900">Pairs well with</h2>
-      <p className="mt-2 text-sm text-stone-600">
+    <section className="mt-10 rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 p-6 shadow-sm">
+      <h2 className="text-xl font-bold text-stone-900 dark:text-stone-100">Pairs well with</h2>
+      <p className="mt-2 text-sm text-stone-600 dark:text-stone-400">
         If you enjoyed this recipe, here are a few related Zaffaron recipes to try next.
       </p>
       <ul className="mt-4 space-y-2">

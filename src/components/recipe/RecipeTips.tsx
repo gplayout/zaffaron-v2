@@ -42,11 +42,11 @@ export function RecipeTips({ recipe }: RecipeTipsProps) {
     <>
       {/* Cultural Significance */}
       {recipe.cultural_significance && (
-        <section className="mb-8 rounded-lg border-l-4 border-amber-400 bg-amber-50/50 px-5 py-4">
+        <section className="mb-8 rounded-lg border-l-4 border-amber-400 bg-amber-50/50 dark:bg-amber-950/30 px-5 py-4">
           <h2 className="mb-2 text-sm font-bold uppercase tracking-wide text-amber-700">
             Cultural Background
           </h2>
-          <p className="text-sm leading-relaxed text-stone-700">{recipe.cultural_significance}</p>
+          <p className="text-sm leading-relaxed text-stone-700 dark:text-stone-300">{recipe.cultural_significance}</p>
         </section>
       )}
 
@@ -79,14 +79,14 @@ export function RecipeTips({ recipe }: RecipeTipsProps) {
       {/* Equipment */}
       {recipe.equipment && Array.isArray(recipe.equipment) && recipe.equipment.length > 0 && (
         <section className="mb-8">
-          <h2 className="mb-2 flex items-center gap-1.5 text-sm font-bold uppercase tracking-wide text-stone-500">
+          <h2 className="mb-2 flex items-center gap-1.5 text-sm font-bold uppercase tracking-wide text-stone-500 dark:text-stone-400">
             <Utensils className="h-4 w-4" /> Equipment
           </h2>
           <div className="flex flex-wrap gap-2">
             {recipe.equipment.map((e: string) => (
               <span
                 key={e}
-                className="rounded-full border border-stone-200 bg-white px-3 py-1 text-xs text-stone-600"
+                className="rounded-full border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 px-3 py-1 text-xs text-stone-600 dark:text-stone-400"
               >
                 {e}
               </span>
@@ -125,9 +125,9 @@ export function RecipeTips({ recipe }: RecipeTipsProps) {
 
       {/* Storage Notes */}
       {recipe.storage_notes && (
-        <section className="mt-6 rounded-lg bg-stone-100 p-6">
+        <section className="mt-6 rounded-lg bg-stone-100 dark:bg-stone-800 p-6">
           <h2 className="mb-3 text-lg font-bold text-stone-800">🧊 How to Store</h2>
-          <p className="text-sm leading-relaxed text-stone-700">{recipe.storage_notes}</p>
+          <p className="text-sm leading-relaxed text-stone-700 dark:text-stone-300">{recipe.storage_notes}</p>
         </section>
       )}
 
@@ -143,7 +143,7 @@ export function RecipeTips({ recipe }: RecipeTipsProps) {
       {serveWith.length > 0 && (
         <section className="mt-6">
           <h2 className="mb-3 text-lg font-bold">🍽️ Pairs Well With</h2>
-          <ul className="list-disc pl-5 text-sm text-stone-600 space-y-1">
+          <ul className="list-disc pl-5 text-sm text-stone-600 dark:text-stone-400 space-y-1">
             {serveWith.map((item, i) => (
               <li key={i}>{item}</li>
             ))}
@@ -163,7 +163,7 @@ export function RecipeTips({ recipe }: RecipeTipsProps) {
               if (typeof v === "string") {
                 if (!v.trim()) return null;
                 return (
-                  <li key={i} className="rounded-lg border border-stone-200 p-3 text-sm text-stone-600">
+                  <li key={i} className="rounded-lg border border-stone-200 dark:border-stone-700 p-3 text-sm text-stone-600 dark:text-stone-400">
                     {v}
                   </li>
                 );
@@ -171,10 +171,10 @@ export function RecipeTips({ recipe }: RecipeTipsProps) {
               const text = v.description || v.difference;
               if (!v.region && !text) return null;
               return (
-                <li key={i} className="rounded-lg border border-stone-200 p-3 text-sm">
-                  {v.region && <span className="font-medium text-stone-800">{v.region}</span>}
+                <li key={i} className="rounded-lg border border-stone-200 dark:border-stone-700 p-3 text-sm">
+                  {v.region && <span className="font-medium text-stone-800 dark:text-stone-200">{v.region}</span>}
                   {text && (
-                    <span className={v.region ? "block mt-0.5 text-stone-600" : "text-stone-600"}>
+                    <span className={v.region ? "block mt-0.5 text-stone-600 dark:text-stone-400" : "text-stone-600 dark:text-stone-400"}>
                       {v.region ? text : text}
                     </span>
                   )}
@@ -191,7 +191,7 @@ export function RecipeTips({ recipe }: RecipeTipsProps) {
           {recipe.occasions.map((o: string) => (
             <span
               key={o}
-              className="flex items-center gap-1 rounded-full border border-stone-200 bg-white px-3 py-1 text-xs text-stone-600"
+              className="flex items-center gap-1 rounded-full border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 px-3 py-1 text-xs text-stone-600 dark:text-stone-400"
             >
               <Calendar className="h-3 w-3" /> {o}
             </span>
@@ -203,7 +203,7 @@ export function RecipeTips({ recipe }: RecipeTipsProps) {
       {recipe.tags?.length > 0 && (
         <div className="mt-6 flex flex-wrap gap-2">
           {recipe.tags.map((tag: string) => (
-            <span key={tag} className="rounded-full bg-stone-100 px-3 py-1 text-xs text-stone-500">
+            <span key={tag} className="rounded-full bg-stone-100 dark:bg-stone-800 px-3 py-1 text-xs text-stone-500 dark:text-stone-400">
               #{tag}
             </span>
           ))}

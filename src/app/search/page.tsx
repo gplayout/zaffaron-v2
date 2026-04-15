@@ -63,7 +63,7 @@ function SearchPageInner() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search recipes, cuisines, categories…"
-            className="w-full rounded-xl border border-stone-300 bg-white py-3 pl-10 pr-4 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-200"
+            className="w-full rounded-xl border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-800 py-3 pl-10 pr-4 text-sm text-stone-900 dark:text-stone-100 placeholder:text-stone-400 dark:placeholder:text-stone-500 outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-200"
           />
         </div>
       </form>
@@ -79,20 +79,20 @@ function SearchPageInner() {
       {/* Initial state: search suggestions */}
       {!searched && !loading && (
         <div className="mx-auto max-w-lg text-center">
-          <p className="text-lg font-medium text-stone-700 mb-4">What are you craving?</p>
+          <p className="text-lg font-medium text-stone-700 dark:text-stone-300 mb-4">What are you craving?</p>
           <div className="flex flex-wrap justify-center gap-2">
             {["Kebab", "Rice", "Soup", "Biryani", "Hummus", "Baklava", "Dolma", "Stew", "Salad", "Bread"].map((term) => (
               <button
                 key={term}
                 type="button"
                 onClick={() => doSearch(term)}
-                className="rounded-full border border-stone-200 bg-white px-4 py-1.5 text-sm text-stone-600 transition hover:border-amber-300 hover:bg-amber-50"
+                className="rounded-full border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 px-4 py-1.5 text-sm text-stone-600 dark:text-stone-400 transition hover:border-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950"
               >
                 {term}
               </button>
             ))}
           </div>
-          <p className="mt-6 text-sm text-stone-400">Search across 1,800+ recipes from Persian, Turkish, Afghan, Lebanese, Azerbaijani, Indian, Moroccan, and Greek cuisines</p>
+          <p className="mt-6 text-sm text-stone-400 dark:text-stone-500">Search across 1,800+ recipes from Persian, Turkish, Afghan, Lebanese, Azerbaijani, Indian, Moroccan, and Greek cuisines</p>
         </div>
       )}
 

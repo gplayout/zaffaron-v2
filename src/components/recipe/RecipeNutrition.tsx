@@ -26,18 +26,18 @@ export function RecipeNutrition({ nutrition, calories }: RecipeNutritionProps) {
     : [{ label: "Calories", value: calories, unit: "" }];
 
   return (
-    <section className="mt-6 rounded-lg border border-stone-200 p-4">
-      <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-stone-500">
+    <section className="mt-6 rounded-lg border border-stone-200 dark:border-stone-700 p-4">
+      <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-stone-500 dark:text-stone-400">
         Nutrition per serving
       </h2>
       <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
         {items.map((item) => (
           <div key={item.label} className="text-center">
-            <div className="text-lg font-bold text-stone-800">
+            <div className="text-lg font-bold text-stone-800 dark:text-stone-200">
               {item.value}
               {item.unit}
             </div>
-            <div className="text-xs text-stone-500">{item.label}</div>
+            <div className="text-xs text-stone-500 dark:text-stone-400">{item.label}</div>
           </div>
         ))}
       </div>

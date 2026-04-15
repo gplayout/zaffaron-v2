@@ -13,17 +13,34 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const { data } = await supabaseServer
     .from("blog_posts")
-    .select("seo_title, seo_description, title, excerpt")
+    .select("seo_title, seo_description, title, excerpt, featured_image")
     .eq("slug", slug)
     .eq("published", true)
     .single();
 
   if (!data) return { title: "Blog Post Not Found" };
 
+  const title = data.seo_title || `${data.title} — Zaffaron Blog`;
+  const description = data.seo_description || data.excerpt || `Read the full article about ${data.title}.`;
+  const ogImage = data.featured_image || '/og-default.jpg';
+
   return {
-    title: data.seo_title || `${data.title} — Zaffaron Blog`,
-    description: data.seo_description || data.excerpt || `Read the full article about ${data.title}.`,
+    title,
+    description,
     alternates: { canonical: `/blog/${slug}` },
+    openGraph: {
+      title,
+      description,
+      type: 'article',
+      url: `/blog/${slug}`,
+      images: [{ url: ogImage, alt: data.title }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [ogImage],
+    },
   };
 }
 

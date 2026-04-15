@@ -73,7 +73,7 @@ export default async function SeasonalSpotlight() {
             className="group block overflow-hidden rounded-xl border border-stone-200 bg-white transition hover:border-amber-300 hover:shadow-md"
           >
             {recipe.image_url && (
-              <div className="aspect-[4/3] overflow-hidden bg-stone-100">
+              <div className="relative aspect-[4/3] overflow-hidden bg-stone-100">
                 <Image
                   src={recipe.image_url}
                   alt={recipe.title}

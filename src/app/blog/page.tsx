@@ -42,7 +42,7 @@ export default async function BlogIndexPage() {
             className="group block flex-col justify-between rounded-2xl border border-stone-200 bg-white overflow-hidden shadow-sm transition hover:border-amber-300 hover:shadow-md"
           >
             {post.featured_image && (
-              <div className="aspect-video w-full bg-stone-100 overflow-hidden">
+              <div className="relative aspect-video w-full bg-stone-100 overflow-hidden">
                 <Image
                   src={post.featured_image}
                   alt={post.title}

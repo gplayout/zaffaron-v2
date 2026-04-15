@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { supabaseServer } from "@/lib/supabase-server";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { BlogPostJsonLd } from "@/components/blog/BlogPostJsonLd";
 
 export const revalidate = 3600;
 
@@ -59,6 +60,17 @@ export default async function BlogPostPage({ params }: PageProps) {
   }
 
   return (
+    <>
+      <BlogPostJsonLd
+        title={post.title}
+        slug={post.slug}
+        description={post.seo_description || post.excerpt || ''}
+        authorName={post.author_name || 'Zaffaron Kitchen'}
+        publishedAt={post.published_at}
+        updatedAt={post.updated_at}
+        featuredImage={post.featured_image}
+        tags={post.tags}
+      />
     <article className="max-w-3xl mx-auto px-4 py-12">
       <Link href="/blog" className="text-sm font-medium text-amber-600 hover:text-amber-700 hover:underline mb-8 block transition">
         ← Back to Blog
@@ -122,5 +134,6 @@ export default async function BlogPostPage({ params }: PageProps) {
         </div>
       )}
     </article>
+    </>
   );
 }

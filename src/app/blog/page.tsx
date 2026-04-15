@@ -13,7 +13,7 @@ export const revalidate = 3600;
 export default async function BlogIndexPage() {
   const { data: posts, error } = await supabaseServer
     .from("blog_posts")
-    .select("slug, title, excerpt, author_name, published_at")
+    .select("slug, title, excerpt, author_name, published_at, featured_image")
     .eq("published", true)
     .order("published_at", { ascending: false });
 
@@ -38,9 +38,19 @@ export default async function BlogIndexPage() {
           <Link
             key={post.slug}
             href={`/blog/${post.slug}`}
-            className="group block flex-col justify-between rounded-2xl border border-stone-200 bg-white p-6 shadow-sm transition hover:border-amber-300 hover:shadow-md"
+            className="group block flex-col justify-between rounded-2xl border border-stone-200 bg-white overflow-hidden shadow-sm transition hover:border-amber-300 hover:shadow-md"
           >
-            <div>
+            {post.featured_image && (
+              <div className="aspect-video w-full bg-stone-100 overflow-hidden">
+                <img
+                  src={post.featured_image}
+                  alt={post.title}
+                  className="object-cover w-full h-full group-hover:scale-105 transition duration-300"
+                  loading="lazy"
+                />
+              </div>
+            )}
+            <div className="p-6">
               <h2 className="text-xl font-bold text-stone-900 group-hover:text-amber-700 transition">
                 {post.title}
               </h2>

@@ -8,6 +8,12 @@
     display: none !important;
   }
 
+  /* Hide non-essential recipe sections */
+  [data-print="hide"],
+  .no-print {
+    display: none !important;
+  }
+
   /* Reduce page padding */
   main {
     max-width: none !important;
@@ -16,11 +22,29 @@
 
   body {
     background: white !important;
+    font-size: 12pt !important;
+  }
+
+  /* Keep recipe card compact */
+  article {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  /* Avoid page breaks inside steps */
+  li, .prose h2, .prose h3 {
+    break-inside: avoid;
   }
 
   /* Avoid odd link styling in print */
   a {
     color: inherit;
     text-decoration: none;
+  }
+
+  /* Hide images except hero */
+  img:not([data-print="keep"]) {
+    max-height: 200px !important;
+    object-fit: cover !important;
   }
 }

@@ -100,9 +100,13 @@ export default async function RecipePage({ params }: Props) {
 
         <RecipeQuickCard recipe={recipe} />
 
-        <RecipeTips recipe={recipe} />
+        <div data-print="hide">
+          <RecipeTips recipe={recipe} />
+        </div>
 
-        <RecipeFAQ items={getRecipeFaq(recipe.slug)} />
+        <div data-print="hide">
+          <RecipeFAQ items={getRecipeFaq(recipe.slug)} />
+        </div>
 
         <div id="recipe-ingredients" className="grid gap-8 md:grid-cols-[1fr_2fr] mt-8">
           <RecipeIngredients
@@ -112,35 +116,37 @@ export default async function RecipePage({ params }: Props) {
           <RecipeInstructions instructions={recipe.instructions} />
         </div>
 
-        <RecipeVariations sections={getRecipeVariations(recipe.slug)} />
+        <div data-print="hide">
+          <RecipeVariations sections={getRecipeVariations(recipe.slug)} />
 
-        <RecipeProvenance
-          cuisineSlug={recipe.cuisine_slug}
-          culturalSignificance={recipe.cultural_significance}
-          regionalVariations={recipe.regional_variations}
-          author={recipe.author}
-          publishedAt={recipe.published_at}
-        />
+          <RecipeProvenance
+            cuisineSlug={recipe.cuisine_slug}
+            culturalSignificance={recipe.cultural_significance}
+            regionalVariations={recipe.regional_variations}
+            author={recipe.author}
+            publishedAt={recipe.published_at}
+          />
 
-        <ShareButtons
-          title={recipe.title}
-          url={`${SITE_URL}/recipe/${recipe.slug}`}
-        />
+          <ShareButtons
+            title={recipe.title}
+            url={`${SITE_URL}/recipe/${recipe.slug}`}
+          />
 
-        <RecipeNutrition
-          nutrition={recipe.nutrition_per_serving}
-          calories={recipe.calories_per_serving}
-        />
+          <RecipeNutrition
+            nutrition={recipe.nutrition_per_serving}
+            calories={recipe.calories_per_serving}
+          />
 
-        <RecipeInternalLinks recipe={recipe} />
+          <RecipeInternalLinks recipe={recipe} />
 
-        <RelatedRecipes
-          currentSlug={recipe.slug}
-          cuisineSlug={recipe.cuisine_slug || recipe.cuisine.toLowerCase()}
-          categorySlug={recipe.category_slug || recipe.category.toLowerCase()}
-        />
+          <RelatedRecipes
+            currentSlug={recipe.slug}
+            cuisineSlug={recipe.cuisine_slug || recipe.cuisine.toLowerCase()}
+            categorySlug={recipe.category_slug || recipe.category.toLowerCase()}
+          />
 
-        <RecipeReviews reviews={reviews} recipeId={recipe.id} />
+          <RecipeReviews reviews={reviews} recipeId={recipe.id} />
+        </div>
       </article>
     </>
   );

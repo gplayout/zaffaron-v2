@@ -166,7 +166,7 @@ export default function RootLayout({
               </div>
 
               {/* Newsletter */}
-              <div className="mt-8 flex justify-center">
+              <div className="mt-8 flex justify-center" data-print="hide">
                 <NewsletterForm />
               </div>
 

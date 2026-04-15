@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { supabaseServer } from "@/lib/supabase-server";
 
@@ -42,11 +43,12 @@ export default async function BlogIndexPage() {
           >
             {post.featured_image && (
               <div className="aspect-video w-full bg-stone-100 overflow-hidden">
-                <img
+                <Image
                   src={post.featured_image}
                   alt={post.title}
-                  className="object-cover w-full h-full group-hover:scale-105 transition duration-300"
-                  loading="lazy"
+                  fill
+                  className="object-cover group-hover:scale-105 transition duration-300"
+                  sizes="(max-width: 768px) 100vw, 50vw"
                 />
               </div>
             )}

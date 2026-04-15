@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { supabaseServer } from "@/lib/supabase-server";
 
@@ -73,11 +74,12 @@ export default async function SeasonalSpotlight() {
           >
             {recipe.image_url && (
               <div className="aspect-[4/3] overflow-hidden bg-stone-100">
-                <img
+                <Image
                   src={recipe.image_url}
                   alt={recipe.title}
-                  className="h-full w-full object-cover transition group-hover:scale-105"
-                  loading="lazy"
+                  fill
+                  className="object-cover transition group-hover:scale-105"
+                  sizes="(max-width: 768px) 50vw, 25vw"
                 />
               </div>
             )}

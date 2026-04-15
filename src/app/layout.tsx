@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Link from "next/link";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AuthProvider } from "@/components/AuthProvider";
 import Navigation from "@/components/Navigation";
 import NewsletterForm from "@/components/NewsletterForm";
@@ -235,6 +236,7 @@ export default function RootLayout({
             </div>
           </footer>
           <Analytics />
+            <SpeedInsights />
         </AuthProvider>
       </body>
     </html>

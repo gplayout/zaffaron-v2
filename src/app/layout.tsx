@@ -32,10 +32,16 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Zaffaron",
     locale: "en_US",
-    images: [{ url: `${SITE_URL}/og-default.jpg`, width: 1200, height: 630, alt: "Zaffaron — Authentic Recipes from Every Kitchen" }],
+    images: {
+      url: `${SITE_URL}/og-default.jpg`,
+      width: 1200,
+      height: 630,
+      alt: "Zaffaron — Authentic Recipes from Every Kitchen",
+    },
   },
   twitter: {
     card: "summary_large_image",
+    images: [`${SITE_URL}/og-default.jpg`],
   },
   icons: {
     icon: "/favicon.ico",

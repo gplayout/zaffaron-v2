@@ -27,7 +27,7 @@ export default function Navigation() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-stone-200 bg-white/90 backdrop-blur-md">
+    <header data-print="hide" className="sticky top-0 z-50 border-b border-stone-200 bg-white/90 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">

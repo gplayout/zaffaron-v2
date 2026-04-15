@@ -109,7 +109,8 @@
 
 /* Print-friendly defaults (used by the existing PrintButton -> window.print()). */
 @media print {
-  /* Remove chrome */
+  /* Remove chrome — site header, nav, footer */
+  body > header,
   nav,
   footer {
     display: none !important;

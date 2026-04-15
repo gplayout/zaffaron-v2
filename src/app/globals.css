@@ -107,6 +107,113 @@
   }
 }
 
+/* Class-based dark mode (for manual toggle) */
+.dark {
+  .dark {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: #1c1917; /* stone-900 */
+    color: #e7e5e4; /* stone-200 */
+  }
+
+  /* Cards and sections */
+  article,
+  section,
+  .bg-white,
+  [class*="bg-white"] {
+    background-color: #292524 !important; /* stone-800 */
+  }
+
+  /* Borders */
+  [class*="border-stone-200"],
+  [class*="border-stone-100"] {
+    border-color: #44403c !important; /* stone-700 */
+  }
+
+  /* Text colors */
+  [class*="text-stone-900"],
+  [class*="text-stone-800"] {
+    color: #e7e5e4 !important; /* stone-200 */
+  }
+
+  [class*="text-stone-700"],
+  [class*="text-stone-600"] {
+    color: #d6d3d1 !important; /* stone-300 */
+  }
+
+  [class*="text-stone-500"] {
+    color: #a8a29e !important; /* stone-400 */
+  }
+
+  /* Background tints */
+  [class*="bg-stone-50"],
+  [class*="bg-stone-100"] {
+    background-color: #1c1917 !important; /* stone-900 */
+  }
+
+  [class*="bg-amber-50"],
+  [class*="bg-orange-50"] {
+    background-color: #292524 !important;
+  }
+
+  /* Gradient overrides */
+  [class*="from-amber-50"],
+  [class*="to-orange-50"] {
+    --tw-gradient-from: #292524 !important;
+    --tw-gradient-to: #1c1917 !important;
+  }
+
+  /* Input fields */
+  input, textarea, select {
+    background-color: #292524 !important;
+    color: #e7e5e4 !important;
+    border-color: #44403c !important;
+  }
+
+  /* Prose (blog content) */
+  .prose {
+    --tw-prose-body: #d6d3d1;
+    --tw-prose-headings: #e7e5e4;
+    --tw-prose-links: #d97706;
+    --tw-prose-bold: #e7e5e4;
+    --tw-prose-quotes: #a8a29e;
+    --tw-prose-quote-borders: #d97706;
+    --tw-prose-counters: #a8a29e;
+    --tw-prose-bullets: #a8a29e;
+    --tw-prose-hr: #44403c;
+    --tw-prose-th-borders: #44403c;
+    --tw-prose-td-borders: #44403c;
+  }
+
+  .prose blockquote {
+    background-color: rgba(217, 119, 6, 0.1) !important;
+  }
+
+  /* Footer */
+  footer {
+    background-color: #0c0a09 !important; /* stone-950 */
+  }
+
+  /* Navigation */
+  nav {
+    background-color: #1c1917 !important;
+    border-color: #44403c !important;
+  }
+
+  /* Difficulty badges */
+  [class*="bg-green-100"] { background-color: #14532d !important; color: #86efac !important; }
+  [class*="bg-amber-100"] { background-color: #78350f !important; color: #fcd34d !important; }
+  [class*="bg-red-100"],
+  [class*="bg-pink-100"] { background-color: #7f1d1d !important; color: #fca5a5 !important; }
+
+  /* Shadow adjustments */
+  [class*="shadow"] {
+    --tw-shadow-color: rgba(0, 0, 0, 0.3);
+  }
+}
+
 /* Print-friendly defaults (used by the existing PrintButton -> window.print()). */
 @media print {
   /* Remove chrome — site header, nav, footer */

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChefHat, Menu, X, Search, UtensilsCrossed, Calendar, BookOpen } from "lucide-react";
 import { HeaderAuthWithFavorites } from "./HeaderAuthWithFavorites";
+import ThemeToggle from "./ThemeToggle";
 
 const navLinks = [
   { href: "/recipes", label: "Recipes", icon: UtensilsCrossed },
@@ -63,11 +64,13 @@ export default function Navigation() {
           >
             <Search className="h-5 w-5" />
           </Link>
+          <ThemeToggle />
           <HeaderAuthWithFavorites />
         </div>
 
         {/* Mobile Menu Button */}
         <div className="flex items-center gap-2 md:hidden">
+          <ThemeToggle />
           <Link
             href="/search"
             className="rounded-full p-2 text-stone-500 transition hover:bg-stone-100 hover:text-stone-900"

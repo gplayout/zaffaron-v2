@@ -8,6 +8,14 @@ import { BlogPostJsonLd } from "@/components/blog/BlogPostJsonLd";
 
 export const revalidate = 3600;
 
+export async function generateStaticParams() {
+  const { data } = await supabaseServer
+    .from("blog_posts")
+    .select("slug")
+    .eq("published", true);
+  return (data || []).map((p) => ({ slug: p.slug }));
+}
+
 type PageProps = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

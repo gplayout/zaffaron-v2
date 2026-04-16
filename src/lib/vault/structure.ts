@@ -1,7 +1,8 @@
-import OpenAI from "openai";
+/**
+ * Recipe structuring via raw fetch to OpenAI API.
+ * NO openai SDK import — Vercel bundler crashes with the SDK in API routes.
+ */
 import type { VaultStructuredData, StructureResult } from "./types";
-
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 const SYSTEM_PROMPT = `You are a recipe structuring assistant for Zaffaron, a global family recipe vault.
 
@@ -34,28 +35,35 @@ export async function structureRecipeText(
   title: string
 ): Promise<StructureResult> {
   try {
-    const response = await openai.chat.completions.create({
-      model: "gpt-5.2",
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        {
-          role: "user",
-          content: `Recipe title: ${title}\n\nRaw recipe text:\n${rawText}`,
-        },
-      ],
-      response_format: { type: "json_object" },
-      max_completion_tokens: 2000,
-      temperature: 0.3,
+    const resp = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-5.2",
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          { role: "user", content: `Recipe title: ${title}\n\nRaw recipe text:\n${rawText}` },
+        ],
+        response_format: { type: "json_object" },
+        max_completion_tokens: 2000,
+        temperature: 0.3,
+      }),
     });
 
-    const content = response.choices[0]?.message?.content;
-    if (!content) {
-      return { ok: false, error: "No response from AI" };
+    if (!resp.ok) {
+      const err = await resp.text();
+      return { ok: false, error: `OpenAI error: ${err.slice(0, 200)}` };
     }
+
+    const data = await resp.json();
+    const content = data.choices?.[0]?.message?.content;
+    if (!content) return { ok: false, error: "No response from AI" };
 
     const parsed = JSON.parse(content) as VaultStructuredData;
 
-    // Basic validation
     if (!parsed.ingredients || !Array.isArray(parsed.ingredients)) {
       return { ok: false, error: "AI did not return valid ingredients" };
     }
@@ -63,7 +71,6 @@ export async function structureRecipeText(
       return { ok: false, error: "AI did not return valid instructions" };
     }
 
-    // Calculate confidence based on completeness
     let confidence = 0.5;
     if (parsed.ingredients.length >= 2) confidence += 0.15;
     if (parsed.instructions.length >= 2) confidence += 0.15;
@@ -81,7 +88,6 @@ export async function structureRecipeText(
     };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
-    console.error("Recipe structuring failed:", message);
     return { ok: false, error: `Structuring failed: ${message}` };
   }
 }

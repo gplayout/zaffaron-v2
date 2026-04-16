@@ -26,9 +26,9 @@ const features = [
   },
   {
     icon: Camera,
-    title: "Snap a Photo",
+    title: "Photo OCR (Coming Soon)",
     description:
-      "Take a picture of a handwritten recipe card, a page from a cookbook, or your grandmother's notes. AI reads any script.",
+      "Soon: snap a photo of a handwritten recipe card and our AI will read it. Currently in development.",
   },
   {
     icon: Type,
@@ -46,7 +46,7 @@ const features = [
     icon: Share2,
     title: "Share with Family",
     description:
-      "Send beautiful recipe cards to your family. They can add their own version, notes, and secret ingredients.",
+      "Share your recipe via link. Family multiplayer features (versions, notes) coming soon.",
   },
   {
     icon: Lock,
@@ -212,7 +212,7 @@ export default function VaultLandingPage() {
             <span className="text-green-600">✓</span> Delete anytime, instantly
           </span>
           <span className="flex items-center gap-2">
-            <span className="text-green-600">✓</span> Export your data
+            <span className="text-green-600">✓</span> Export coming soon
           </span>
         </div>
       </section>

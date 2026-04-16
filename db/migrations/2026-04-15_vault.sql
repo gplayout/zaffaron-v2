@@ -109,9 +109,9 @@ CREATE POLICY vault_recipes_owner ON vault_recipes
   FOR ALL TO authenticated
   USING (owner_id = auth.uid());
 
--- Public recipes visible to all
+-- Public recipes visible to ALL (including anonymous visitors)
 CREATE POLICY vault_recipes_public ON vault_recipes
-  FOR SELECT TO authenticated
+  FOR SELECT TO anon, authenticated
   USING (visibility = 'public');
 
 -- Family members can view family recipes

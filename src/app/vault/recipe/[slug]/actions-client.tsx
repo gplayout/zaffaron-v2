@@ -24,9 +24,13 @@ export default function VaultRecipeActions({ recipeId, slug, visibility: initial
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ recipeId, visibility: newVis }),
       });
-      if (res.ok) setVisibility(newVis);
+      if (res.ok) {
+        setVisibility(newVis);
+      } else {
+        alert("Failed to update visibility. Please try again.");
+      }
     } catch {
-      // silently fail
+      alert("Something went wrong. Please try again.");
     }
   }
 

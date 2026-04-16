@@ -6,7 +6,7 @@ import { ChefHat, Loader2, Check, AlertCircle, Sparkles } from "lucide-react";
 import { structureRecipe, saveVaultRecipe } from "@/app/actions/vault";
 import type { VaultStructuredData } from "@/lib/vault/types";
 import { useAuth } from "@/components/AuthProvider";
-// import AudioRecorder from "@/components/vault/AudioRecorder"; // temporarily disabled for deploy fix
+import AudioRecorder from "@/components/vault/AudioRecorder";
 
 type Step = "input" | "processing" | "review" | "saving" | "done";
 type InputMode = "text" | "voice";
@@ -221,7 +221,10 @@ export default function VaultCreatePage() {
           {/* Voice Input Mode — temporarily disabled for deploy fix */}
           {inputMode === "voice" && (
             <div>
-              <p className="text-center text-stone-500 dark:text-stone-400 py-8">Voice recording coming soon! Use text input for now.</p>
+              <AudioRecorder
+                title={title}
+                onTranscription={handleVoiceTranscription}
+              />
               {rawText && (
                 <div className="mt-4">
                   <label className="mb-1.5 block text-sm font-medium text-stone-700 dark:text-stone-300">

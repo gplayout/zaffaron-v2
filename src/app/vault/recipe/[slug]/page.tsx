@@ -14,8 +14,13 @@ export const dynamic = "force-dynamic";
 type PageProps = { params: Promise<{ slug: string }> };
 
 async function getVaultRecipe(slug: string) {
-  // Use service role to fetch (RLS check done manually below)
-  const { data, error } = await supabaseServer
+  // Use service role to bypass RLS — privacy check done manually in render
+  const { createClient } = await import("@supabase/supabase-js");
+  const serviceClient = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+  const { data, error } = await serviceClient
     .from("vault_recipes")
     .select("*")
     .eq("share_slug", slug)

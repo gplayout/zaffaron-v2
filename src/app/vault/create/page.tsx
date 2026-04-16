@@ -6,14 +6,17 @@ import { ChefHat, Loader2, Check, AlertCircle, Sparkles } from "lucide-react";
 import { structureRecipe, saveVaultRecipe } from "@/app/actions/vault";
 import type { VaultStructuredData } from "@/lib/vault/types";
 import { useAuth } from "@/components/AuthProvider";
+import AudioRecorder from "@/components/vault/AudioRecorder";
 
 type Step = "input" | "processing" | "review" | "saving" | "done";
+type InputMode = "text" | "voice";
 
 export default function VaultCreatePage() {
   const router = useRouter();
   const { user } = useAuth();
 
   const [step, setStep] = useState<Step>("input");
+  const [inputMode, setInputMode] = useState<InputMode>("text");
   const [title, setTitle] = useState("");
   const [rawText, setRawText] = useState("");
   const [attributionName, setAttributionName] = useState("");
@@ -78,6 +81,25 @@ export default function VaultCreatePage() {
     setStructuredData(null);
   }
 
+  function handleVoiceTranscription(data: {
+    transcript: string;
+    language: string;
+    structured?: Record<string, unknown>;
+    confidence?: number;
+  }) {
+    setRawText(data.transcript);
+    setLanguage(data.language);
+
+    if (data.structured) {
+      setStructuredData(data.structured as unknown as VaultStructuredData);
+      setConfidence(data.confidence || 0.7);
+      setStep("review");
+    } else {
+      // Transcript only — user can edit and then structure
+      setInputMode("text");
+    }
+  }
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
       <div className="mb-8 text-center">
@@ -138,6 +160,30 @@ export default function VaultCreatePage() {
       {/* STEP 1: Input */}
       {step === "input" && (
         <div className="space-y-6">
+          {/* Input Mode Tabs */}
+          <div className="flex rounded-lg border border-stone-200 dark:border-stone-700 p-1 bg-stone-100 dark:bg-stone-800">
+            <button
+              onClick={() => setInputMode("text")}
+              className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition ${
+                inputMode === "text"
+                  ? "bg-white dark:bg-stone-700 text-stone-900 dark:text-stone-100 shadow-sm"
+                  : "text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-300"
+              }`}
+            >
+              ⌨️ Type Recipe
+            </button>
+            <button
+              onClick={() => setInputMode("voice")}
+              className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition ${
+                inputMode === "voice"
+                  ? "bg-white dark:bg-stone-700 text-stone-900 dark:text-stone-100 shadow-sm"
+                  : "text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-300"
+              }`}
+            >
+              🎤 Record Voice
+            </button>
+          </div>
+
           <div>
             <label htmlFor="recipe-title" className="mb-1.5 block text-sm font-medium text-stone-700 dark:text-stone-300">
               Recipe Name *
@@ -152,22 +198,48 @@ export default function VaultCreatePage() {
             />
           </div>
 
-          <div>
-            <label htmlFor="recipe-text" className="mb-1.5 block text-sm font-medium text-stone-700 dark:text-stone-300">
-              Recipe (in any language) *
-            </label>
-            <textarea
-              id="recipe-text"
-              rows={10}
-              value={rawText}
-              onChange={(e) => setRawText(e.target.value)}
-              placeholder={"Type or paste your recipe here...\n\nFor example:\n2 cups dried herbs (parsley, cilantro, fenugreek)\n500g lamb, cubed\n3 dried limes\n\n1. Fry the herbs until dark green...\n2. Brown the meat with turmeric..."}
-              className="w-full rounded-lg border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-800 px-4 py-3 text-stone-900 dark:text-stone-100 placeholder:text-stone-400 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 font-mono text-sm"
-            />
-            <p className="mt-1.5 text-xs text-stone-500 dark:text-stone-400">
-              Write in any language — Persian, Turkish, Arabic, Hindi, English, or any other. Our AI supports 99+ languages.
-            </p>
-          </div>
+          {/* Text Input Mode */}
+          {inputMode === "text" && (
+            <div>
+              <label htmlFor="recipe-text" className="mb-1.5 block text-sm font-medium text-stone-700 dark:text-stone-300">
+                Recipe (in any language) *
+              </label>
+              <textarea
+                id="recipe-text"
+                rows={10}
+                value={rawText}
+                onChange={(e) => setRawText(e.target.value)}
+                placeholder={"Type or paste your recipe here...\n\nFor example:\n2 cups dried herbs (parsley, cilantro, fenugreek)\n500g lamb, cubed\n3 dried limes\n\n1. Fry the herbs until dark green...\n2. Brown the meat with turmeric..."}
+                className="w-full rounded-lg border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-800 px-4 py-3 text-stone-900 dark:text-stone-100 placeholder:text-stone-400 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 font-mono text-sm"
+              />
+              <p className="mt-1.5 text-xs text-stone-500 dark:text-stone-400">
+                Write in any language — Persian, Turkish, Arabic, Hindi, English, or any other. Our AI supports 99+ languages.
+              </p>
+            </div>
+          )}
+
+          {/* Voice Input Mode */}
+          {inputMode === "voice" && (
+            <div>
+              <AudioRecorder
+                title={title}
+                onTranscription={handleVoiceTranscription}
+              />
+              {rawText && (
+                <div className="mt-4">
+                  <label className="mb-1.5 block text-sm font-medium text-stone-700 dark:text-stone-300">
+                    Transcript (edit if needed)
+                  </label>
+                  <textarea
+                    rows={6}
+                    value={rawText}
+                    onChange={(e) => setRawText(e.target.value)}
+                    className="w-full rounded-lg border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-800 px-4 py-3 text-stone-900 dark:text-stone-100 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 font-mono text-sm"
+                  />
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div>

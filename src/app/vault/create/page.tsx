@@ -72,7 +72,20 @@ export default function VaultCreatePage() {
     }
 
     setStep("done");
-    // Redirect to my recipes (private recipes need auth which may not transfer on server redirect)
+
+    // Generate heritage card in background (don't block UX)
+    fetch("/api/vault/card", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        recipeId: result.slug, // server will look up by slug
+        title,
+        attributionName: attributionName || undefined,
+        cuisine: structuredData.cuisine || undefined,
+        shareSlug: result.slug,
+      }),
+    }).catch(() => {}); // silent — card is optional
+
     setTimeout(() => router.push("/vault/my-recipes"), 1500);
   }
 

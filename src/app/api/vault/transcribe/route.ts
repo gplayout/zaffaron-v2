@@ -10,6 +10,12 @@ export async function POST(request: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: "Please sign in" }, { status: 401 });
 
+    // Credit check
+    const { data: ent } = await supabase.from("user_entitlements").select("ai_credits_remaining").eq("user_id", user.id).single();
+    if (ent && ent.ai_credits_remaining <= 0) {
+      return NextResponse.json({ error: "No AI credits remaining. Upgrade to Heritage Pro for unlimited." }, { status: 402 });
+    }
+
     const formData = await request.formData();
     const audioFile = formData.get("audio") as File | null;
     const title = formData.get("title") as string | null;

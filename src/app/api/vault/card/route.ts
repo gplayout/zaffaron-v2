@@ -9,8 +9,8 @@ export async function POST(request: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const { recipeId, title, attributionName, cuisine, shareSlug } = await request.json();
-    if (!recipeId || !title || !shareSlug) {
+    const { title, attributionName, cuisine, shareSlug } = await request.json();
+    if (!title || !shareSlug) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
@@ -34,8 +34,8 @@ export async function POST(request: NextRequest) {
 
     const cardUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/recipe-images/${cardPath}`;
 
-    // Update recipe with card URL
-    await supabase.from("vault_recipes").update({ image_url: cardUrl }).eq("id", recipeId).eq("owner_id", user.id);
+    // Update recipe with card URL (lookup by slug)
+    await supabase.from("vault_recipes").update({ image_url: cardUrl }).eq("share_slug", shareSlug).eq("owner_id", user.id);
 
     return NextResponse.json({ ok: true, imageUrl: cardUrl });
   } catch (error) {

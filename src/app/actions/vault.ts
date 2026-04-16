@@ -4,8 +4,37 @@ import { createServerSupabase } from "@/lib/supabase-server-auth";
 import { structureRecipeText } from "@/lib/vault/structure";
 import type { VaultStructuredData } from "@/lib/vault/types";
 import { nanoid } from "nanoid";
-// Heritage card generation moved to separate API route to avoid sharp bundling issues
-// import { generateHeritageCard } from "@/lib/vault/heritage-card";
+
+// Credit limit check
+async function checkCredits(userId: string, supabase: Awaited<ReturnType<typeof createServerSupabase>>): Promise<{ ok: true } | { ok: false; error: string }> {
+  // Check user entitlements
+  const { data: ent } = await supabase.from("user_entitlements").select("tier, ai_credits_remaining, recipe_limit").eq("user_id", userId).single();
+  
+  if (!ent) {
+    // First-time user — create entitlements with free tier defaults
+    await supabase.from("user_entitlements").insert({ user_id: userId, tier: "free", ai_credits_remaining: 5, recipe_limit: 10 });
+    return { ok: true };
+  }
+  
+  if (ent.ai_credits_remaining <= 0) {
+    return { ok: false, error: "You've used all your free AI credits this month. Upgrade to Heritage Pro for unlimited." };
+  }
+  
+  // Check recipe count
+  const { count } = await supabase.from("vault_recipes").select("*", { count: "exact", head: true }).eq("owner_id", userId);
+  if ((count || 0) >= (ent.recipe_limit || 10) && ent.tier === "free") {
+    return { ok: false, error: `You've reached the ${ent.recipe_limit} recipe limit. Upgrade to Heritage Pro for unlimited.` };
+  }
+  
+  return { ok: true };
+}
+
+async function decrementCredits(userId: string, supabase: Awaited<ReturnType<typeof createServerSupabase>>) {
+  const { data: ent } = await supabase.from("user_entitlements").select("ai_credits_remaining").eq("user_id", userId).single();
+  if (ent && ent.ai_credits_remaining > 0) {
+    await supabase.from("user_entitlements").update({ ai_credits_remaining: ent.ai_credits_remaining - 1 }).eq("user_id", userId);
+  }
+}
 
 export async function structureRecipe(
   title: string,
@@ -22,8 +51,21 @@ export async function structureRecipe(
     return { ok: false, error: "Recipe text is too long (max 10,000 characters)." };
   }
 
+  // Auth + credit check for AI usage
+  const supabase = await createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (user) {
+    const creditCheck = await checkCredits(user.id, supabase);
+    if (!creditCheck.ok) return creditCheck;
+  }
+
   const result = await structureRecipeText(rawText, title);
   if (!result.ok) return result;
+
+  // Decrement AI credit after successful structuring
+  if (user) {
+    await decrementCredits(user.id, supabase);
+  }
 
   return {
     ok: true,

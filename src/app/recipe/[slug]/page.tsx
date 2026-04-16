@@ -19,6 +19,7 @@ import {
   RecipeVariations,
   RecipeInternalLinks,
 } from "@/components/recipe";
+import { VaultCTA } from "@/components/recipe/VaultCTA";
 import type { Metadata } from "next";
 import { getRecipeFaq } from "@/lib/seo/recipe-faq";
 import { getRecipeVariations } from "@/lib/seo/recipe-variations";
@@ -148,6 +149,12 @@ export default async function RecipePage({ params }: Props) {
           />
 
           <RecipeInternalLinks recipe={recipe} />
+
+          <VaultCTA
+            recipeTitle={recipe.title}
+            recipeSlug={recipe.slug}
+            cuisine={recipe.cuisine}
+          />
 
           <RelatedRecipes
             currentSlug={recipe.slug}

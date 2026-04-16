@@ -72,8 +72,8 @@ export default function VaultCreatePage() {
     }
 
     setStep("done");
-    // Redirect to vault recipe view
-    setTimeout(() => router.push(`/vault/recipe/${result.slug}`), 1500);
+    // Redirect to my recipes (private recipes need auth which may not transfer on server redirect)
+    setTimeout(() => router.push("/vault/my-recipes"), 1500);
   }
 
   function handleBackToEdit() {

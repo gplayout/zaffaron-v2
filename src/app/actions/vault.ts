@@ -5,35 +5,29 @@ import { structureRecipeText } from "@/lib/vault/structure";
 import type { VaultStructuredData } from "@/lib/vault/types";
 import { nanoid } from "nanoid";
 
-// Credit limit check
-async function checkCredits(userId: string, supabase: Awaited<ReturnType<typeof createServerSupabase>>): Promise<{ ok: true } | { ok: false; error: string }> {
-  // Check user entitlements
-  const { data: ent } = await supabase.from("user_entitlements").select("tier, ai_credits_remaining, recipe_limit").eq("user_id", userId).single();
-  
+// Atomic credit system via Supabase RPC (prevents race conditions)
+async function ensureEntitlements(userId: string, supabase: Awaited<ReturnType<typeof createServerSupabase>>) {
+  const { data: ent } = await supabase.from("user_entitlements").select("user_id").eq("user_id", userId).single();
   if (!ent) {
-    // First-time user — create entitlements with free tier defaults
     await supabase.from("user_entitlements").insert({ user_id: userId, tier: "free", ai_credits_remaining: 5, recipe_limit: 10 });
-    return { ok: true };
   }
-  
-  if (ent.ai_credits_remaining <= 0) {
-    return { ok: false, error: "You've used all your free AI credits this month. Upgrade to Heritage Pro for unlimited." };
-  }
-  
-  // Check recipe count
-  const { count } = await supabase.from("vault_recipes").select("*", { count: "exact", head: true }).eq("owner_id", userId);
-  if ((count || 0) >= (ent.recipe_limit || 10) && ent.tier === "free") {
-    return { ok: false, error: `You've reached the ${ent.recipe_limit} recipe limit. Upgrade to Heritage Pro for unlimited.` };
-  }
-  
-  return { ok: true };
 }
 
-async function decrementCredits(userId: string, supabase: Awaited<ReturnType<typeof createServerSupabase>>) {
-  const { data: ent } = await supabase.from("user_entitlements").select("ai_credits_remaining").eq("user_id", userId).single();
-  if (ent && ent.ai_credits_remaining > 0) {
-    await supabase.from("user_entitlements").update({ ai_credits_remaining: ent.ai_credits_remaining - 1 }).eq("user_id", userId);
-  }
+async function tryDecrementCredits(userId: string, supabase: Awaited<ReturnType<typeof createServerSupabase>>): Promise<boolean> {
+  await ensureEntitlements(userId, supabase);
+  const { data } = await supabase.rpc("decrement_ai_credits", { p_user_id: userId, p_cost: 1 });
+  return data === true;
+}
+
+async function refundCredits(userId: string, supabase: Awaited<ReturnType<typeof createServerSupabase>>) {
+  await supabase.rpc("refund_ai_credits", { p_user_id: userId, p_cost: 1 });
+}
+
+async function checkRecipeLimit(userId: string, supabase: Awaited<ReturnType<typeof createServerSupabase>>): Promise<boolean> {
+  const { data: ent } = await supabase.from("user_entitlements").select("tier, recipe_limit").eq("user_id", userId).single();
+  if (!ent || ent.tier !== "free") return true;
+  const { count } = await supabase.from("vault_recipes").select("*", { count: "exact", head: true }).eq("owner_id", userId);
+  return (count || 0) < (ent.recipe_limit || 10);
 }
 
 export async function structureRecipe(
@@ -51,20 +45,25 @@ export async function structureRecipe(
     return { ok: false, error: "Recipe text is too long (max 10,000 characters)." };
   }
 
-  // Auth + credit check for AI usage
+  // Auth + atomic credit deduction
   const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
+  let creditDeducted = false;
   if (user) {
-    const creditCheck = await checkCredits(user.id, supabase);
-    if (!creditCheck.ok) return creditCheck;
+    const hasCredits = await tryDecrementCredits(user.id, supabase);
+    if (!hasCredits) {
+      return { ok: false, error: "No AI credits remaining. Upgrade to Heritage Pro for unlimited." };
+    }
+    creditDeducted = true;
   }
 
   const result = await structureRecipeText(rawText, title);
   if (!result.ok) return result;
 
-  // Decrement AI credit after successful structuring
-  if (user) {
-    await decrementCredits(user.id, supabase);
+  // Credit already deducted atomically before AI call
+  // If AI failed, refund:
+  if (!result.ok && creditDeducted && user) {
+    await refundCredits(user.id, supabase);
   }
 
   return {
@@ -91,6 +90,12 @@ export async function saveVaultRecipe(
 
     if (authError || !user) {
       return { ok: false, error: "Please sign in to save recipes." };
+    }
+
+    // Recipe limit check
+    const withinLimit = await checkRecipeLimit(user.id, supabase);
+    if (!withinLimit) {
+      return { ok: false, error: "Recipe limit reached. Upgrade to Heritage Pro for unlimited." };
     }
 
     // Generate share slug

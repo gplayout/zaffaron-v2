@@ -53,7 +53,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             title,
             description: recipe.attribution_story || "A family recipe preserved forever.",
             url: `${SITE_URL}/vault/recipe/${slug}`,
-            images: [{ url: "/og-default.jpg" }],
+            images: [{ url: recipe.image_url || "/og-default.jpg" }],
           },
         }
       : { robots: { index: false, follow: false } }),

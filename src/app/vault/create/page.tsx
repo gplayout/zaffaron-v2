@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChefHat, Loader2, Check, AlertCircle, Sparkles } from "lucide-react";
-import { structureRecipe, saveVaultRecipe } from "@/app/actions/vault";
+import { saveVaultRecipe } from "@/app/actions/vault";
+import { structureRecipeStreaming, type RecipeStreamData } from "@/app/actions/vault-stream";
 import type { VaultStructuredData } from "@/lib/vault/types";
 import { useAuth } from "@/components/AuthProvider";
 import AudioRecorder from "@/components/vault/AudioRecorder";
@@ -34,14 +35,14 @@ export default function VaultCreatePage() {
     setError(null);
     setStep("processing");
 
-    const result = await structureRecipe(title, rawText);
+    const result = await structureRecipeStreaming(title, rawText);
     if (!result.ok) {
       setError(result.error);
       setStep("input");
       return;
     }
 
-    setStructuredData(result.data);
+    setStructuredData(result.data as VaultStructuredData);
     setConfidence(result.confidence);
     setLanguage(result.language);
     setStep("review");

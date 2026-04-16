@@ -4,8 +4,8 @@ import { createServerSupabase } from "@/lib/supabase-server-auth";
 import { structureRecipeText } from "@/lib/vault/structure";
 import type { VaultStructuredData } from "@/lib/vault/types";
 import { nanoid } from "nanoid";
-import { generateHeritageCard } from "@/lib/vault/heritage-card";
-import { supabaseServer } from "@/lib/supabase-server";
+// Heritage card generation moved to separate API route to avoid sharp bundling issues
+// import { generateHeritageCard } from "@/lib/vault/heritage-card";
 
 export async function structureRecipe(
   title: string,
@@ -79,26 +79,7 @@ export async function saveVaultRecipe(
       return { ok: false, error: "Failed to save recipe. Please try again." };
     }
 
-    // Generate Heritage Card (background, don't block save)
-    try {
-      const cardBuffer = await generateHeritageCard({
-        title,
-        attributionName: attributionName || undefined,
-        cuisine: structuredData.cuisine || undefined,
-        ingredientCount: structuredData.ingredients?.length || 0,
-        stepCount: structuredData.instructions?.length || 0,
-      });
-      const cardPath = `vault-cards/${shareSlug}.jpg`;
-      await supabaseServer.storage
-        .from("recipe-images")
-        .upload(cardPath, cardBuffer, { contentType: "image/jpeg", upsert: true });
-      
-      const cardUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/recipe-images/${cardPath}`;
-      await supabase.from("vault_recipes").update({ image_url: cardUrl }).eq("share_slug", shareSlug);
-    } catch (cardError) {
-      // Card generation failure should NOT block recipe save
-      console.error("Heritage card generation failed:", cardError);
-    }
+    // TODO: Heritage card generation via separate API route (sharp causes Vercel bundling issues)
 
     return { ok: true, slug: shareSlug };
   } catch (error) {

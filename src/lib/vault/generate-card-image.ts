@@ -9,15 +9,16 @@ export async function generateCardImage(
   cuisine?: string
 ): Promise<{ ok: true; imageBase64: string; mimeType: string } | { ok: false; error: string }> {
   try {
-    const prompt = `Professional food photography style share card for a family recipe called "${title}".
-${attributionName ? `Recipe by ${attributionName}.` : ""}
-${cuisine ? `${cuisine} cuisine.` : ""}
-Beautiful overhead shot of the dish on a warm rustic wooden table.
-Natural lighting, appetizing, magazine quality.
-Include elegant text overlay at bottom: "${title}"${attributionName ? ` — by ${attributionName}` : ""}.
-The text should be warm cream/gold color on a semi-transparent dark banner.
-Style: cozy, family, heritage, warmth. NOT corporate or minimal.
-Aspect ratio exactly 1200x630 (OG image size). No watermarks.`;
+    const displayTitle = attributionName ? `${attributionName}'s ${title.replace(new RegExp(attributionName + "'s?", 'i'), '').trim()}` : title;
+
+    const prompt = `Beautiful food photography share card for "${displayTitle}".
+${cuisine ? `${cuisine} cuisine.` : ''}
+Overhead shot on warm rustic wooden table, natural lighting, magazine quality.
+Text overlay at bottom on semi-transparent dark banner:
+- Main: "${displayTitle}" in warm cream serif font
+- Small: "Preserved on Zaffaron Family Vault · zaffaron.com/vault"
+Style: cozy, family heritage, warmth, appetizing.
+Wide landscape format (1200x630). No watermarks. No redundant text.`;
 
     const resp = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=${process.env.GOOGLE_AI_KEY}`,

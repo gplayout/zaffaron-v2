@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createServerSupabase } from "@/lib/supabase-server-auth";
 import { transcribeAudio } from "@/lib/vault/transcribe";
 import { structureRecipeText } from "@/lib/vault/structure";
 
 export async function POST(request: NextRequest) {
   try {
+    // Auth check — prevent anonymous API billing drain
+    const supabase = await createServerSupabase();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return NextResponse.json({ error: "Please sign in" }, { status: 401 });
+
     const formData = await request.formData();
     const audioFile = formData.get("audio") as File | null;
     const title = formData.get("title") as string | null;

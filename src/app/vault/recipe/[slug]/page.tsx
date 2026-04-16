@@ -14,13 +14,21 @@ export const dynamic = "force-dynamic";
 type PageProps = { params: Promise<{ slug: string }> };
 
 async function getVaultRecipe(slug: string) {
-  // Use service role to bypass RLS — privacy check done manually in render
-  const { createClient } = await import("@supabase/supabase-js");
-  const serviceClient = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
-  const { data, error } = await serviceClient
+  // Try authenticated user session first (RLS handles owner + family access)
+  try {
+    const userSupabase = await createServerSupabase();
+    const { data } = await userSupabase
+      .from("vault_recipes")
+      .select("*")
+      .eq("share_slug", slug)
+      .single();
+    if (data) return data;
+  } catch {
+    // No session or auth failed — fall through to anon
+  }
+
+  // Fallback: anon can read public recipes via RLS policy
+  const { data, error } = await supabaseServer
     .from("vault_recipes")
     .select("*")
     .eq("share_slug", slug)

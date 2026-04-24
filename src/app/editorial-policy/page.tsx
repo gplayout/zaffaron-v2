@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Editorial Policy",
-  description: "How Zaffaron tests and verifies every recipe before publishing.",
+  description: "How Zaffaron researches, writes, and publishes every recipe. Honest disclosure of our AI-assisted pipeline and solo-founder operation.",
   alternates: { canonical: "/editorial-policy" },
 };
 
@@ -12,64 +12,118 @@ export default function EditorialPolicyPage() {
       <h1>Editorial Policy</h1>
 
       <p>
-        At Zaffaron, &quot;verified&quot; is not a marketing word — it is a process.
-        Every recipe on this site goes through a structured quality review before
-        it reaches you.
+        This page tells you exactly how every recipe on Zaffaron is made and
+        what our quality process does — and doesn&apos;t — cover. We want you to
+        know what you&apos;re getting before you cook.
       </p>
 
-      <h2>Our Recipe Testing Process</h2>
+      <h2>How Every Recipe Is Made</h2>
+      <p>
+        Zaffaron uses an AI-assisted research and writing pipeline. The steps are:
+      </p>
       <ol>
         <li>
-          <strong>Research:</strong> Each recipe begins with research across
-          multiple authoritative sources — traditional cookbooks, respected chef
-          references, and established culinary publications.
+          <strong>Research (AI):</strong> Each recipe starts with AI-assisted
+          research across multiple culinary references — traditional cookbooks,
+          established publications, and public chef resources.
         </li>
         <li>
-          <strong>Drafting:</strong> A detailed recipe draft is created with exact
-          measurements, clear step-by-step instructions, and realistic time estimates.
+          <strong>Drafting (AI):</strong> An AI model drafts the recipe with
+          specific measurements, step-by-step instructions, and estimated
+          cooking times based on the research.
         </li>
         <li>
-          <strong>Cross-Verification:</strong> Every recipe is cross-referenced
-          against at least two independent, reputable sources to verify ingredient
-          ratios, cooking times, and techniques.
+          <strong>Cross-Verification (AI):</strong> A second AI verification
+          pass cross-checks ingredient ratios, cooking times, and techniques
+          against additional reference sources.
         </li>
         <li>
-          <strong>Quality Checklist:</strong> Before publishing, each recipe must
-          pass our automated and manual quality checks:
+          <strong>Automated Quality Checks:</strong> Before publishing, each
+          recipe passes a 5-gate automated review:
           <ul>
             <li>All ingredients appear in the instructions</li>
             <li>Measurements are realistic for the stated servings</li>
             <li>Cooking times are achievable</li>
             <li>Instructions are clear enough for a beginner</li>
-            <li>Food safety practices are followed</li>
+            <li>Basic food safety practices are followed</li>
           </ul>
         </li>
         <li>
-          <strong>Publishing:</strong> Only recipes that pass all checks are
-          marked as verified and published to the site.
+          <strong>Publishing:</strong> Recipes that pass all automated checks
+          are published. Recipes that fail are kept unpublished until issues
+          are resolved.
         </li>
       </ol>
 
+      <h2>Important Disclosure</h2>
+      <p>
+        Zaffaron is a solo-founder project. Recipes are AI-researched,
+        AI-drafted, and AI-verified. A human (the founder) operates the
+        pipeline, monitors quality, and investigates reported issues — but
+        <strong> does NOT personally cook and test each recipe</strong> before publishing.
+      </p>
+      <p>
+        This is an honest trade-off: AI-assisted workflows let us cover many
+        cuisines deeply and consistently. They also mean recipes here are
+        <strong> research-and-cross-reference-based</strong>, not hands-on-kitchen-tested.
+        We&apos;re transparent about this because we believe you deserve to know.
+      </p>
+
+      <h2>Food Safety &amp; Dietary Disclaimer</h2>
+      <p>
+        These recipes are provided for informational and culinary-reference
+        purposes. Always verify ingredients against your own dietary needs,
+        allergies, and local food-safety practices. If you have allergies,
+        medical conditions, or dietary restrictions, consult the ingredient
+        list carefully and, when relevant, a medical or nutritional professional.
+      </p>
+      <p>
+        Zaffaron does not provide medical or nutritional advice. We do not
+        substitute for the expertise of professional chefs, registered
+        dietitians, or food-safety authorities.
+      </p>
+
+      <h2>Corrections &amp; Reported Issues</h2>
+      <p>
+        If you find an error — wrong measurements, a missing step, a
+        food-safety concern, or cultural inaccuracy — please email{" "}
+        <a href="mailto:hello@zaffaron.com">hello@zaffaron.com</a> with the
+        recipe name and a description of the issue. We take corrections
+        seriously and investigate every report.
+      </p>
+
       <h2>Verification Levels</h2>
       <ul>
-        <li><strong>Verified:</strong> Fully reviewed, cross-referenced, and quality-checked.</li>
-        <li><strong>Reviewed:</strong> Reviewed by our team but pending final verification.</li>
+        <li>
+          <strong>Published:</strong> Passed our full automated quality pipeline.
+        </li>
+        <li>
+          <strong>Under Review:</strong> A reported issue is being investigated;
+          the recipe remains visible but may be updated.
+        </li>
+        <li>
+          <strong>Unpublished:</strong> Did not pass quality checks; not visible
+          on the site.
+        </li>
       </ul>
-
-      <h2>Corrections</h2>
-      <p>
-        Found an error? We take corrections seriously. Please email{" "}
-        <a href="mailto:hello@zaffaron.com">hello@zaffaron.com</a> with the
-        recipe name and the issue you found. We will investigate and update
-        the recipe promptly.
-      </p>
 
       <h2>AI Assistance Disclosure</h2>
       <p>
-        We use AI tools to assist with recipe research, drafting, and formatting.
-        However, every recipe undergoes human editorial review and verification
-        before publication. AI is a tool in our process, not a replacement for
-        culinary knowledge and accuracy.
+        We use AI tools (currently GPT-5.2 for drafting and Gemini 3.1 Pro for
+        verification) to research, write, and cross-check recipes. Images are
+        generated by an AI image model (Gemini 3 Pro Image). A human monitors
+        the pipeline and reviews reported problems.
+      </p>
+      <p>
+        AI is the current best-effort substitute for a larger editorial team.
+        It is not equivalent to hands-on kitchen testing by a professional chef.
+      </p>
+
+      <h2>Looking Ahead</h2>
+      <p>
+        We plan to add user ratings, community feedback, and eventually
+        human-expert review as Zaffaron grows. Our current automated
+        verification is a foundation to build on — not a final destination.
       </p>
     </article>
   );

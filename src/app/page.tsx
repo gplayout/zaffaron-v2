@@ -16,7 +16,7 @@ function buildWebSiteSchema() {
     '@type': 'WebSite',
     name: 'Zaffaron',
     url: SITE_URL,
-    description: 'Authentic, verified recipes from Persian, Turkish, Lebanese, Afghan, Azerbaijani, and world cuisines.',
+    description: 'Authentic recipes from Persian, Turkish, Lebanese, Afghan, Azerbaijani, and world cuisines.',
     potentialAction: {
       '@type': 'SearchAction',
       target: {

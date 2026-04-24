@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Zaffaron — Authentic Persian Recipes",
     short_name: "Zaffaron",
-    description: "Authentic, verified Persian recipes and world cuisine.",
+    description: "Authentic Persian recipes and world cuisine.",
     start_url: "/",
     display: "standalone",
     background_color: "#fafaf9",

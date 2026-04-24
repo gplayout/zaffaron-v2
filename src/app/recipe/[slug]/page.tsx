@@ -20,6 +20,7 @@ import {
   RecipeInternalLinks,
 } from "@/components/recipe";
 import { VaultCTA } from "@/components/recipe/VaultCTA";
+import { ViewTracker } from "@/components/recipe/ViewTracker";
 import type { Metadata } from "next";
 import { getRecipeFaq } from "@/lib/seo/recipe-faq";
 import { getRecipeVariations } from "@/lib/seo/recipe-variations";
@@ -107,6 +108,8 @@ export default async function RecipePage({ params }: Props) {
       <RecipeJsonLd recipe={recipe} ratingCount={ratingCount} ratingValue={ratingValue} />
       <BreadcrumbJsonLd recipe={recipe} />
       <article className="mx-auto max-w-3xl">
+        {/* Phase 1b: anonymous view tracking (5s settle + visibility gate) */}
+        <ViewTracker recipeId={recipe.id} />
         <RecipeHero recipe={recipe} />
 
         <RecipeQuickCard recipe={recipe} />

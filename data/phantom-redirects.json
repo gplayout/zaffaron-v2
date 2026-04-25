@@ -1,0 +1,34 @@
+{
+  "cuisine": [
+    {
+      "from": "/cuisine/japanese",
+      "to": "/recipes?cuisine=japanese"
+    },
+    {
+      "from": "/cuisine/french",
+      "to": "/recipes?cuisine=french"
+    },
+    {
+      "from": "/cuisine/italian",
+      "to": "/recipes?cuisine=italian"
+    },
+    {
+      "from": "/cuisine/greek",
+      "to": "/recipes?cuisine=greek"
+    },
+    {
+      "from": "/cuisine/thai",
+      "to": "/recipes?cuisine=thai"
+    }
+  ],
+  "category": [
+    {
+      "from": "/category/curry",
+      "to": "/recipes?category=curry"
+    },
+    {
+      "from": "/category/pasta",
+      "to": "/recipes?category=pasta"
+    }
+  ]
+}

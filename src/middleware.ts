@@ -1,6 +1,18 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import recipeRedirects from '@/lib/seo/recipe-redirects.json';
+// Phase III v2 (P1.2) - deterministic 404 cleanup data.
+// Regenerated via: scripts/recipeops/build-gsc-redirect-map-v2.mjs.
+// NOTE: phantom-redirects.json is kept in /data/ for forensic reference but NOT
+// imported here. The 7 candidate /cuisine/* and /category/* paths were verified
+// 2026-04-25 to currently render HTTP 200 via /cuisine/[slug] and /category/[slug]
+// dynamic routes (self-healed since GSC originally indexed them as 404). Adding
+// phantom 308s would redirect WORKING pages — a UX change out of P1.2 scope.
+// See AUDIT-LOG 2026-04-25 P1.2-v2 deploy entry + new PENDING-TODO for UX cycle.
+import gone410List from '../data/410-set.json';
+
+// O(1) Set lookup for 410 paths. Stable for the lifetime of the edge runtime instance.
+const GONE_410_SET = new Set<string>(gone410List as string[]);
 
 const SUPABASE_HOST = process.env.NEXT_PUBLIC_SUPABASE_URL
   ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname
@@ -11,7 +23,7 @@ const PROTECTED_PATHS = ['/cook/dashboard', '/cook/apply', '/favorites'];
 function maybeRedirectRecipe(request: NextRequest) {
   const { pathname } = request.nextUrl;
   // Only handle legacy/duplicate slugs:
-  // /recipe/<slug> → /recipe/<canonical>
+  // /recipe/<slug> -> /recipe/<canonical>
   if (!pathname.startsWith('/recipe/')) return null;
 
   const slug = pathname.slice('/recipe/'.length).split('/')[0];
@@ -26,8 +38,28 @@ function maybeRedirectRecipe(request: NextRequest) {
   return NextResponse.redirect(url, 308);
 }
 
+// Phase III v2 - 410 Gone for verified-unrecoverable 404 URLs from GSC.
+// 602 paths confirmed via 20/20 sample manual review (2026-04-25).
+// Source: data/410-set.json (regenerable via build-gsc-redirect-map-v2.mjs).
+function maybeReturn410(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  if (!GONE_410_SET.has(pathname)) return null;
+  return new Response(null, {
+    status: 410,
+    headers: {
+      // 24h CDN cache so each origin hit happens at most once per day per edge.
+      'Cache-Control': 'public, max-age=86400, s-maxage=86400',
+      'X-Robots-Tag': 'noindex',
+    },
+  });
+}
+
 export async function middleware(request: NextRequest) {
-  // 1) SEO redirects first (fast path)
+  // 0) Phase III v2 - 410 Gone for verified-unrecoverable 404 URLs (fast O(1) check).
+  const gone = maybeReturn410(request);
+  if (gone) return gone;
+
+  // 1) SEO redirects (existing 75-entry slug-rename map).
   const redirect = maybeRedirectRecipe(request);
   if (redirect) return redirect;
 

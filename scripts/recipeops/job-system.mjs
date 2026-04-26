@@ -1,18 +1,31 @@
 /**
- * RecipeOps Job System
- * Manages job lifecycle: enqueue → claim → update → complete/fail
+ * RecipeOps Job System v4A (Phase 4A refactor)
+ *
+ * Key changes from pre-4A:
+ *   - claimJob() now calls the atomic RPC recipeops_claim_next_job() which
+ *     returns a claim_token UUID the worker MUST use in every subsequent write.
+ *   - updateJob() now REQUIRES claim_token + locked_by. Writes without the
+ *     ownership contract return 0-rows-updated and THROW (ghost write protection).
+ *   - heartbeat() exposes recipeops_heartbeat RPC for long-running phases.
+ *   - completeJob/failJob preserve ownership gate while transitioning status.
+ *
+ * Worker identity: `${os.hostname()}:${process.pid}` unique per container/process.
  */
 
 import { createClient } from '@supabase/supabase-js';
+import os from 'node:os';
 
 const sb = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
+  process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
+/** Stable worker identity for this process */
+export const WORKER_ID = `${os.hostname()}:${process.pid}`;
+
 /**
- * Enqueue a new recipe generation job
- * @param {object} opts - { inputType, inputData, createdBy }
+ * Enqueue a new recipe generation job.
+ * No ownership gate needed (creates new row).
  */
 export async function enqueueJob({ inputType = 'text', inputData = {}, createdBy = 'system' } = {}) {
   const { data, error } = await sb
@@ -25,74 +38,104 @@ export async function enqueueJob({ inputType = 'text', inputData = {}, createdBy
     })
     .select()
     .single();
-  
+
   if (error) throw new Error(`Enqueue failed: ${error.message}`);
   return data;
 }
 
 /**
- * Claim the next queued job (atomic)
+ * Claim the next queued job via atomic RPC.
+ * Returns { id, input_type, input_data, claim_token } OR null if nothing queued.
+ * 
+ * Claim contract:
+ *   - Caller gets a UUID claim_token unique to this claim.
+ *   - ALL subsequent writes from this worker for this job MUST include WHERE claim_token = $token.
+ *   - If another worker claims the same job (shouldn't happen due to SKIP LOCKED), the token guarantees isolation.
  */
 export async function claimJob() {
-  // Try up to 3 times to claim a job (handles concurrent worker races)
-  for (let attempt = 0; attempt < 3; attempt++) {
-    const { data: jobs, error: findErr } = await sb
-      .from('recipeops_jobs')
-      .select('id')
-      .eq('status', 'queued')
-      .order('created_at', { ascending: true })
-      .limit(5);  // Fetch several to handle races
-    
-    if (findErr) throw new Error(`Find job failed: ${findErr.message}`);
-    if (!jobs || jobs.length === 0) return null;
+  const { data, error } = await sb.rpc('recipeops_claim_next_job', {
+    p_worker_id: WORKER_ID,
+  });
 
-    // Try each candidate until one is claimed
-    for (const candidate of jobs) {
-      const { data, error } = await sb
-        .from('recipeops_jobs')
-        .update({ 
-          status: 'processing',
-          started_at: new Date().toISOString(),
-        })
-        .eq('id', candidate.id)
-        .eq('status', 'queued')  // Atomic: only if still queued
-        .select()
-        .single();
-      
-      if (data && !error) return data;  // Successfully claimed
-    }
-    // All candidates taken, retry
-    await new Promise(r => setTimeout(r, 500));
-  }
-  return null;
+  if (error) throw new Error(`Claim RPC failed: ${error.message}`);
+  if (!data || data.length === 0) return null;
+
+  const row = data[0];
+  return {
+    id: row.job_id,
+    input_type: row.input_type,
+    input_data: row.input_data,
+    claim_token: row.claim_token,
+  };
 }
 
 /**
- * Update job status
+ * Update job with ownership gate.
+ * THROWS if ownership contract broken (returns 0 rows).
+ * This is the core anti-ghost-write guard.
  */
-export async function updateJob(jobId, updates, retries = 3) {
+export async function updateJob(jobId, claimToken, updates, retries = 3) {
+  if (!claimToken) {
+    throw new Error('updateJob: claim_token REQUIRED (ownership gate)');
+  }
+
   for (let i = 0; i < retries; i++) {
     try {
-      const { error } = await sb
+      const { data, error } = await sb
         .from('recipeops_jobs')
-        .update(updates)
-        .eq('id', jobId);
-      
+        .update({ ...updates, updated_at: new Date().toISOString() })
+        .eq('id', jobId)
+        .eq('claim_token', claimToken)
+        .eq('locked_by', WORKER_ID)
+        .select('id');
+
       if (error) throw new Error(error.message);
+
+      if (!data || data.length === 0) {
+        // Ghost-write protection fired. This means either:
+        //  (a) claim_token mismatch (another worker claimed or job was swept)
+        //  (b) locked_by mismatch (another process is operating this job)
+        //  (c) job was released back to queued
+        throw new Error(
+          `updateJob ownership-gate-fail for job=${jobId} worker=${WORKER_ID}. ` +
+          `Job may have been swept or reassigned. Halting write.`
+        );
+      }
       return;
     } catch (e) {
-      if (i === retries - 1) throw new Error(`Update job failed: ${e.message}`);
+      // Ownership-gate failures should NOT retry — they indicate lost ownership.
+      if (String(e.message || '').includes('ownership-gate-fail')) throw e;
+      if (i === retries - 1) throw new Error(`Update job failed after ${retries}: ${e.message}`);
       await new Promise(r => setTimeout(r, 2000 * (i + 1)));
     }
   }
 }
 
 /**
- * Complete a job
+ * Worker heartbeat — updates heartbeat_at + optional phase.
+ * Returns true if still own the job, false if ownership lost (caller should halt).
  */
-export async function completeJob(jobId, { recipeId, imageUrl, cost } = {}) {
-  await updateJob(jobId, {
+export async function heartbeat(jobId, claimToken, phase = null) {
+  const { data, error } = await sb.rpc('recipeops_heartbeat', {
+    p_job_id: jobId,
+    p_claim_token: claimToken,
+    p_phase: phase,
+  });
+
+  if (error) {
+    console.error(`[heartbeat] RPC error: ${error.message}`);
+    return false;  // Treat errors as lost ownership for safety
+  }
+  return data === true;
+}
+
+/**
+ * Complete a job (successful publish).
+ */
+export async function completeJob(jobId, claimToken, { recipeId, imageUrl, cost } = {}) {
+  await updateJob(jobId, claimToken, {
     status: 'done',
+    phase: 'done',
     recipe_id: recipeId,
     image_url: imageUrl,
     cost_usd: cost || 0,
@@ -101,22 +144,29 @@ export async function completeJob(jobId, { recipeId, imageUrl, cost } = {}) {
 }
 
 /**
- * Fail a job (with optional retry)
+ * Fail a job (with optional retry).
+ * Both retry and final-fail paths clear claim_token so sweeper/claimer can pick it up cleanly.
  */
-export async function failJob(jobId, error, currentRetry = 0, maxRetries = 2) {
+export async function failJob(jobId, claimToken, error, currentRetry = 0, maxRetries = 2) {
   if (currentRetry < maxRetries) {
-    // Retry: put back in queue
-    await updateJob(jobId, {
+    // Retry: put back in queue + release ownership
+    await updateJob(jobId, claimToken, {
       status: 'queued',
+      claim_token: null,  // release ownership so next claimer can grab
+      locked_by: null,
+      locked_at: null,
+      heartbeat_at: null,
+      phase: null,
       error: `Retry ${currentRetry + 1}: ${error}`,
       retry_count: currentRetry + 1,
     });
     return 'retrying';
   }
-  
-  // Final failure
-  await updateJob(jobId, {
+
+  // Final failure — preserve claim_token for post-mortem, but mark failed
+  await updateJob(jobId, claimToken, {
     status: 'failed',
+    phase: 'failed',
     error: `Final failure after ${maxRetries} retries: ${error}`,
     retry_count: currentRetry + 1,
     completed_at: new Date().toISOString(),
@@ -125,7 +175,7 @@ export async function failJob(jobId, error, currentRetry = 0, maxRetries = 2) {
 }
 
 /**
- * Log a job step
+ * Log a job step — no ownership gate needed (append-only log table).
  */
 export async function logStep(jobId, step, status, details = {}, durationMs = 0, costUsd = 0) {
   const { error } = await sb
@@ -138,24 +188,23 @@ export async function logStep(jobId, step, status, details = {}, durationMs = 0,
       duration_ms: durationMs,
       cost_usd: costUsd,
     });
-  
+
   if (error) console.error(`Log step failed: ${error.message}`);
 }
 
 /**
- * Get job summary
+ * Get job summary — read-only, no ownership gate.
  */
 export async function getJobSummary() {
   const { data, error } = await sb
     .from('recipeops_summary')
     .select('*');
-  
+
   if (error) {
-    // Fallback if view doesn't exist
     const { data: jobs } = await sb
       .from('recipeops_jobs')
       .select('status');
-    
+
     const counts = {};
     jobs?.forEach(j => { counts[j.status] = (counts[j.status] || 0) + 1; });
     return counts;
@@ -164,7 +213,7 @@ export async function getJobSummary() {
 }
 
 /**
- * Enqueue batch of recipe names
+ * Enqueue batch of recipe names — no ownership gate needed (creates new rows).
  */
 export async function enqueueBatch(recipeNames, createdBy = 'batch') {
   const jobs = recipeNames.map(name => ({
@@ -173,12 +222,12 @@ export async function enqueueBatch(recipeNames, createdBy = 'batch') {
     status: 'queued',
     created_by: createdBy,
   }));
-  
+
   const { data, error } = await sb
     .from('recipeops_jobs')
     .insert(jobs)
     .select('id');
-  
+
   if (error) throw new Error(`Batch enqueue failed: ${error.message}`);
   return data;
 }

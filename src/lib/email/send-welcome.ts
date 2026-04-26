@@ -13,6 +13,8 @@
  */
 
 import "server-only";
+import { SITE_URL } from "@/lib/config";
+import { generateUnsubscribeToken } from "@/lib/newsletter/unsubscribe-token";
 
 type ResendResponse = {
   id?: string;
@@ -34,6 +36,17 @@ export async function sendWelcomeEmail(toEmail: string): Promise<{ ok: boolean; 
     return { ok: false, reason: "no-from-address" };
   }
 
+  // Generate a per-recipient HMAC-signed unsubscribe token (1-year TTL).
+  // Embedded as ?t=<token> in the unsubscribe URL so only the email recipient
+  // can trigger a delete (closes pre-fix CVE-shape: anyone with email could DELETE).
+  let unsubToken: string;
+  try {
+    unsubToken = generateUnsubscribeToken(toEmail);
+  } catch (e) {
+    console.error("[email] Failed to generate unsubscribe token (NEWSLETTER_UNSUBSCRIBE_SECRET missing?):", e);
+    return { ok: false, reason: "no-unsubscribe-secret" };
+  }
+
   try {
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -45,8 +58,8 @@ export async function sendWelcomeEmail(toEmail: string): Promise<{ ok: boolean; 
         from: fromAddress,
         to: toEmail,
         subject: "Welcome to Zaffaron 🧡 Authentic recipes from every kitchen",
-        html: welcomeHtmlTemplate(toEmail),
-        text: welcomeTextTemplate(toEmail),
+        html: welcomeHtmlTemplate(toEmail, unsubToken),
+        text: welcomeTextTemplate(toEmail, unsubToken),
       }),
     });
 
@@ -64,8 +77,12 @@ export async function sendWelcomeEmail(toEmail: string): Promise<{ ok: boolean; 
   }
 }
 
-function welcomeHtmlTemplate(email: string): string {
-  const unsubscribeUrl = `https://zaffaron.com/newsletter/unsubscribe?email=${encodeURIComponent(email)}`;
+function welcomeHtmlTemplate(email: string, unsubToken: string): string {
+  // Token-based unsubscribe URL (HMAC-signed). Only the email recipient can
+  // forge this URL since the signature requires NEWSLETTER_UNSUBSCRIBE_SECRET.
+  // Email param kept alongside for human-readable transparency in URL
+  // (token is the actual auth; email is informational/redundant).
+  const unsubscribeUrl = `${SITE_URL}/newsletter/unsubscribe?t=${unsubToken}`;
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -94,7 +111,7 @@ function welcomeHtmlTemplate(email: string): string {
             </ul>
             <p style="margin:24px 0;">Start exploring now:</p>
             <p style="text-align:center;margin:24px 0;">
-              <a href="https://zaffaron.com/recipes" style="display:inline-block;background:#d97706;color:#fff;padding:12px 28px;border-radius:6px;text-decoration:none;font-weight:600;">Browse Recipes</a>
+              <a href="${SITE_URL}/recipes" style="display:inline-block;background:#d97706;color:#fff;padding:12px 28px;border-radius:6px;text-decoration:none;font-weight:600;">Browse Recipes</a>
             </p>
             <hr style="border:none;border-top:1px solid #e7e5e4;margin:32px 0;">
             <p style="color:#78716c;font-size:13px;">Cooking a new recipe? Tag us. We love seeing your tables.</p>
@@ -103,7 +120,7 @@ function welcomeHtmlTemplate(email: string): string {
         <tr>
           <td style="background:#f5f5f4;padding:24px 32px;text-align:center;color:#78716c;font-size:12px;">
             <p style="margin:0 0 8px;">Zaffaron · Authentic recipes from every kitchen</p>
-            <p style="margin:0;"><a href="${unsubscribeUrl}" style="color:#78716c;text-decoration:underline;">Unsubscribe</a> · <a href="https://zaffaron.com/privacy" style="color:#78716c;text-decoration:underline;">Privacy</a></p>
+            <p style="margin:0;"><a href="${unsubscribeUrl}" style="color:#78716c;text-decoration:underline;">Unsubscribe</a> · <a href="${SITE_URL}/privacy" style="color:#78716c;text-decoration:underline;">Privacy</a></p>
           </td>
         </tr>
       </table>
@@ -113,7 +130,8 @@ function welcomeHtmlTemplate(email: string): string {
 </html>`;
 }
 
-function welcomeTextTemplate(email: string): string {
+function welcomeTextTemplate(email: string, unsubToken: string): string {
+  void email; // email available for future use; currently unused in text body
   return `Welcome to Zaffaron 🧡
 
 Thanks for joining us. You're now on the list for seasonal recipes, cultural food stories, and the occasional cooking tip.
@@ -124,14 +142,14 @@ What to expect:
 - Seasonal features — Ramadan iftars, Nowruz spreads, Eid tables, festival foods
 - Never spam — one email per week, unsubscribe any time
 
-Browse recipes: https://zaffaron.com/recipes
+Browse recipes: ${SITE_URL}/recipes
 
 Cooking a new recipe? Tag us. We love seeing your tables.
 
 ---
 
 Zaffaron · Authentic recipes from every kitchen
-Unsubscribe: https://zaffaron.com/newsletter/unsubscribe?email=${encodeURIComponent(email)}
-Privacy: https://zaffaron.com/privacy
+Unsubscribe: ${SITE_URL}/newsletter/unsubscribe?t=${unsubToken}
+Privacy: ${SITE_URL}/privacy
 `;
 }

@@ -119,6 +119,11 @@ async function getSpendUsd(windowMinutes) {
     log(`WARN: spend query failed: ${error.message}`);
     return 0;
   }
+  // P0.2 tripwire (GPT-5 F-gpt-5-2-06): warn when query hits PostgREST 1000-row cap.
+  // Indicates undercount; trigger to migrate to server-side recipeops_sum_cost_usd RPC.
+  if (data?.length === 1000) {
+    log(`WARN: [SUPERVISOR-WARN] spend query hit 1000-row cap (${windowMinutes}min window) — undercount likely; migrate to RPC`);
+  }
   return (data || []).reduce((sum, j) => sum + (parseFloat(j.cost_usd) || 0), 0);
 }
 

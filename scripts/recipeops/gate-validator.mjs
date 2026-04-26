@@ -88,8 +88,23 @@ export function validateRecipe(r) {
     const last = r.instructions[r.instructions.length - 1];
     if (last?.text) {
       const t = last.text.trim();
-      if (t.length > 20 && !t.match(/[.!?)"\u2019]$/) && !t.toLowerCase().endsWith('minutes'))
-        issues.push({ gate: 3, field: 'instructions', msg: 'Last step may be truncated' });
+      if (t.length > 20) {
+        // F-kimi-8 (2026-04-26): broaden truncation detection.
+        // Pre-fix: only allowed [.!?)"’] OR endsWith('minutes'). Falsely flagged
+        // valid sentences ending with 'seconds', 'serve', 'enjoy', etc., causing
+        // review queue bloat. Now: explicit truncation signals (ellipsis, trailing
+        // dash) override valid endings; valid endings include broader cooking
+        // instruction word allowlist.
+        const TRUNCATION_RE = /\u2026$|\.{3,}$|---$|--$|-$/; // …, ..., ---, --, -
+        const ENDING_WORDS = ['minutes','seconds','hours','serve','serving','served','ready','enjoy','done','hot','warm','cool','cold','top','side','guests','taste','immediately','plated','rest','set','through','tender'];
+        const tLower = t.toLowerCase();
+        const endsWithTruncationSignal = TRUNCATION_RE.test(t);
+        const endsWithValidPunct = /[.!?)"\u2019]$/.test(t);
+        const endsWithValidWord = ENDING_WORDS.some(w => tLower.endsWith(w));
+        if (endsWithTruncationSignal || (!endsWithValidPunct && !endsWithValidWord)) {
+          issues.push({ gate: 3, field: 'instructions', msg: 'Last step may be truncated' });
+        }
+      }
     }
   }
   const totalTime = (r.prep_time_minutes || 0) + (r.cook_time_minutes || 0);

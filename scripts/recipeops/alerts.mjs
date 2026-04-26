@@ -27,9 +27,35 @@ function validateChatId() {
   return _chatIdValid;
 }
 
+// P1.1 (2026-04-26, Kimi F-kimi-04): validate Telegram BOT_TOKEN format up-front
+// so a malformed token surfaces with a clear [ALERT-CONFIG] error rather than a
+// silent 401 from Telegram API. Format: <bot_id>:<35+ char alphanumeric+_- token>.
+// Empty/undefined fall through to existing !BOT_TOKEN guard. Malformed (wrong
+// shape, leaked partial value, etc.) is the gap this regex closes.
+const BOT_TOKEN_RE = /^\d+:[A-Za-z0-9_-]{35,}$/;
+let _botTokenValidated = false;
+let _botTokenValid = false;
+function validateBotToken() {
+  if (_botTokenValidated) return _botTokenValid;
+  _botTokenValidated = true;
+  if (!BOT_TOKEN || typeof BOT_TOKEN !== 'string' || !BOT_TOKEN_RE.test(BOT_TOKEN.trim())) {
+    // Mask token in error log: show only first 6 chars + length, never full token
+    const masked = BOT_TOKEN ? `${String(BOT_TOKEN).slice(0, 6)}...(len=${String(BOT_TOKEN).length})` : 'undefined';
+    console.error(`[ALERT-CONFIG] TELEGRAM_BOT_TOKEN malformed (got: ${masked}). Expected '<bot_id>:<35+ char token>'. Telegram alerts disabled.`);
+    _botTokenValid = false;
+  } else {
+    _botTokenValid = true;
+  }
+  return _botTokenValid;
+}
+
 export async function sendAlert(message, silent = false) {
   if (!BOT_TOKEN) {
     console.log(`[ALERT] ${message}`);
+    return;
+  }
+  if (!validateBotToken()) {
+    console.log(`[ALERT-NOSEND] ${message}`);
     return;
   }
   if (!validateChatId()) {

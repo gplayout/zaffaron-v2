@@ -94,18 +94,32 @@ async function getCuisineCounts() {
 }
 
 async function getSpendUsd(windowMinutes) {
-  // Read recipeops_jobs within window, sum estimated cost (per-recipe)
+  // F-kimi-7 fix (2026-04-26): sum real cost_usd from completed jobs in window.
+  // Was: count(done|verifying|imaging|processing within updated_at window) * flat $0.08
+  //   → inflated by stuck-job heartbeats (updated_at) AND phantom-charged 535 skipped-duplicate
+  //     jobs (cost_usd=0) at flat rate. Hit caps prematurely.
+  // Now: SUM(cost_usd) WHERE status='done' AND completed_at >= since AND cost_usd IS NOT NULL.
+  // Empirical (probe 2026-04-26 01:13 PDT): 1553 done jobs, 0 null cost_usd, lifetime sum $77.07,
+  //   mean $0.0757/recipe. 535 zero-cost rows are deliberate duplicate-skips (no API call → $0
+  //   actual), not data gaps — Approach B over A locked.
+  //
+  // CEILING NOTE: PostgREST default + max row limit is 1000 (Supabase). For 1h/24h windows in
+  //   current pipeline capacity (~50-100/hr peak, ~200-300/day) this is safely under cap.
+  //   If pipeline ever scales beyond ~1000 done jobs/24h, replace with server-side RPC
+  //   `recipeops_sum_cost_usd(since timestamp)` to bypass row cap entirely. Pre-existing OLD
+  //   count×flat impl had same 1000-row cap (silent undercount above scale).
   const since = new Date(Date.now() - windowMinutes * 60 * 1000).toISOString();
   const { data, error } = await sb
     .from('recipeops_jobs')
-    .select('status, updated_at')
-    .gte('updated_at', since)
-    .in('status', ['done', 'verifying', 'imaging', 'processing']);
+    .select('cost_usd')
+    .eq('status', 'done')
+    .gte('completed_at', since)
+    .not('cost_usd', 'is', null);
   if (error) {
     log(`WARN: spend query failed: ${error.message}`);
     return 0;
   }
-  return (data?.length || 0) * CONFIG.costCaps.perRecipeUsd;
+  return (data || []).reduce((sum, j) => sum + (parseFloat(j.cost_usd) || 0), 0);
 }
 
 async function getRecentFailureCount() {

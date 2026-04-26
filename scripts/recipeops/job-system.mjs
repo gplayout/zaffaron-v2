@@ -60,13 +60,33 @@ export async function claimJob() {
   if (error) throw new Error(`Claim RPC failed: ${error.message}`);
   if (!data || data.length === 0) return null;
 
-  const row = data[0];
-  return {
-    id: row.job_id,
-    input_type: row.input_type,
-    input_data: row.input_data,
-    claim_token: row.claim_token,
-  };
+  const claim = data[0];
+  // F-kimi-3 fix (2026-04-26): RPC returns only {job_id, input_type, input_data, claim_token}
+  // (empirically verified via fb005-rpc-probe). Refetch full row so retry_count, max_retries,
+  // recipe_data, cost_usd propagate to processJob — without this, retries regenerate from
+  // scratch (wasted GPT cost), max_retries cap not enforced, and Telegram alerts show
+  // "Retry: undefined".
+  const { data: full, error: fetchErr } = await sb
+    .from('recipeops_jobs')
+    .select('id, input_type, input_data, claim_token, retry_count, max_retries, recipe_data, cost_usd')
+    .eq('id', claim.job_id)
+    .eq('claim_token', claim.claim_token)
+    .single();
+
+  if (fetchErr || !full) {
+    console.warn(
+      `[claimJob] degraded: refetch failed (${fetchErr?.message || 'no row'}); ` +
+      `falling back to RPC minimal fields. retry_count + recipe_data + cost_usd will be lost ` +
+      `for job ${claim.job_id}. F-kimi-3 fallback path active — investigate if frequent.`
+    );
+    return {
+      id: claim.job_id,
+      input_type: claim.input_type,
+      input_data: claim.input_data,
+      claim_token: claim.claim_token,
+    };
+  }
+  return full;
 }
 
 /**

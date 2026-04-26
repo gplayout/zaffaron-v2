@@ -58,12 +58,15 @@ export async function structureRecipe(
   }
 
   const result = await structureRecipeText(rawText, title);
-  if (!result.ok) return result;
 
-  // Credit already deducted atomically before AI call
-  // If AI failed, refund:
-  if (!result.ok && creditDeducted && user) {
-    await refundCredits(user.id, supabase);
+  // F-kimi-4 fix (2026-04-26): refund credit on AI failure BEFORE returning.
+  // Pre-fix, refund was after early return — unreachable dead code. Users would
+  // lose AI credits on transient failures (rate limits, malformed responses, etc).
+  if (!result.ok) {
+    if (creditDeducted && user) {
+      await refundCredits(user.id, supabase);
+    }
+    return result;
   }
 
   return {

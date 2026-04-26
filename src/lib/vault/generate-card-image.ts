@@ -20,11 +20,17 @@ Text overlay at bottom on semi-transparent dark banner:
 Style: cozy, family heritage, warmth, appetizing.
 Wide landscape format (1200x630). No watermarks. No redundant text.`;
 
+    // F-kimi-6 fix (2026-04-26): use x-goog-api-key header instead of URL query param.
+    // URL query exposes API key in server logs, reverse-proxy logs, Vercel function
+    // logs, error reporting. Header keeps key in encrypted-at-rest infrastructure only.
     const resp = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=${process.env.GOOGLE_AI_KEY}`,
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent",
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": process.env.GOOGLE_AI_KEY ?? "",
+        },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
           generationConfig: { responseModalities: ["image", "text"] },

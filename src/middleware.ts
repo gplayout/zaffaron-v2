@@ -41,9 +41,15 @@ function maybeRedirectRecipe(request: NextRequest) {
 // Phase III v2 - 410 Gone for verified-unrecoverable 404 URLs from GSC.
 // 602 paths confirmed via 20/20 sample manual review (2026-04-25).
 // Source: data/410-set.json (regenerable via build-gsc-redirect-map-v2.mjs).
-function maybeReturn410(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  if (!GONE_410_SET.has(pathname)) return null;
+//
+// FB-001 fix (2026-04-25 20:30 PDT): Next.js NextRequest.nextUrl.pathname returns
+// the URL-ENCODED form for non-ASCII chars and reserved chars (e.g., é → %C3%A9,
+// & → %26). The 410-set.json entries are stored in DECODED form (raw é, raw &).
+// Without decoding, ~245 of 602 entries (40.7%) silently returned 404 not 410
+// (79 non-ASCII + 166 `&` entries). Fix: check both raw + URL-decoded forms.
+// Defense-in-depth: raw first (handles agents sending pre-decoded path), then
+// decoded (handles standard browser+crawler encoding).
+function gone410Response(): Response {
   return new Response(null, {
     status: 410,
     headers: {
@@ -52,6 +58,20 @@ function maybeReturn410(request: NextRequest) {
       'X-Robots-Tag': 'noindex',
     },
   });
+}
+
+function maybeReturn410(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  // 1) Raw form (covers ASCII slugs + edge cases where agent pre-decoded).
+  if (GONE_410_SET.has(pathname)) return gone410Response();
+  // 2) URL-decoded form (covers standard browser/crawler encoded path).
+  try {
+    const decoded = decodeURIComponent(pathname);
+    if (decoded !== pathname && GONE_410_SET.has(decoded)) return gone410Response();
+  } catch {
+    // Malformed percent-encoding — fall through; downstream handlers will 404 naturally.
+  }
+  return null;
 }
 
 export async function middleware(request: NextRequest) {

@@ -1,6 +1,7 @@
 "use server";
 
 import { supabaseServer } from "@/lib/supabase-server";
+import { sendWelcomeEmail } from "@/lib/email/send-welcome";
 import { headers } from "next/headers";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -55,11 +56,22 @@ export async function subscribeNewsletter(formData: FormData) {
 
     if (error) {
       if (error.code === "23505") {
+        // Already subscribed — don't re-send welcome email
         return { success: true, message: "You're already subscribed! 🧡" };
       }
       console.error("Newsletter subscribe error:", error.message);
       return { error: "Something went wrong. Please try again." };
     }
+
+    // New subscriber — fire welcome email (non-blocking, best-effort).
+    // Does not throw; failures are logged but don't break signup flow.
+    sendWelcomeEmail(email).then((result: { ok: boolean; reason?: string; id?: string }) => {
+      if (!result.ok) {
+        console.warn(`[newsletter] Welcome email not sent to ${email}: ${result.reason}`);
+      }
+    }).catch((e: unknown) => {
+      console.error(`[newsletter] Welcome email promise error:`, e);
+    });
 
     return { success: true, message: "Welcome to Zaffaron! 🧡" };
   } catch {

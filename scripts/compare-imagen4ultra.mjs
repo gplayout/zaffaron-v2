@@ -10,12 +10,13 @@ const dishes = [
   { slug: 'tahdig', prompt: `A real photograph of authentic Persian Tahdig (ته‌دیگ). A perfectly golden, crispy rice crust flipped upside down on a round plate, showing gorgeous golden-brown crackling surface. Circular rice cake with perfectly even golden crust. Some pieces broken off showing contrast between crispy golden bottom and fluffy white rice. Saffron strands visible. Shot from overhead, natural light, Canon EOS R5, sharp detail on crispy texture. Real food photograph.` }
 ];
 
-const url = 'https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-ultra-generate-001:predict?key=' + key;
+// P0.4 fix 2026-04-26 (Kimi F-kimi-01): use x-goog-api-key header instead of URL query param
+const url = 'https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-ultra-generate-001:predict';
 
 for (const dish of dishes) {
   console.log(`📸 Imagen 4 Ultra: ${dish.slug}...`);
   try {
-    const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ instances: [{ prompt: dish.prompt }], parameters: { sampleCount: 1, aspectRatio: '16:9' } }) });
+    const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key }, body: JSON.stringify({ instances: [{ prompt: dish.prompt }], parameters: { sampleCount: 1, aspectRatio: '16:9' } }) });
     const j = await r.json();
     if (j.error) { console.log(`  ❌ ${j.error.message?.substring(0, 100)}`); continue; }
     if (j.predictions?.[0]?.bytesBase64Encoded) {

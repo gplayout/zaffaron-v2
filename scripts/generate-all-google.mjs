@@ -42,13 +42,14 @@ PHOTOGRAPHY: Shot in a warm home kitchen with natural window daylight. Canon EOS
 }
 
 async function generateImage(prompt, retries = 2) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${GOOGLE_KEY}`;
+  // P0.4 fix 2026-04-26 (Kimi F-kimi-01): use x-goog-api-key header instead of URL query param
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
   
   for (let i = 0; i <= retries; i++) {
     try {
       const r = await fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': GOOGLE_KEY },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
           generationConfig: { responseModalities: ['IMAGE', 'TEXT'] }

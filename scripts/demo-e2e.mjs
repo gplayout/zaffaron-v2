@@ -65,9 +65,10 @@ writeFileSync('scripts/demo-recipe-full.json', JSON.stringify(recipe, null, 2));
 // STEP 2: Generate image
 console.log('\n⏳ Step 2: Generating image with Gemini 3 Pro Image...');
 const imgPrompt = recipe.image_prompt || 'Photorealistic food photo of Persian Kashk-e Bademjan, smoky eggplant dip with kashk drizzle, fried onions and mint garnish';
-const r2 = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=${GOOGLE_KEY}`, {
+// P0.4 fix 2026-04-26 (Kimi F-kimi-01): use x-goog-api-key header instead of URL query param
+const r2 = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent`, {
   method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+  headers: { 'Content-Type': 'application/json', 'x-goog-api-key': GOOGLE_KEY },
   body: JSON.stringify({
     contents: [{ parts: [{ text: `Generate a photorealistic food photo: ${imgPrompt}` }] }],
     generationConfig: { responseModalities: ['IMAGE', 'TEXT'] },

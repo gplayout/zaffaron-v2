@@ -84,10 +84,11 @@ async function callOpenAI(model, apiKey, prompt) {
 }
 
 async function callGoogle(model, apiKey, prompt) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+  // P0.4 fix 2026-04-26 (Kimi F-kimi-01): use x-goog-api-key header instead of URL query param
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
   const r = await fetch(url, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
     body: JSON.stringify({
       contents: [{ parts: [{ text: prompt }] }],
       generationConfig: { temperature: 0.3, responseMimeType: 'application/json' },

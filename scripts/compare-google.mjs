@@ -30,10 +30,11 @@ const dishes = [
 for (const dish of dishes) {
   console.log(`📸 Google: ${dish.slug}...`);
   try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=${key}`;
+    // P0.4 fix 2026-04-26 (Kimi F-kimi-01): use x-goog-api-key header instead of URL query param
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent`;
     const r = await fetch(url, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
       body: JSON.stringify({
         contents: [{ parts: [{ text: dish.prompt }] }],
         generationConfig: { responseModalities: ['IMAGE', 'TEXT'] }

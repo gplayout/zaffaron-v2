@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase-server-auth";
-import { supabaseServer } from "@/lib/supabase-server";
 import { generateCardImage } from "@/lib/vault/generate-card-image";
 
 export async function POST(request: NextRequest) {
@@ -20,11 +19,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: result.error }, { status: 422 });
     }
 
+    // F-kimi-18 (2026-04-26): use authenticated `supabase` (createServerSupabase)
+    // for storage upload, matching the authenticated client already used for the
+    // DB update below. Pre-fix used anon-key `supabaseServer` for upload while
+    // the DB update used authenticated context, an inconsistency that would fail
+    // the upload if storage RLS required authenticated user context.
     // Upload to Supabase Storage
     const buffer = Buffer.from(result.imageBase64, "base64");
     const cardPath = `vault-cards/${shareSlug}.jpg`;
 
-    const { error: uploadError } = await supabaseServer.storage
+    const { error: uploadError } = await supabase.storage
       .from("recipe-images")
       .upload(cardPath, buffer, { contentType: "image/jpeg", upsert: true });
 

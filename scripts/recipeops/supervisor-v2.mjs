@@ -123,11 +123,15 @@ async function getSpendUsd(windowMinutes) {
 }
 
 async function getRecentFailureCount() {
+  // P0.1 fix 2026-04-26 (Kimi F-kimi-03 + GPT-5 F-gpt-5-2-01 STRONG convergence):
+  // Use completed_at (set once at terminal status, never updated) instead of updated_at
+  // (which can tick on any row update e.g. sweeper resets, inflating circuit-breaker count).
+  // Empirically verified 2026-04-26: completed_at populated 20/20 on failed rows.
   const since = new Date(Date.now() - CONFIG.safety.circuitBreakerWindowMinutes * 60 * 1000).toISOString();
   const { data, error } = await sb
     .from('recipeops_jobs')
     .select('status')
-    .gte('updated_at', since)
+    .gte('completed_at', since)
     .eq('status', 'failed');
   if (error) {
     log(`WARN: failure query failed: ${error.message}`);

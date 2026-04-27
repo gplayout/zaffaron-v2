@@ -18,11 +18,29 @@ async function checkRateLimit(ip: string): Promise<boolean> {
       .select('*', { count: 'exact', head: true })
       .eq('source', 'footer')
       .gte('created_at', since);
-    // Rough check: if more than RATE_LIMIT total inserts in window, slow down
-    // For proper per-IP, we'd need an IP column. This prevents mass abuse.
-    return (count ?? 0) < RATE_LIMIT * 10; // generous global limit
-  } catch {
-    return true; // fail open
+    // Rough check: if more than RATE_LIMIT total inserts in window, slow down.
+    // KNOWN LIMITATION: this is a global rate limit, not per-IP. A determined
+    // attacker can fill the bucket with junk subscriptions and lock out legit
+    // users. Per-IP enforcement requires a schema migration to add ip_hash
+    // (or a dedicated rate-limit table). Tracked in PENDING-TODOS as future
+    // work. At current scale (0-tens of subscribers/day) the global limit is
+    // sufficient + Cloudflare WAF in front of zaffaron.com already filters
+    // most abuse vectors.
+    const within = (count ?? 0) < RATE_LIMIT * 10;
+    if (!within) {
+      console.warn(
+        `[newsletter:subscribe] rate-limit triggered (ip=${ip}, window-count=${count ?? 'n/a'}, threshold=${RATE_LIMIT * 10})`
+      );
+    }
+    return within;
+  } catch (e) {
+    // Fail-open: do not block legitimate subscribes if Supabase is glitchy.
+    // Surface the failure so operators can detect persistent issues.
+    const msg = e instanceof Error ? e.message : 'unknown';
+    console.warn(
+      `[newsletter:subscribe] rate-limit check FAIL-OPEN (ip=${ip}, error=${msg})`
+    );
+    return true;
   }
 }
 
@@ -37,6 +55,7 @@ export async function subscribeNewsletter(formData: FormData) {
   }
 
   if (!email || !EMAIL_REGEX.test(email)) {
+    console.warn(`[newsletter:subscribe] invalid-email (input length=${(email ?? '').length})`);
     return { error: "Please enter a valid email address." };
   }
 
@@ -57,24 +76,32 @@ export async function subscribeNewsletter(formData: FormData) {
     if (error) {
       if (error.code === "23505") {
         // Already subscribed — don't re-send welcome email
+        console.log(`[newsletter:subscribe] dup-detected (email=${email}, ip=${ip})`);
         return { success: true, message: "You're already subscribed! 🧡" };
       }
-      console.error("Newsletter subscribe error:", error.message);
+      console.error(`[newsletter:subscribe] db-error (email=${email}, ip=${ip}, code=${error.code}, msg=${error.message})`);
       return { error: "Something went wrong. Please try again." };
     }
+
+    console.log(`[newsletter:subscribe] success (email=${email}, ip=${ip})`);
 
     // New subscriber — fire welcome email (non-blocking, best-effort).
     // Does not throw; failures are logged but don't break signup flow.
     sendWelcomeEmail(email).then((result: { ok: boolean; reason?: string; id?: string }) => {
       if (!result.ok) {
-        console.warn(`[newsletter] Welcome email not sent to ${email}: ${result.reason}`);
+        console.warn(`[newsletter:welcome-email] not-sent (email=${email}, reason=${result.reason})`);
+      } else {
+        console.log(`[newsletter:welcome-email] sent (email=${email}, id=${result.id ?? 'unknown'})`);
       }
     }).catch((e: unknown) => {
-      console.error(`[newsletter] Welcome email promise error:`, e);
+      const msg = e instanceof Error ? e.message : 'unknown';
+      console.error(`[newsletter:welcome-email] promise-error (email=${email}, error=${msg})`);
     });
 
     return { success: true, message: "Welcome to Zaffaron! 🧡" };
-  } catch {
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : 'unknown';
+    console.error(`[newsletter:subscribe] exception (ip=${ip}, error=${msg})`);
     return { error: "Something went wrong. Please try again." };
   }
 }

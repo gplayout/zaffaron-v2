@@ -140,6 +140,9 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // Match all paths except static files and API routes
-    '/((?!_next/static|_next/image|favicon\\.ico|icon\\.svg|manifest\\.webmanifest|robots\\.txt|sitemap\\.xml|.*\\.(?:png|jpg|jpeg|gif|webp|svg|ico|woff2|woff|ttf|css|js)$).*)',
+    // Phase 2.5 D-1 RC-5 test (2026-05-04): exclude /contact and /vault from middleware
+    // to test whether middleware request-header reconstruction interferes with
+    // Server Action POST routing (x-nextjs-action-not-found). Revertable.
+    '/((?!_next/static|_next/image|favicon\\.ico|icon\\.svg|manifest\\.webmanifest|robots\\.txt|sitemap\\.xml|contact|vault|.*\\.(?:png|jpg|jpeg|gif|webp|svg|ico|woff2|woff|ttf|css|js)$).*)',
   ],
 };

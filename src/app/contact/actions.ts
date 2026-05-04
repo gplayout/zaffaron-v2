@@ -1,7 +1,15 @@
 'use server';
 
-import { createServerSupabase } from '@/lib/supabase-server-auth';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
+
+// Phase 2.5 Option-A+ (2026-05-04): Use service-role for the insert. The
+// 'anon_insert_contact' RLS policy is INSERT TO anon WITH CHECK (true), but
+// createServerSupabase() with cookies attaches the authenticated user when
+// present, switching the request role to 'authenticated' which is excluded
+// from the policy. Server-processed contact submissions don't need RLS
+// gating; service-role bypasses it cleanly. Mehdi reads messages via
+// service-role anyway.
 
 export type ContactState = { ok: boolean | null; error?: string };
 
@@ -36,7 +44,7 @@ export async function submitContactForm(
   }
 
   try {
-    const supabase = await createServerSupabase();
+    const supabase = supabaseAdmin();
     const { error } = await supabase.from('contact_messages').insert({
       name, email, subject, message,
     });

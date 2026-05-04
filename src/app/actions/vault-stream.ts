@@ -14,7 +14,10 @@ const openai = createOpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-export const recipeSchema = z.object({
+// Internal schema (not exported) — Next.js 16 'use server' files can only
+// export async functions. recipeSchema is used only by structureRecipeStreaming
+// in this file.
+const recipeSchema = z.object({
   ingredients: z.array(
     z.object({
       item: z.string(),
@@ -38,7 +41,10 @@ export const recipeSchema = z.object({
   language: z.string(),
 });
 
-export type RecipeStreamData = z.infer<typeof recipeSchema>;
+// Internal type (not exported) — Next.js 16 'use server' files can only
+// export async functions. The shape is implicit via structureRecipeStreaming's
+// return type and z.infer<>.
+type RecipeStreamData = z.infer<typeof recipeSchema>;
 
 const SYSTEM_PROMPT = `You are a recipe structuring assistant for Zaffaron, a global family recipe vault.
 

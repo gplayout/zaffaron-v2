@@ -3,7 +3,12 @@
 import { createServerSupabase } from '@/lib/supabase-server-auth';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 
-export async function submitContactForm(formData: FormData) {
+export type ContactState = { ok: boolean | null; error?: string };
+
+export async function submitContactForm(
+  _prev: ContactState,
+  formData: FormData,
+): Promise<ContactState> {
   // Honeypot check — bots fill this hidden field
   const honeypot = String(formData.get('website') || '').trim();
   if (honeypot) {

@@ -1,11 +1,13 @@
 "use client";
 
 import { Mail } from "lucide-react";
-import { submitContactForm } from './actions';
-import { useState } from 'react';
+import { submitContactForm, type ContactState } from './actions';
+import { useActionState } from 'react';
+
+const initialState: ContactState = { ok: null };
+
 export default function ContactPage() {
-  const [submitting, setSubmitting] = useState(false);
-  const [status, setStatus] = useState<string | null>(null);
+  const [state, formAction, isPending] = useActionState(submitContactForm, initialState);
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -16,13 +18,7 @@ export default function ContactPage() {
 
       {/* Contact Form */}
       <div className="mt-8 rounded-xl border border-stone-200 bg-white p-6 sm:p-8">
-        <form className="space-y-6" action={async (formData) => {
-          setSubmitting(true);
-          setStatus(null);
-          const result = await submitContactForm(formData);
-          setSubmitting(false);
-          setStatus(result.ok ? 'sent' : result.error || 'Failed');
-        }}>
+        <form className="space-y-6" action={formAction}>
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-stone-700">
               Name
@@ -89,17 +85,17 @@ export default function ContactPage() {
 
           <button
             type="submit"
-            disabled={submitting}
+            disabled={isPending}
             className="w-full rounded-lg bg-amber-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-amber-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {submitting ? 'Sending...' : 'Send Message'}
+            {isPending ? 'Sending...' : 'Send Message'}
           </button>
 
-          {status === 'sent' && (
+          {state.ok === true && (
             <p className="text-sm text-green-600 text-center">✅ Message sent! We&apos;ll get back to you soon.</p>
           )}
-          {status && status !== 'sent' && (
-            <p className="text-sm text-red-600 text-center">❌ {status}</p>
+          {state.ok === false && (
+            <p className="text-sm text-red-600 text-center">❌ {state.error || 'Failed'}</p>
           )}
         </form>
       </div>

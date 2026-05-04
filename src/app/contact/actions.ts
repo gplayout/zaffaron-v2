@@ -1,16 +1,52 @@
 'use server';
 
-// EPHEMERAL SKELETON — Phase 2.5 search-space partition test.
-// Returns { ok: true } immediately with no DB / headers / supabase calls.
-// If POST -> 200: original 500 was in body (DB/rate-limit/etc) → Option α (request-scoped supabase).
-// If POST -> 500: 500 is in wiring (useActionState/RSC/serialization) → different fix path.
-// Will be reverted after empirical signal captured.
+import { createServerSupabase } from '@/lib/supabase-server-auth';
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 
 export type ContactState = { ok: boolean | null; error?: string };
 
 export async function submitContactForm(
   _prev: ContactState,
-  _formData: FormData,
+  formData: FormData,
 ): Promise<ContactState> {
-  return { ok: true };
+  // Honeypot check — bots fill this hidden field
+  const honeypot = String(formData.get('website') || '').trim();
+  if (honeypot) {
+    // Silently accept to not tip off the bot
+    return { ok: true };
+  }
+
+  // Rate limit (distributed, works on serverless)
+  const ip = await getClientIp();
+  const rl = await checkRateLimit(`contact:${ip}`, 5, 3600_000);
+  if (!rl.allowed) {
+    return { ok: false, error: 'Too many messages. Please try again later.' };
+  }
+
+  const name = String(formData.get('name') || '').trim().slice(0, 100);
+  const email = String(formData.get('email') || '').trim().slice(0, 200);
+  const subject = String(formData.get('subject') || 'General Inquiry').trim().slice(0, 200);
+  const message = String(formData.get('message') || '').trim().slice(0, 5000);
+
+  if (!name || !email || !message) {
+    return { ok: false, error: 'Please fill in all required fields.' };
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { ok: false, error: 'Please enter a valid email address.' };
+  }
+
+  try {
+    const supabase = await createServerSupabase();
+    const { error } = await supabase.from('contact_messages').insert({
+      name, email, subject, message,
+    });
+    if (error) {
+      console.error('Contact form error:', error.message);
+      return { ok: false, error: 'Failed to send message. Please try again.' };
+    }
+    return { ok: true };
+  } catch (e) {
+    console.error('Contact form exception:', e);
+    return { ok: false, error: 'An unexpected error occurred.' };
+  }
 }

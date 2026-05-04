@@ -4,8 +4,16 @@
  * Uses x-real-ip (trusted) instead of spoofable x-forwarded-for.
  */
 
-import { supabaseServer } from '@/lib/supabase-server';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 import { headers } from 'next/headers';
+
+// Phase 2.5 Option-α (2026-05-04): switched from supabaseServer (module-level
+// publishable-key singleton) to supabaseAdmin() (lazy-init service-role client).
+// rate_limits table has RLS-deny-all + 0 policies (service-role only). The
+// publishable client could not insert/select, and the module-level singleton's
+// connection became stale across serverless invocations -> 'Connection closed.'
+// 500 with digest 1619326732. Service-role bypasses RLS and lazy-init avoids
+// the cold-start staleness.
 
 /**
  * Get the client's IP address from trusted headers.
@@ -38,8 +46,9 @@ export async function checkRateLimit(
   const windowStart = new Date(now - windowMs).toISOString();
 
   try {
+    const sb = supabaseAdmin();
     // Count recent requests in window
-    const { count, error: countError } = await supabaseServer
+    const { count, error: countError } = await sb
       .from('rate_limits')
       .select('*', { count: 'exact', head: true })
       .eq('key', key)
@@ -55,7 +64,7 @@ export async function checkRateLimit(
 
     if (currentCount >= maxRequests) {
       // Find when the oldest entry in window expires
-      const { data: oldest } = await supabaseServer
+      const { data: oldest } = await sb
         .from('rate_limits')
         .select('created_at')
         .eq('key', key)
@@ -76,7 +85,7 @@ export async function checkRateLimit(
     }
 
     // Record this request
-    const { error: insertError } = await supabaseServer
+    const { error: insertError } = await sb
       .from('rate_limits')
       .insert({ key, created_at: new Date(now).toISOString() });
 

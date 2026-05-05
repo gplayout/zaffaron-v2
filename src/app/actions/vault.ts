@@ -1,10 +1,10 @@
 "use server";
 
-// Phase 2.5 vault fix (2026-05-05 00:15 PDT): maxDuration=60 insures against
-// OpenAI gpt-5.2 response times (typically 5-30s for 2000-token responses)
-// exceeding Vercel default function timeout. Root-cause for "Connection closed
-// digest 1619326732" runtime error observed during Phase 2.5 testing.
-export const maxDuration = 60;
+// Phase 2.5 vault fix note (2026-05-05): maxDuration=60 is set on the consuming
+// route (src/app/vault/create/page.tsx) NOT here. Next.js 16 'use server' files
+// can ONLY export async functions; non-async exports invalidate the whole
+// module. Function timeout is properly a route-level concern anyway — Server
+// Actions inherit Route Segment Config from the page they're invoked on.
 
 import { createServerSupabase } from "@/lib/supabase-server-auth";
 import { structureRecipeText } from "@/lib/vault/structure";

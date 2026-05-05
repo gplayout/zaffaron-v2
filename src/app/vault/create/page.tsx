@@ -18,6 +18,13 @@
 import { saveVaultRecipe, structureRecipe } from "@/app/actions/vault";
 import VaultCreateClient from "./VaultCreateClient";
 
+// Phase 2.5 vault fix (2026-05-05): Route Segment Config. maxDuration=60
+// insures against gpt-5.2 response times (5-30s) exceeding Vercel default
+// function timeout. Server Actions invoked from this route inherit this
+// timeout. Pro plan ceiling is 300s; 60s matches conservative GPT-5.2 P95.
+// Root cause for "Connection closed digest 1619326732" Phase 2.5 runtime err.
+export const maxDuration = 60;
+
 export default function VaultCreatePage() {
   return (
     <VaultCreateClient

@@ -1,6 +1,18 @@
 /**
- * Recipe structuring via Vercel AI SDK — STREAMING version.
- * User sees ingredients/steps appear in real-time instead of 15s spinner.
+ * Recipe structuring via Vercel AI SDK — STREAMING foundation (preserved).
+ *
+ * STATUS (2026-05-05 00:15 PDT, Phase 2.5 vault fix): NOT CURRENTLY ACTIVE.
+ * The active /vault/create path uses raw fetch via lib/vault/structure.ts +
+ * actions/vault.ts (IRON-LAW-compliant baseline).
+ *
+ * THIS FILE IS PRESERVED as the foundation for future client-streaming UX
+ * (per Mehdi 2026-04-16 architecture review: "keep raw fetch() as baseline;
+ * adopt Vercel AI SDK selectively for text streaming/typed outputs").
+ *
+ * To re-activate: build a Route Handler (per architecture review) that calls
+ * structureRecipeStream() and pipes the ReadableStream to client via SSE/fetch
+ * stream, with client-side useObject() consuming partial JSON updates.
+ *
  * Uses @ai-sdk/openai (edge-compatible, NOT the bloated openai SDK).
  */
 import { createOpenAI } from "@ai-sdk/openai";

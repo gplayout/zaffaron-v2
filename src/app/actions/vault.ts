@@ -1,5 +1,11 @@
 "use server";
 
+// Phase 2.5 vault fix (2026-05-05 00:15 PDT): maxDuration=60 insures against
+// OpenAI gpt-5.2 response times (typically 5-30s for 2000-token responses)
+// exceeding Vercel default function timeout. Root-cause for "Connection closed
+// digest 1619326732" runtime error observed during Phase 2.5 testing.
+export const maxDuration = 60;
+
 import { createServerSupabase } from "@/lib/supabase-server-auth";
 import { structureRecipeText } from "@/lib/vault/structure";
 import type { VaultStructuredData } from "@/lib/vault/types";

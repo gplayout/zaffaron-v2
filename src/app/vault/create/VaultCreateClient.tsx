@@ -3,8 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Check, AlertCircle, Sparkles } from "lucide-react";
-import type { saveVaultRecipe } from "@/app/actions/vault";
-import type { structureRecipeStreaming } from "@/app/actions/vault-stream";
+import type { saveVaultRecipe, structureRecipe } from "@/app/actions/vault";
 import type { VaultStructuredData } from "@/lib/vault/types";
 import { useAuth } from "@/components/AuthProvider";
 import AudioRecorder from "@/components/vault/AudioRecorder";
@@ -13,7 +12,7 @@ type Step = "input" | "processing" | "review" | "saving" | "done";
 type InputMode = "text" | "voice";
 
 type Props = {
-  structureAction: typeof structureRecipeStreaming;
+  structureAction: typeof structureRecipe;
   saveAction: typeof saveVaultRecipe;
 };
 

@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import Link from "next/link";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import PinterestTag from "@/components/PinterestTag";
 import { AuthProvider } from "@/components/AuthProvider";
 import Navigation from "@/components/Navigation";
 import NewsletterForm from "@/components/NewsletterForm";
@@ -210,6 +211,7 @@ export default function RootLayout({
           </footer>
           <Analytics />
             <SpeedInsights />
+            <PinterestTag />
         </AuthProvider>
       </body>
     </html>

@@ -18,7 +18,9 @@ import {
   RecipeFAQ,
   RecipeVariations,
   RecipeInternalLinks,
+  UnitSystemProvider,
 } from "@/components/recipe";
+import { headers } from "next/headers";
 import { VaultCTA } from "@/components/recipe/VaultCTA";
 import { ViewTracker } from "@/components/recipe/ViewTracker";
 import type { Metadata } from "next";
@@ -103,10 +105,24 @@ export default async function RecipePage({ params }: Props) {
     ? Math.round((reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / ratingCount) * 10) / 10
     : undefined;
 
+  // Phase 6.6 γ (2026-05-05): default unit system based on user geo + cookie pref.
+  // Priority: cookie zaff_unit_pref > Vercel header x-vercel-ip-country (US-style countries) > metric.
+  // Note: revalidate=3600 means this server-rendered default is cached per route, NOT per request.
+  // Client-side hydration via UnitSystemProvider reads cookie + overrides (so individual users still get their pref).
+  const hdrs = await headers();
+  const cookieStr = hdrs.get("cookie") || "";
+  const cookieMatch = cookieStr.match(/zaff_unit_pref=(metric|imperial)/);
+  const country = (hdrs.get("x-vercel-ip-country") || "").toUpperCase();
+  const initialUnit: "metric" | "imperial" =
+    cookieMatch ? (cookieMatch[1] as "metric" | "imperial") :
+    (country === "US" || country === "LR" || country === "MM") ? "imperial" :
+    "metric";
+
   return (
     <>
       <RecipeJsonLd recipe={recipe} ratingCount={ratingCount} ratingValue={ratingValue} />
       <BreadcrumbJsonLd recipe={recipe} />
+      <UnitSystemProvider initial={initialUnit}>
       <article className="mx-auto max-w-3xl">
         {/* Phase 1b: anonymous view tracking (5s settle + visibility gate) */}
         <ViewTracker recipeId={recipe.id} />
@@ -168,6 +184,7 @@ export default async function RecipePage({ params }: Props) {
           <RecipeReviews reviews={reviews} recipeId={recipe.id} recipeSlug={recipe.slug} />
         </div>
       </article>
+      </UnitSystemProvider>
     </>
   );
 }

@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from "react";
 import type { Ingredient, Substitution } from "@/types";
+import { useUnitSystem, UnitSystemToggle } from "./UnitSystemToggle";
+import { formatIngredient } from "@/lib/units/imperial-convert";
 
 interface RecipeIngredientsProps {
   ingredients: Ingredient[];
@@ -20,12 +22,22 @@ export function RecipeIngredients({ ingredients, substitutions }: RecipeIngredie
     });
   }, []);
 
+  // Phase 6.6 γ (2026-05-05): unit toggle for metric/imperial display.
+  // Storage stays metric (canonical). Imperial is computed on-the-fly.
+  const { system } = useUnitSystem();
+
   return (
     <section id="recipe-ingredients">
-      <h2 className="mb-4 text-xl font-bold">Ingredients</h2>
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+        <h2 className="text-xl font-bold">Ingredients</h2>
+        <UnitSystemToggle />
+      </div>
       <ul className="space-y-2">
         {ingredients.map((ing, i) => {
           const isChecked = checkedItems.has(i);
+          const fmt = formatIngredient(ing.amount, ing.unit, system);
+          // Render "amount unit" with smart spacing (omit space if unit empty).
+          const measure = fmt.unit ? `${fmt.amount} ${fmt.unit}` : fmt.amount;
           return (
             <li
               key={i}
@@ -42,7 +54,7 @@ export function RecipeIngredients({ ingredients, substitutions }: RecipeIngredie
                 onClick={(e) => e.stopPropagation()}
               />
               <span className={`font-medium text-stone-800 dark:text-stone-200 min-w-fit ${isChecked ? "line-through" : ""}`}>
-                {ing.amount} {ing.unit}
+                {measure}
               </span>
               <span className={`text-stone-600 dark:text-stone-400 ${isChecked ? "line-through" : ""}`}>
                 {ing.item}
